@@ -7,23 +7,24 @@ const topicArn = 'arn:aws:sns:us-east-1:263032025301:DemoTopicSNS';
 
 export const handler = async (event) => {
 
-    /* This is the JSON input that my code require
-     * UserId is the uuid of the new user that has signed up
-     * email is the email of the user
-     {
-         "UserId": "2",
-         "email": "rockmyworld.aa@gmail.com"
-       } */
-
     let userId, email;
 
     try {
         userId = event.UserId;
         email = event.email;
+        if (email === undefined || email === null || email.trim() === "") {
+            console.log("Please provide a proper email value");
+            return { statusCode: 422, body: JSON.stringify("Please provide a proper email value") };
+        }
+
+        if (userId === undefined || userId === null || userId.trim() === "") {
+            console.log("Please provide a proper userId value");
+            return { statusCode: 422, body: JSON.stringify("Please provide a proper userId value") };
+        }
     }
     catch (error) {
         console.error("error parsing JSON body:", error);
-        return { statusCode: 400, body: JSON.stringify('Invalud JSON body') };
+        return { statusCode: 422, body: JSON.stringify('Please provide a proper JSON input') };
     }
     const subscribeParams = {
         Protocol: 'email',  // e.g., 'email', 'sms', etc.
