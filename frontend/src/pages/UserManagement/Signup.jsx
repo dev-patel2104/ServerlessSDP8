@@ -67,7 +67,7 @@ function Signup() {
               </Flex>
               <Input
                 color="white"
-                placeholder="Enter email"
+                placeholder="Enter Email"
                 mb="4"
                 type="email"
                 required
@@ -78,10 +78,10 @@ function Signup() {
               />
               <Input
                 color="white"
-                placeholder="Enter username"
+                placeholder="Enter Username"
                 required
                 mb="4"
-                type="email"
+                type="text"
                 value={username}
                 onChange={(e) => {
                   setUsername(e.target.value);
