@@ -1,9 +1,10 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Login from './pages/Authentication/Login';
+import Login from './pages/UserManagement/Login';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LayoutWithNav from './pages/Layout/LayoutWithNav';
 import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
-
+import Profile from './pages/UserManagement/Profile';
+import Signup from './pages/UserManagement/Signup';
 
 function App() {
   const router = createBrowserRouter([
@@ -24,8 +25,25 @@ function App() {
           element: <Login />
         }
       ]
+    },
+    {
+      element: <LayoutWithoutNav />,
+      children: [
+        {
+          path: "/user/profile",
+          element: <Profile />
+        }
+      ]
+    },
+    {
+      element: <LayoutWithoutNav />,
+      children: [
+        {
+          path: "/user/signup",
+          element: <Signup />
+        }
+      ]
     }
-  
   ]);
 
   return (
