@@ -7,6 +7,7 @@ import {
   Button,
   FormControl,
   Divider,
+  useToast
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -19,21 +20,34 @@ import { auth } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [disabled, setDisabled] = useState(true);
 
-  function handleSubmit() {
+  function handleSubmit(event) {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
+      .then(() => {
+        toast({
+          title: "Success!",
+          description: "Your account was successfully created!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         navigate("/user/profile");
       })
-      .catch((error) => {
-        console.error(error.message);
+      .catch(() => {
+        toast({
+          title: "Error",
+          description: "The account wasn't created, please try again!",
+          status: "error",
+          duration: 3000,
+          isClosable: false,
+        });
       });
   }
 

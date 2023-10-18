@@ -7,6 +7,7 @@ import {
   Image,
   FormControl,
   Divider,
+  useToast
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -18,29 +19,76 @@ import { auth, googleProvider } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
 
   function handleGoogleSignIn() {
   signInWithPopup(auth, googleProvider)
-  .then((result) => {
-    console.log(result);
+  .then(() => {
+    toast({
+      title: "Success",
+      description: "You have been logged in!",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
     navigate("/user/profile");
   }).catch((error) => {
-    console.error(error.message);
+    if(error.message.includes("popup-closed-by-use")){
+      toast({
+        title: "Failure!",
+        description: "The google popup was closed",
+        status: "warning",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    else {
+      toast({
+        title: "Failed!",
+        description: "Unable to login please try again later or use email and password!",
+        status: "error",
+        duration: 3000,
+        isClosable: false,
+      });
+    }
   });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log(userCredential);
+      .then(() => {
+        toast({
+          title: "Success",
+          description: "You have been logged in!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
         navigate("/user/profile");
       })
       .catch((error) => {
-        console.error(error.message);
+        if (error.message.includes('auth/invalid-login-credentials')){
+          toast({
+            title: "Failed!",
+            description: "Unable to login, please check your credentials and try again!",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
+        }
+        else if (error.message.includes('auth/user-not-found')){
+          toast({
+            title: "Failed!",
+            description: "The user was not found, please sign up",
+            status: "error",
+            duration: 3000,
+            isClosable: false,
+          });
+        }
       });
   }
 
