@@ -6,6 +6,7 @@ import {
   Box,
   Image,
   FormControl,
+  Divider,
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -16,13 +17,13 @@ function Login() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   function handleSubmit() {
-    alert("Entered user name is " + email+" and password is " + password);
+    alert("Entered user name is " + email + " and password is " + password);
   }
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
   return isMobile ? (
     <Flex
       w="100%"
-      minHeight="90vh"
+      minHeight="100vh"
       backgroundColor="#000C66"
       flexDir="column"
       alignItems="center"
@@ -33,13 +34,14 @@ function Login() {
   ) : (
     <Flex
       w="100%"
-      minHeight="90vh"
+      minHeight="100vh"
       backgroundColor="#000C66"
       alignItems="center"
       justifyContent="space-evenly"
     >
       <Flex
         w="100%"
+        height="60vh"
         maxW="800px"
         p="10"
         borderRadius="lg"
@@ -47,9 +49,15 @@ function Login() {
         flexDir="row"
         alignItems="center"
       >
-        <Box flex="3" display={{ base: "none", md: "block" }} mr="4">
-          <Image src={logo} alt="Login Image" />
-        </Box>
+        <Flex flex="3" flexDir="column">
+          <Box flex="3" display={{ base: "none", md: "block" }} mr="4">
+            <Image src={logo} alt="Login Image" />
+          </Box>
+          <Button mt="4" mr="4" variant="outline" as={Link} to="/">
+            Home Page
+          </Button>
+        </Flex>
+        <Divider orientation="vertical" mr='4' ml='4'/>
         <Flex flex="4" flexDir="column">
           <Flex justify="space-between" alignItems="center" mb="4">
             <Text fontSize="30px" color="white">
@@ -67,7 +75,9 @@ function Login() {
                 mb="4"
                 type="email"
                 value={email}
-                onChange={(e) => {setEmail(e.target.value)}}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
                 required
               />
               <Input
@@ -75,7 +85,9 @@ function Login() {
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={(e) => {setPassword(e.target.value)}}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
                 mb="4"
                 required
               />

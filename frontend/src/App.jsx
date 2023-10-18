@@ -33,7 +33,7 @@ function App() {
       ]
     },
     {
-      element: <LayoutWithoutNav />,
+      element: <LayoutWithNav />,
       children: [
         {
           path: "/user/profile",
