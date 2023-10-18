@@ -1,4 +1,4 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Text, useToast } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import { auth } from "../../config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 
 function NavBar() {
+  const toast = useToast();
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
 
   const [loggedIn, setLoggedIn] = useState(null);
@@ -14,9 +15,25 @@ function NavBar() {
   function handleSignout() {
     signOut(auth)
       .then(() => {
-        console.log("sign out successful");
+        toast({
+          title: "Signed Out",
+          description: "You have been signed out!",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description:
+            "We are unable to sign you out at the moment, please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: false,
+        });
+      });
   }
 
   useEffect(() => {
@@ -63,7 +80,9 @@ function NavBar() {
         <>
           <Flex mr="4">
             <Button
-              onClick={() => {handleSignout();}}
+              onClick={() => {
+                handleSignout();
+              }}
               _hover={{ backgroundColor: theme.primaryBackground }}
               color={theme.accent}
               borderColor={theme.accent}
