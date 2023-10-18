@@ -6,6 +6,7 @@ import {
   Input,
   Button,
   FormControl,
+  Divider
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -17,7 +18,6 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
-  const [username, setUsername] = useState("");
   const [disabled, setDisabled] = useState(true);
   function handleSubmit() {
     alert("Username: " + email + " Password: " + password);
@@ -37,7 +37,7 @@ function Signup() {
   ) : (
     <Flex
       w="100%"
-      minHeight="90vh"
+      minHeight="100vh"
       backgroundColor="#000C66"
       alignItems="center"
       justifyContent="space-evenly"
@@ -45,15 +45,22 @@ function Signup() {
       <Flex
         w="100%"
         maxW="800px"
+        height="70vh"
         p="10"
         borderRadius="lg"
         backgroundColor="black"
         flexDir="row"
         alignItems="center"
       >
-        <Box flex="3" display={{ base: "none", md: "block" }} mr="4">
-          <Image src={logo} alt="Login Image" />
-        </Box>
+        <Flex flex="3" flexDir="column">
+          <Box display={{ base: "none", md: "block" }} mr="4">
+            <Image src={logo} alt="Login Image" />
+          </Box>
+          <Button mt="4" mr="4" variant="outline" as={Link} to="/">
+            Home Page
+          </Button>
+        </Flex>
+        <Divider orientation="vertical" mr='4' ml='4'/>
         <Flex flex="4" flexDir="column">
           <form onSubmit={handleSubmit}>
             <FormControl>
@@ -74,17 +81,6 @@ function Signup() {
                 value={email}
                 onChange={(e) => {
                   setEmail(e.target.value);
-                }}
-              />
-              <Input
-                color="white"
-                placeholder="Enter Username"
-                required
-                mb="4"
-                type="text"
-                value={username}
-                onChange={(e) => {
-                  setUsername(e.target.value);
                 }}
               />
               <Input
@@ -125,15 +121,17 @@ function Signup() {
                   setDisabled(!isValid);
                 }}
               />
-              <Button
-                colorScheme="teal"
-                variant="outline"
-                isDisabled={disabled}
-                type="submit"
-                mt="4"
-              >
-                Sign Up
-              </Button>
+              <Flex justify="space-between">
+                <Button
+                  colorScheme="teal"
+                  variant="outline"
+                  isDisabled={disabled}
+                  type="submit"
+                  mt="4"
+                >
+                  Sign Up
+                </Button>
+              </Flex>
             </FormControl>
           </form>
         </Flex>
