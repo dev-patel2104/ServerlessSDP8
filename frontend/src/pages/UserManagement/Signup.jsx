@@ -6,13 +6,14 @@ import {
   Input,
   Button,
   FormControl,
-  Divider
+  Divider,
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import logo from "../../assets/signup.svg";
 import { useState } from "react";
 import PasswordChecklist from "react-password-checklist";
+import { theme } from "../../theme";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -27,7 +28,7 @@ function Signup() {
     <Flex
       w="100%"
       minHeight="90vh"
-      backgroundColor="#000C66"
+      backgroundColor={theme.primaryBackground}
       flexDir="column"
       alignItems="center"
       justifyContent="start"
@@ -38,7 +39,7 @@ function Signup() {
     <Flex
       w="100%"
       minHeight="100vh"
-      backgroundColor="#000C66"
+      backgroundColor={theme.primaryBackground}
       alignItems="center"
       justifyContent="space-evenly"
     >
@@ -48,46 +49,71 @@ function Signup() {
         height="70vh"
         p="10"
         borderRadius="lg"
-        backgroundColor="black"
+        backgroundColor={theme.secondaryBackground}
         flexDir="row"
         alignItems="center"
       >
         <Flex flex="3" flexDir="column">
-          <Box display={{ base: "none", md: "block" }} mr="4">
+          <Box display={{ base: "none", md: "block" }}>
             <Image src={logo} alt="Login Image" />
           </Box>
-          <Button mt="4" mr="4" variant="outline" as={Link} to="/">
+          <Button
+            mt="4"
+            variant="outline"
+            as={Link}
+            to="/"
+            _hover={{ backgroundColor: theme.primaryBackground }}
+            color={theme.accent}
+            borderColor={theme.accent}
+          >
             Home Page
           </Button>
         </Flex>
-        <Divider orientation="vertical" mr='4' ml='4'/>
+        <Divider orientation="vertical" mr="4" ml="4" borderColor={theme.accent} borderWidth="1px" borderRadius="30px"/>
         <Flex flex="4" flexDir="column">
           <form onSubmit={handleSubmit}>
             <FormControl>
               <Flex justify="space-between" alignItems="center" mb="4">
-                <Text fontSize="30px" color="white">
+                <Text fontSize="30px" color={theme.accent}>
                   Sign Up
                 </Text>
-                <Text as={Link} to="/user/login" fontSize="sm" color="blue.500">
+                <Text
+                  as={Link}
+                  to="/user/login"
+                  fontSize="sm"
+                  color={theme.accent}
+                >
                   Have an account? Sign In
                 </Text>
               </Flex>
               <Input
-                color="white"
+                color={theme.accent}
                 placeholder="Enter Email"
                 mb="4"
                 type="email"
                 required
                 value={email}
+                style={{
+                  borderColor: theme.accent,
+                }}
+                _placeholder={{
+                  color: theme.accent,
+                }}
                 onChange={(e) => {
                   setEmail(e.target.value);
                 }}
               />
               <Input
-                color="white"
+                color={theme.accent}
                 type="password"
                 required
                 value={password}
+                style={{
+                  borderColor: theme.accent,
+                }}
+                _placeholder={{
+                  color: theme.accent,
+                }}
                 onChange={(e) => {
                   setPassword(e.target.value);
                 }}
@@ -95,10 +121,16 @@ function Signup() {
                 mb="4"
               />
               <Input
-                color="white"
+                color={theme.accent}
                 type="password"
                 required
                 placeholder="Re-enter Password"
+                style={{
+                  borderColor: theme.accent,
+                }}
+                _placeholder={{
+                  color: theme.accent,
+                }}
                 value={passwordAgain}
                 onChange={(e) => {
                   setPasswordAgain(e.target.value);
@@ -116,18 +148,20 @@ function Signup() {
                 minLength={8}
                 value={password}
                 valueAgain={passwordAgain}
-                style={{ color: "white" }}
+                style={{ color: theme.accent }}
                 onChange={(isValid) => {
                   setDisabled(!isValid);
                 }}
               />
               <Flex justify="space-between">
                 <Button
-                  colorScheme="teal"
                   variant="outline"
                   isDisabled={disabled}
                   type="submit"
                   mt="4"
+                  _hover={{ backgroundColor: theme.primaryBackground }}
+                  color={theme.accent}
+                  borderColor={theme.accent}
                 >
                   Sign Up
                 </Button>
