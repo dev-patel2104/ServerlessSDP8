@@ -14,16 +14,31 @@ import logo from "../../assets/signup.svg";
 import { useState } from "react";
 import PasswordChecklist from "react-password-checklist";
 import { theme } from "../../theme";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordAgain, setPasswordAgain] = useState("");
   const [disabled, setDisabled] = useState(true);
+
   function handleSubmit() {
-    alert("Username: " + email + " Password: " + password);
+    event.preventDefault();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        navigate("/user/profile");
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
   }
+
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
+
   return isMobile ? (
     <Flex
       w="100%"

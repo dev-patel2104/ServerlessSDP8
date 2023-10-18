@@ -12,14 +12,38 @@ import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import logo from "../../assets/login.svg";
 import { useState } from "react";
-import { theme } from '../../theme';
+import { theme } from "../../theme";
+import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  function handleSubmit() {
-    alert("Entered user name is " + email + " and password is " + password);
+
+  function handleGoogleSignIn() {
+  signInWithPopup(auth, googleProvider)
+  .then((result) => {
+    console.log(result);
+    navigate("/user/profile");
+  }).catch((error) => {
+    console.error(error.message);
+  });
   }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        console.log(userCredential);
+        navigate("/user/profile");
+      })
+      .catch((error) => {
+        console.error(error.message);
+      });
+  }
+
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
   return isMobile ? (
     <Flex
@@ -54,17 +78,37 @@ function Login() {
           <Box flex="3" display={{ base: "none", md: "block" }}>
             <Image src={logo} alt="Login Image" />
           </Box>
-          <Button mt="4" variant="outline" as={Link} to="/" _hover={{backgroundColor: theme.primaryBackground}} color={theme.accent} borderColor={theme.accent}>
+          <Button
+            mt="4"
+            variant="outline"
+            as={Link}
+            to="/"
+            _hover={{ backgroundColor: theme.primaryBackground }}
+            color={theme.accent}
+            borderColor={theme.accent}
+          >
             Home Page
           </Button>
         </Flex>
-        <Divider orientation="vertical" mr='4' ml='4' borderColor={theme.accent} borderWidth="1px" borderRadius="30px"/>
+        <Divider
+          orientation="vertical"
+          mr="4"
+          ml="4"
+          borderColor={theme.accent}
+          borderWidth="1px"
+          borderRadius="30px"
+        />
         <Flex flex="4" flexDir="column">
           <Flex justify="space-between" alignItems="center" mb="4">
             <Text fontSize="30px" color={theme.accent}>
               Sign In
             </Text>
-            <Text as={Link} to="/user/passreset" fontSize="sm" color={theme.accent}>
+            <Text
+              as={Link}
+              to="/user/passreset"
+              fontSize="sm"
+              color={theme.accent}
+            >
               Forgot Password?
             </Text>
           </Flex>
@@ -81,10 +125,10 @@ function Login() {
                 }}
                 required
                 style={{
-                  borderColor: theme.accent
+                  borderColor: theme.accent,
                 }}
                 _placeholder={{
-                  color: theme.accent
+                  color: theme.accent,
                 }}
               />
               <Input
@@ -98,14 +142,20 @@ function Login() {
                 mb="4"
                 required
                 style={{
-                  borderColor: theme.accent
+                  borderColor: theme.accent,
                 }}
                 _placeholder={{
-                  color: theme.accent
+                  color: theme.accent,
                 }}
               />
               <Flex justify="space-between" alignItems="center" mb="4">
-                <Button variant="outline" type="submit" _hover={{backgroundColor: theme.primaryBackground}} color={theme.accent} borderColor={theme.accent}>
+                <Button
+                  variant="outline"
+                  type="submit"
+                  _hover={{ backgroundColor: theme.primaryBackground }}
+                  color={theme.accent}
+                  borderColor={theme.accent}
+                >
                   Sign In
                 </Button>
                 <Text
@@ -119,7 +169,13 @@ function Login() {
               </Flex>
             </FormControl>
           </form>
-          <Button variant="outline" _hover={{backgroundColor: theme.primaryBackground}} color={theme.accent} borderColor={theme.accent}>
+          <Button
+            variant="outline"
+            onClick={() => {handleGoogleSignIn();}}
+            _hover={{ backgroundColor: theme.primaryBackground }}
+            color={theme.accent}
+            borderColor={theme.accent}
+          >
             Sign In with Google
           </Button>
         </Flex>
