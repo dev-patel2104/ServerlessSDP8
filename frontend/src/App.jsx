@@ -5,6 +5,7 @@ import LayoutWithNav from './pages/Layout/LayoutWithNav';
 import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
 import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
+import BookTable from './pages/BookTable/BookTable';
 
 function App() {
   const router = createBrowserRouter([
@@ -14,6 +15,10 @@ function App() {
         {
           path: "/",
           element: <LandingPage />
+        },
+        {
+          path: "/restaurant/:restaurantID/book",
+          element: <BookTable />
         }
       ]
     },
@@ -23,7 +28,8 @@ function App() {
         {
           path: "/user/login",
           element: <Login />
-        }
+        },
+
       ]
     },
     {
