@@ -31,6 +31,7 @@ function Signup() {
     event.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
+        //call AddEmailToDynamoDB API here
         toast({
           title: "Success!",
           description: "Your account was successfully created!",
