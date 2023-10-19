@@ -1,10 +1,11 @@
-import { Button, Flex, Text, useToast } from "@chakra-ui/react";
+import { Button, Flex, Text, useToast, Image } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { auth } from "../../config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 
 function NavBar() {
   const toast = useToast();
@@ -69,11 +70,14 @@ function NavBar() {
       w="100%"
       backgroundColor={theme.secondaryBackground}
     >
-      <Flex flex="1" ml="4">
+      <Flex flex="1" ml="4" flexDir="row" alignItems="center">
         <Link to="/">
-          <Text color={theme.secondaryForeground} fontWeight="bold">
-            Reserve Table
-          </Text>
+          <Flex alignItems="center">
+            <Image src={logo} alt="Login Image" boxSize="30px" mr="1" />
+            <Text color={theme.accent} fontWeight="bold">
+              Foodvaganza
+            </Text>
+          </Flex>
         </Link>
       </Flex>
       {loggedIn ? (
