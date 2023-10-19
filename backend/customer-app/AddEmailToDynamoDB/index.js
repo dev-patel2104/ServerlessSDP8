@@ -15,7 +15,7 @@ exports.handler = async (event) => {
     if (!email) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ message: "Email and password are required" }),
+        body: JSON.stringify({ message: "Email is required in the request body" }),
       };
     }
 
@@ -33,7 +33,7 @@ exports.handler = async (event) => {
       return {
         statusCode: 409,
         body: JSON.stringify({
-          message: "User with the same email already exists please login",
+          message: "The DB already contains this email address",
         }),
       };
     }
