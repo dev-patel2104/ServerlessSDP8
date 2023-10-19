@@ -7,7 +7,10 @@ import {
   Image,
   FormControl,
   Divider,
-  useToast
+  useToast,
+  InputGroup,
+  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { Link } from "react-router-dom";
@@ -17,44 +20,48 @@ import { theme } from "../../theme";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth, googleProvider } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 function Login() {
   const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [showPassword, setShowPassword] = useState(false);
 
   function handleGoogleSignIn() {
-  signInWithPopup(auth, googleProvider)
-  .then(() => {
-    toast({
-      title: "Success",
-      description: "You have been logged in!",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-    navigate("/user/profile");
-  }).catch((error) => {
-    if(error.message.includes("popup-closed-by-use")){
-      toast({
-        title: "Failure!",
-        description: "The google popup was closed",
-        status: "warning",
-        duration: 3000,
-        isClosable: true,
+    signInWithPopup(auth, googleProvider)
+      .then(() => {
+        //call AddEmailToDynamoDB API here
+        toast({
+          title: "Success",
+          description: "You have been logged in!",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        navigate("/user/profile");
+      })
+      .catch((error) => {
+        if (error.message.includes("popup-closed-by-use")) {
+          toast({
+            title: "Failure!",
+            description: "The google popup was closed",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: "Failed!",
+            description:
+              "Unable to login please try again later or use email and password!",
+            status: "error",
+            duration: 3000,
+            isClosable: false,
+          });
+        }
       });
-    }
-    else {
-      toast({
-        title: "Failed!",
-        description: "Unable to login please try again later or use email and password!",
-        status: "error",
-        duration: 3000,
-        isClosable: false,
-      });
-    }
-  });
   }
 
   function handleSubmit(event) {
@@ -71,16 +78,16 @@ function Login() {
         navigate("/user/profile");
       })
       .catch((error) => {
-        if (error.message.includes('auth/invalid-login-credentials')){
+        if (error.message.includes("auth/invalid-login-credentials")) {
           toast({
             title: "Failed!",
-            description: "Unable to login, please check your credentials and try again!",
+            description:
+              "Unable to login, please check your credentials and try again!",
             status: "warning",
             duration: 3000,
             isClosable: true,
           });
-        }
-        else if (error.message.includes('auth/user-not-found')){
+        } else if (error.message.includes("auth/user-not-found")) {
           toast({
             title: "Failed!",
             description: "The user was not found, please sign up",
@@ -179,23 +186,36 @@ function Login() {
                   color: theme.accent,
                 }}
               />
-              <Input
-                color={theme.accent}
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                }}
-                mb="4"
-                required
-                style={{
-                  borderColor: theme.accent,
-                }}
-                _placeholder={{
-                  color: theme.accent,
-                }}
-              />
+              <InputGroup>
+                <Input
+                  color={theme.accent}
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                  mb="4"
+                  required
+                  style={{
+                    borderColor: theme.accent,
+                  }}
+                  _placeholder={{
+                    color: theme.accent,
+                  }}
+                />
+                <InputRightElement>
+                  <IconButton
+                    variant="outline"
+                    _hover={{ backgroundColor: theme.primaryBackground }}
+                    color={theme.accent}
+                    borderColor={theme.accent}
+                    size="sm"
+                    onClick={() => setShowPassword(!showPassword)}
+                    icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
+                  />
+                </InputRightElement>
+              </InputGroup>
               <Flex justify="space-between" alignItems="center" mb="4">
                 <Button
                   variant="outline"
@@ -219,7 +239,9 @@ function Login() {
           </form>
           <Button
             variant="outline"
-            onClick={() => {handleGoogleSignIn();}}
+            onClick={() => {
+              handleGoogleSignIn();
+            }}
             _hover={{ backgroundColor: theme.primaryBackground }}
             color={theme.accent}
             borderColor={theme.accent}
