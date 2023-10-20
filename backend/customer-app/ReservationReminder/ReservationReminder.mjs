@@ -31,7 +31,7 @@ export const handler = async (event) => {
 
     try {
         let date;
-        let currentTime, messageAttributes, params;
+        let currentTime, messageAttributes, params, cnt = 0;
         const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
         for(const reservation of reservations)
         {
@@ -49,6 +49,7 @@ export const handler = async (event) => {
                         MessageAttributes: messageAttributes,
                         TopicArn: topicARN
                     };
+                    cnt++;
                     await publishAsync(params);
                     reservation.isNotified = true;  // need to change this once fetched from harsh database
                     console.log(reservation.id);
@@ -58,14 +59,25 @@ export const handler = async (event) => {
                 }
             }  
         }
-        return {
-          statusCode: 200,
-          body: 'Message published to corresponding SNS topics.'
-        };
+        if(cnt == 0)
+        {
+            return {
+                statusCode: 200,
+                body: 'No change has been made to reservations and no user has been notified.'
+            };
+        }
+        else
+        {
+            return {
+                statusCode: 200,
+                body: 'Message published to corresponding SNS topics.'
+            };    
+        }
+        
         // store the changes reservation table back to the database
     }
     catch (err) {
-        console.log("Some error has occurred");
+        console.log("Some error has occurred", err);
         return {
           statusCode: 500,
           body: 'Error publishing message to SNS.'
