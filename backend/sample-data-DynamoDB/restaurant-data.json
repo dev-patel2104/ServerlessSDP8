@@ -1,0 +1,399 @@
+[
+  {
+    "restaurant_id": "1",
+    "name": "The Wooden Monkey",
+    "address": "1707 Grafton St, Halifax, NS",
+    "start_time": "11:00",
+    "end_time": "21:00",
+    "contact": 9021234567,
+    "fb_link": "https://www.facebook.com/woodenmonkey",
+    "x_link": "https://www.google.com/maps/woodenmonkey",
+    "store_link": "https://www.woodenmonkey.com",
+    "online_delivery": true,
+    "tagline": "Local, Organic, Sustainable",
+    "max_booking_capacity": 60,
+    "image_path": "woodenmonkey.jpg",
+    "menu": [
+      {
+        "item_id": "101",
+        "item_name": "Organic Spinach Salad",
+        "item_description": "Fresh organic spinach with a balsamic vinaigrette dressing.",
+        "category": "Salads",
+        "item_image_path": "spinach_salad.jpg",
+        "item_type":"vegetarian",
+        "is_available":true,
+        "item_size_price": [
+            {
+                "size": "Small",
+                "price": 8.99,
+                "type": "pcs"
+            },
+            {
+                "size": "Regular",
+                "price": 12.99,
+                "type": "pcs"
+            }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "2",
+    "name": "Two If By Sea Café",
+    "address": "66 Ochterloney St, Dartmouth, NS",
+    "start_time": "8:00",
+    "end_time": "17:00",
+    "contact": 9029876543,
+    "fb_link": "https://www.facebook.com/tibscafe",
+    "x_link": "https://www.google.com/maps/tibscafe",
+    "store_link": "https://www.tibscafe.com",
+    "online_delivery": false,
+    "tagline": "Great Coffee and Pastries",
+    "max_booking_capacity": 30,
+    "image_path": "tibscafe.jpg",
+    "menu": [
+      {
+        "item_id": "201",
+        "item_name": "Croissant",
+        "item_description": "Freshly baked croissant with flaky layers.",
+        "category": "Pastries",
+        "item_image_path": "croissant.jpg",
+        "item_type":"vegan",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 2.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "3",
+    "name": "The Bicycle Thief",
+    "address": "1475 Lower Water St, Halifax, NS",
+    "start_time": "17:00",
+    "end_time": "22:00",
+    "contact": 9025554321,
+    "fb_link": "https://www.facebook.com/bicyclethiefhfx",
+    "x_link": "https://www.google.com/maps/bicyclethief",
+    "store_link": "https://www.bicyclethief.ca",
+    "online_delivery": true,
+    "tagline": "Italian Cuisine by the Waterfront",
+    "max_booking_capacity": 80,
+    "image_path": "bicyclethief.jpg",
+    "menu": [
+      {
+        "item_id": "301",
+        "item_name": "Margherita Pizza",
+        "item_description": "Classic pizza with tomato, mozzarella, and basil.",
+        "category": "Pizza",
+        "item_image_path": "margherita_pizza.jpg",
+        "item_type":"vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Large",
+            "price": 16.99
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "4",
+    "name": "Edna",
+    "address": "2053 Gottingen St, Halifax, NS",
+    "start_time": "9:00",
+    "end_time": "15:00",
+    "contact": 9027891234,
+    "fb_link": "https://www.facebook.com/ednahfx",
+    "x_link": "https://www.google.com/maps/edna",
+    "store_link": "https://www.ednahfx.com",
+    "online_delivery": false,
+    "tagline": "Brunch and Comfort Food",
+    "max_booking_capacity": 40,
+    "image_path": "edna.jpg",
+    "menu": [
+      {
+        "item_id": "401",
+        "item_name": "Eggs Benedict",
+        "item_description": "Poached eggs with hollandaise sauce on an English muffin.",
+        "category": "Breakfast",
+        "item_image_path": "eggs_benedict.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 12.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "5",
+    "name": "The Stubborn Goat",
+    "address": "1579 Grafton St, Halifax, NS",
+    "start_time": "11:00",
+    "end_time": "23:00",
+    "contact": 9023456789,
+    "fb_link": "https://www.facebook.com/stubborngoathfx",
+    "x_link": "https://www.google.com/maps/stubborngoathfx",
+    "store_link": "https://www.stubborngoat.ca",
+    "online_delivery": true,
+    "tagline": "Craft Beer and Gastropub Fare",
+    "max_booking_capacity": 70,
+    "image_path": "stubborngoat.jpg",
+    "menu": [
+      {
+        "item_id": "501",
+        "item_name": "Craft Beer Sampler",
+        "item_description": "A selection of craft beers from local breweries.",
+        "category": "Drinks",
+        "item_image_path": "craft_beer_sampler.jpg",
+        "is_available":false,
+        "item_size_price": [
+          {
+            "size": "Sampler",
+            "price": 15.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "6",
+    "name": "Chives Canadian Bistro",
+    "address": "1537 Barrington St, Halifax, NS",
+    "start_time": "17:30",
+    "end_time": "22:00",
+    "contact": 9026781234,
+    "fb_link": "https://www.facebook.com/chiveshfx",
+    "x_link": "https://www.google.com/maps/chiveshfx",
+    "store_link": "https://www.chivesbistro.com",
+    "online_delivery": false,
+    "tagline": "Locally Sourced Canadian Cuisine",
+    "max_booking_capacity": 50,
+    "image_path": "chivesbistro.jpg",
+    "menu": [
+      {
+        "item_id": "601",
+        "item_name": "Lobster Bisque",
+        "item_description": "Creamy lobster bisque with a hint of sherry.",
+        "category": "Soup",
+        "item_image_path": "lobster_bisque.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Cup",
+            "price": 8.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "7",
+    "name": "Durty Nelly's Irish Pub",
+    "address": "5221 Sackville St, Halifax, NS",
+    "start_time": "11:30",
+    "end_time": "13:00",
+    "contact": 9028765432,
+    "fb_link": "https://www.facebook.com/durtynellyshfx",
+    "x_link": "https://www.google.com/maps/durtynellyshfx",
+    "store_link": "https://www.durtynellys.ca",
+    "online_delivery": true,
+    "tagline": "Traditional Irish Pub",
+    "max_booking_capacity": 80,
+    "image_path": "durtynellys.jpg",
+    "menu": [
+      {
+        "item_id": "701",
+        "item_name": "Fish and Chips",
+        "item_description": "Crispy battered cod with fries and tartar sauce.",
+        "category": "Entree",
+        "item_image_path": "fish_and_chips.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":false,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 15.99,
+            "type": "pcs"
+          }
+        ]
+      },
+      {
+        "item_id": "702",
+        "item_name": "Irish Stew",
+        "item_description": "Hearty stew with lamb, potatoes, and vegetables.",
+        "category": "Stew",
+        "item_image_path": "irish_stew.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Bowl",
+            "price": 11.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "8",
+    "name": "The Coastal Cafe",
+    "address": "2731 Robie St, Halifax, NS",
+    "start_time": "8:00",
+    "end_time": "14:30",
+    "contact": 9026543210,
+    "fb_link": "https://www.facebook.com/thecoastalcafehfx",
+    "x_link": "https://www.google.com/maps/thecoastalcafehfx",
+    "store_link": "https://www.thecoastalcafe.ca",
+    "online_delivery": false,
+    "tagline": "Breakfast and Brunch",
+    "max_booking_capacity": 40,
+    "image_path": "coastalcafe.jpg",
+    "menu": [
+      {
+        "item_id": "801",
+        "item_name": "Blueberry Pancakes",
+        "item_description": "Fluffy pancakes with fresh blueberries and maple syrup.",
+        "category": "Breakfast",
+        "item_image_path": "blueberry_pancakes.jpg",
+        "item_type":"vegan",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 10.99,
+            "type": "pcs"
+          }
+        ]
+      },
+      {
+        "item_id": "802",
+        "item_name": "Eggs Benedict",
+        "item_description": "Poached eggs with hollandaise sauce on an English muffin.",
+        "category": "Breakfast",
+        "item_image_path": "eggs_benedict.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":false,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 12.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "9",
+    "name": "Gio",
+    "address": "1725 Market St, Halifax, NS",
+    "start_time": "17:30",
+    "end_time": "22:00",
+    "contact": 9027895678,
+    "fb_link": "https://www.facebook.com/giohfx",
+    "x_link": "https://www.google.com/maps/giohfx",
+    "store_link": "https://www.giohalifax.com",
+    "online_delivery": true,
+    "tagline": "Italian Fine Dining",
+    "max_booking_capacity": 60,
+    "image_path": "gio.jpg",
+    "menu": [
+      {
+        "item_id": "901",
+        "item_name": "Veal Marsala",
+        "item_description": "Tender veal cutlets in a Marsala wine sauce with mushrooms.",
+        "category": "Entree",
+        "item_image_path": "veal_marsala.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":false,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 24.99,
+            "type": "pcs"
+          }
+        ]
+      },
+      {
+        "item_id": "902",
+        "item_name": "Linguine Carbonara",
+        "item_description": "Pasta with eggs, cheese, pancetta, and black pepper.",
+        "category": "Pasta",
+        "item_image_path": "linguine_carbonara.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 18.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "restaurant_id": "10",
+    "name": "The Henry House",
+    "address": "1222 Barrington St, Halifax, NS",
+    "start_time": "11:00",
+    "end_time": "23:00",
+    "contact": 9029876123,
+    "fb_link": "https://www.facebook.com/thehenryhousehfx",
+    "x_link": "https://www.google.com/maps/thehenryhousehfx",
+    "store_link": "https://www.henryhouse.ca",
+    "online_delivery": false,
+    "tagline": "Historic Pub and Alehouse",
+    "max_booking_capacity": 70,
+    "image_path": "henryhouse.jpg",
+    "menu": [
+      {
+        "item_id": "1001",
+        "item_name": "Shepherd's Pie",
+        "item_description": "Classic shepherd's pie with ground beef and mashed potatoes.",
+        "category": "Entree",
+        "item_image_path": "shepherds_pie.jpg",
+        "item_type":"non-vegetarian",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 14.99,
+            "type": "pcs"
+          }
+        ]
+      },
+      {
+        "item_id": "1002",
+        "item_name": "Bangers and Mash",
+        "item_description": "Sausages with mashed potatoes and onion gravy.",
+        "category": "Entree",
+        "item_type":"non-vegetarian",
+        "item_image_path": "bangers_and_mash.jpg",
+        "is_available":true,
+        "item_size_price": [
+          {
+            "size": "Regular",
+            "price": 13.99,
+            "type": "pcs"
+          }
+        ]
+      }
+    ]
+  }
+]
