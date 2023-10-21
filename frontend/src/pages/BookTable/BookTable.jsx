@@ -1,8 +1,10 @@
-import { Flex, Text, Image, Button, CircularProgress } from '@chakra-ui/react';
+import { Flex, Text, Image, Button, CircularProgress, useToast } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { theme } from '../../theme';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
+import { useNavigate, useParams } from 'react-router-dom';
+import { createReservation } from '../../services/ReservationServices/ReservationService';
 
 function BookTable() {
     const isMobile = useMediaQuery({ query: '(max-width: 1080px)' });
@@ -12,6 +14,10 @@ function BookTable() {
     const [slotLoading, setSlotLoading] = useState("false");
     const [selectedDay, setSelectedDay] = useState(0);
     const [selectedSlot, setSelectedSlot] = useState(0);
+    const { restaurant_id } = useParams();
+    const customer_id = 1;
+    const toast = useToast();
+    const navigate = useNavigate();
 
     const restaurant = {
         "restaurant_id": "1",
@@ -54,11 +60,11 @@ function BookTable() {
 
     useEffect(() => {
         loadDays();
-        loadSlots();
-        
+        loadSlots(0);
+
     }, []);
 
-    function loadDays() {
+    const loadDays = () => {
         setLoading("true");
         const currentDate = new Date();
         const next5Days = [];
@@ -69,19 +75,20 @@ function BookTable() {
 
             next5Days.push({
                 date: date.toDateString().split(" ")[1] + " " + date.toDateString().split(" ")[2],
-                day: date.toDateString().split(" ")[0]
+                day: date.toDateString().split(" ")[0],
+                fullDate: date
             });
         }
         setDaysArray(next5Days);
         setLoading("false");
     }
 
-    function loadSlots(num) {
+    const loadSlots = (num) => {
         setSlotLoading("true");
         const currentDate = new Date();
         let startTime = Number(restaurant.start_time.split(":")[0]);
         if (num === 0 && startTime < Number(currentDate.getHours())) {
-            startTime = Number(currentDate.getHours());
+            startTime = Number(currentDate.getHours()) + 1;
         }
         let endTime = Number(restaurant.end_time.split(":")[0]);
         let slotTimeMinutes = restaurant.start_time.split(":")[1];
@@ -99,9 +106,41 @@ function BookTable() {
         setSlotLoading("false");
     }
 
-    function handleDayClick(ind){
+    const handleDayClick = (ind) => {
         setSelectedDay(ind);
         loadSlots(ind);
+    }
+
+    const createNewReservation = async () => {
+        let reservation_date = daysArray[selectedDay].fullDate;
+        reservation_date.setHours(slots[selectedSlot].hours);
+        reservation_date.setMinutes(Number(slots[selectedSlot].minutes));
+        reservation_date.setSeconds(0);
+
+        let reservation_time = reservation_date.getTime();
+        let reservation_status = "confirmed";
+        const reservationResponse = await createReservation(restaurant_id, reservation_time, customer_id, reservation_status);
+
+        if(reservationResponse.reservation_id){
+            toast({
+                title: 'Reservation Successful',
+                description: "Your table has been booked!",
+                status: 'success',
+                duration: 3000, // Duration in milliseconds
+                isClosable: true,
+            });
+            
+            navigate(`/reservations/${reservationResponse.reservation_id}`);
+        }else{
+            toast({
+                title: 'Reservation error',
+                description: "We could not make your booking!",
+                status: 'error',
+                duration: 3000, // Duration in milliseconds
+                isClosable: true,
+            });
+        }
+        
     }
 
     return (
@@ -158,12 +197,12 @@ function BookTable() {
                                                 </Flex>
                                             </button>)
                                 }
-                            </Flex> : 
+                            </Flex> :
                             <Flex w="60%" gap="16px" rowGap="8px" mt="8px">
                                 <CircularProgress isIndeterminate color="teal" />
                             </Flex>
                         }
-                        <Button mt="32px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Reserve</Button>
+                        <Button onClick={createNewReservation} mt="32px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Reserve</Button>
                     </Flex>
                 </Flex> :
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">

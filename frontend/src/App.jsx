@@ -6,6 +6,7 @@ import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
 import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
 import BookTable from './pages/BookTable/BookTable';
+import Reservation from './pages/Reservation/Reservation';
 
 function App() {
   const router = createBrowserRouter([
@@ -17,12 +18,16 @@ function App() {
           element: <LandingPage />
         },
         {
-          path: "/restaurant/:restaurantID/book",
+          path: "/restaurant/:restaurant_id/book",
           element: <BookTable />
         },
         {
           path: "/user/profile",
           element: <Profile />
+        },
+        {
+          path: "/reservations/:reservation_id",
+          element: <Reservation />
         }
       ]
     },
