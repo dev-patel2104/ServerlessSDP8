@@ -15,7 +15,7 @@ function BookTable() {
     const [selectedDay, setSelectedDay] = useState(0);
     const [selectedSlot, setSelectedSlot] = useState(0);
     const { restaurant_id } = useParams();
-    const customer_id = 1;
+    const customer_id = "2";
     const toast = useToast();
     const navigate = useNavigate();
 

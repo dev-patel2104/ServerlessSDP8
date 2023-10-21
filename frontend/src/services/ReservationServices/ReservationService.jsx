@@ -95,6 +95,25 @@ export const getAllReservations = async () => {
     }
 }
 
+export const getAllReservationsbyCustomerID = async (customer_id) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations?customer_id=${customer_id}`, options);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+        return null;
+    }
+}
+
 export const deleteReservation = async (reservation_id) => {
     const options = {
         method: 'DELETE',
