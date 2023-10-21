@@ -110,7 +110,11 @@ function Reservation() {
                         <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
 
                         <Flex gap="16px">
-                            <Button onClick={() => navigate(`edit`)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
+                            {
+                                reservationDate.getTime() - new Date().getTime() > 360000 ?
+                                    <Button onClick={() => navigate(`edit`)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
+                                    : null
+                            }
                             <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
                         </Flex>
                     </Flex>
