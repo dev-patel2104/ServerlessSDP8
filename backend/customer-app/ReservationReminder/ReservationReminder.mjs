@@ -39,8 +39,6 @@ export const handler = async (event) => {
             body: ""
         };
         
-        // console.log(reservations);
-        // const response2 = await fetch('https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations', putOptions);
         let date;
         let currentTime, messageAttributes, params, cnt = 0;
         const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
@@ -54,7 +52,6 @@ export const handler = async (event) => {
                 if (timeDifference <= thirtyMinutesInMilliseconds && timeDifference >= 0) {
                     messageAttributes = { "UserId": { DataType: "String", StringValue: reservation.customer_id } };
                     
-                    // Once you fetch the actual data add the name of the restaurant in the message response as well
                     params = {
                         Message: message,
                         MessageAttributes: messageAttributes,
