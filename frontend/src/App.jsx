@@ -19,22 +19,7 @@ function App() {
         {
           path: "/restaurant/:restaurantID/book",
           element: <BookTable />
-        }
-      ]
-    },
-    {
-      element: <LayoutWithoutNav />,
-      children: [
-        {
-          path: "/user/login",
-          element: <Login />
         },
-
-      ]
-    },
-    {
-      element: <LayoutWithNav />,
-      children: [
         {
           path: "/user/profile",
           element: <Profile />
@@ -45,11 +30,15 @@ function App() {
       element: <LayoutWithoutNav />,
       children: [
         {
+          path: "/user/login",
+          element: <Login />
+        },
+        {
           path: "/user/signup",
           element: <Signup />
         }
       ]
-    }
+    },
   ]);
 
   return (

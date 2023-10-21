@@ -62,7 +62,8 @@ export const handler = async (event, context) => {
                             restaurant_id: requestJSON.restaurant_id,
                             customer_id: requestJSON.customer_id,
                             reservation_time: requestJSON.reservation_time,
-                            reservation_status: requestJSON.reservation_status
+                            reservation_status: requestJSON.reservation_status,
+                            is_notified: requestJSON.is_notified
                         }
                     })
                 );
