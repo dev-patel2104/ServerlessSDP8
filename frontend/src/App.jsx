@@ -7,6 +7,8 @@ import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
 import BookTable from './pages/BookTable/BookTable';
 import Reservation from './pages/Reservation/Reservation';
+import MyReservations from './pages/MyReservations/MyReservations';
+import EditReservation from './pages/EditReservation/EditReservation';
 
 function App() {
   const router = createBrowserRouter([
@@ -28,7 +30,16 @@ function App() {
         {
           path: "/reservations/:reservation_id",
           element: <Reservation />
+        },
+        {
+          path: "/my-reservations",
+          element: <MyReservations />
+        },
+        {
+          path: "/reservations/:reservation_id/edit",
+          element: <EditReservation />
         }
+
       ]
     },
     {

@@ -1,7 +1,7 @@
 import { Flex, Text, Button, Image, CircularProgress, useToast } from '@chakra-ui/react';
 import { useMediaQuery } from 'react-responsive';
 import { theme } from '../../theme';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { deleteReservation, getReservation } from '../../services/ReservationServices/ReservationService';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
@@ -14,6 +14,7 @@ function Reservation() {
     const [reservation, setReservation] = useState({});
     const [reservationDate, setReservationDate] = useState(new Date());
     const toast = useToast();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -76,7 +77,7 @@ function Reservation() {
                 isClosable: true,
             });
 
-            navigate(`/reservations`);
+            navigate(`/my-reservations`);
         } else {
             toast({
                 title: 'Reservation deletion error',
@@ -109,7 +110,7 @@ function Reservation() {
                         <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
 
                         <Flex gap="16px">
-                            <Button mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
+                            <Button onClick={() => navigate(`edit`)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
                             <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
                         </Flex>
                     </Flex>
