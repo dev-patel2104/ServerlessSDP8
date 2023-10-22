@@ -40,6 +40,7 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         navigate("/user/profile");
       })
       .catch((error) => {
@@ -75,6 +76,7 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         navigate("/user/profile");
       })
       .catch((error) => {
