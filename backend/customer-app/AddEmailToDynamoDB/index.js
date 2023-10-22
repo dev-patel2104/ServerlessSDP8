@@ -38,16 +38,13 @@ exports.handler = async (event) => {
       };
     }
 
-    //assign uuid
     const uuidValue = uuid.v4();
 
-    //create the addition parameters
     const signupParams = {
       TableName: TABLE_NAME,
       Item: {
         uuid: uuidValue,
         email: email
-        //add more parameters here if needed
       },
     };
 
