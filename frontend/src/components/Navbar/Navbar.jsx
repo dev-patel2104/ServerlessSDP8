@@ -1,11 +1,12 @@
 import { Button, Flex, Text, useToast, Image } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { theme } from "../../theme";
 import { auth } from "../../config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
+import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
 
 function NavBar() {
   const toast = useToast();
@@ -23,6 +24,9 @@ function NavBar() {
           duration: 3000,
           isClosable: true,
         });
+        localStorage.setItem("foodvaganzaUser", "");
+        window.location.reload();
+
       })
       .catch((error) => {
         console.error(error);
@@ -80,9 +84,15 @@ function NavBar() {
           </Flex>
         </Link>
       </Flex>
-      {loggedIn ? (
+      {isAuthenticated() ? (
         <>
-          <Flex mr="4">
+          <Flex mr="4" gap="16px" alignItems="center">
+            <NavLink to='/my-reservations'>
+              <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
+            </NavLink>
+            <NavLink to='/restaurant/1/book'>
+              <Text fontWeight="medium" color={theme.secondaryForeground} >Book</Text>
+            </NavLink>
             <Button
               onClick={() => {
                 handleSignout();
@@ -91,7 +101,7 @@ function NavBar() {
               color={theme.accent}
               borderColor={theme.accent}
               variant="outline"
-              mr="2"
+              
             >
               Logout
             </Button>
@@ -110,6 +120,7 @@ function NavBar() {
       ) : (
         <>
           <Flex mr="4">
+
             <Button
               as={Link}
               to="/user/login"
