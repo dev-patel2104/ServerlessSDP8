@@ -1,9 +1,19 @@
 const AWS = require('aws-sdk');
 const uuid = require('uuid');
 const crypto = require('crypto');
+const { stringify } = require('querystring');
 
 const dynamoDB = new AWS.DynamoDB.DocumentClient();
+//const sns = new AWS.SNS(); 
 const TABLE_NAME = 'SDP8UserData';
+
+/*const postOptions = {
+  method: 'POST',
+  headers: {
+      'Content-Type': 'application/json',
+  },
+  body: ""
+};*/
 
 exports.handler = async (event) => {
   try {
@@ -46,8 +56,11 @@ exports.handler = async (event) => {
       },
     };
 
+    //postOptions.body = JSON.stringify({UserId : uuidValue, email : email});
+    
     await dynamoDB.put(signupParams).promise();
-
+    //await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/subscribe', postOptions);
+    
     return {
       statusCode: 200,
       body: JSON.stringify({ message: 'Registration successful' }),
