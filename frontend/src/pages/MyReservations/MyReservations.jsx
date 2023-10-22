@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 function MyReservations() {
     const isMobile = useMediaQuery({ query: '(max-width: 1080px)' });
-    const customer_id = "2";
+    const customer_id = localStorage.getItem("foodvaganzaUser");
     const [loading, setLoading] = useState("false");
     const [reservations, setReservations] = useState([]);
     const navigate = useNavigate();

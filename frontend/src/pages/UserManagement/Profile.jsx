@@ -12,6 +12,7 @@ function Profile() {
     signOut(auth)
     .then(() => {
       console.log("sign out successful");
+      localStorage.setItem("foodvaganzaUser", "");
     })
     .catch((error) => console.log(error));
   }

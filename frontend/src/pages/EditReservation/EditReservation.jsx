@@ -16,7 +16,7 @@ function EditReservation() {
     const [selectedSlot, setSelectedSlot] = useState(0);
     const { reservation_id } = useParams();
     const [reservation, setReservation] = useState({});
-    const customer_id = "2";
+    const customer_id = localStorage.getItem("foodvaganzaUser");
     const toast = useToast();
     const navigate = useNavigate();
 
