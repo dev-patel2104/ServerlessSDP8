@@ -46,13 +46,13 @@ export const handler = async (event, context) => {
                 body = body.Item;
                 break;
             case "GET /reservations":
-                const customer_id = event.queryParameters.customer_id;
-                if(customer_id){
+               
+                if(event.queryStringParameters.customer_id){
                     body = await dynamo.send(
                         new ScanCommand({ TableName: tableName })
                     );
                     body = body.Items;
-                    body = body.filter((item) => item.customer_id === customer_id);
+                    body = body.filter((item) => item.customer_id === event.queryStringParameters.customer_id);
                 }else{
                     body = await dynamo.send(
                         new ScanCommand({ TableName: tableName })
