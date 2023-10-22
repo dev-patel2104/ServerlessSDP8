@@ -56,7 +56,7 @@ for item in data:
     response = dynamodb.put_item(
         TableName='restaurant',
         Item={
-            'restaurant_id': {'N': item['restaurant_id']},
+            'restaurant_id': {'S': item['restaurant_id']},
             'name': {'S': item['name']},
             'address': {'S': item['address']},
             'start_time': {'S': item['start_time']},
@@ -69,7 +69,8 @@ for item in data:
             'tagline': {'S': item['tagline']},
             'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
             'image_path': {'S': item['image_path']},
-            'menu': {'L': menu_items}
+            'menu': {'L': menu_items},
+            'is_new': {'BOOL': item['is_new']}
         }
     )
 

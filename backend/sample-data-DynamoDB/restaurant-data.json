@@ -13,6 +13,7 @@
     "tagline": "Local, Organic, Sustainable",
     "max_booking_capacity": 60,
     "image_path": "woodenmonkey.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "101",
@@ -51,6 +52,7 @@
     "tagline": "Great Coffee and Pastries",
     "max_booking_capacity": 30,
     "image_path": "tibscafe.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "201",
@@ -84,6 +86,7 @@
     "tagline": "Italian Cuisine by the Waterfront",
     "max_booking_capacity": 80,
     "image_path": "bicyclethief.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "301",
@@ -116,6 +119,7 @@
     "tagline": "Brunch and Comfort Food",
     "max_booking_capacity": 40,
     "image_path": "edna.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "401",
@@ -149,6 +153,7 @@
     "tagline": "Craft Beer and Gastropub Fare",
     "max_booking_capacity": 70,
     "image_path": "stubborngoat.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "501",
@@ -181,6 +186,7 @@
     "tagline": "Locally Sourced Canadian Cuisine",
     "max_booking_capacity": 50,
     "image_path": "chivesbistro.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "601",
@@ -214,6 +220,7 @@
     "tagline": "Traditional Irish Pub",
     "max_booking_capacity": 80,
     "image_path": "durtynellys.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "701",
@@ -263,6 +270,7 @@
     "tagline": "Breakfast and Brunch",
     "max_booking_capacity": 40,
     "image_path": "coastalcafe.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "801",
@@ -312,6 +320,7 @@
     "tagline": "Italian Fine Dining",
     "max_booking_capacity": 60,
     "image_path": "gio.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "901",
@@ -361,6 +370,7 @@
     "tagline": "Historic Pub and Alehouse",
     "max_booking_capacity": 70,
     "image_path": "henryhouse.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "1001",
