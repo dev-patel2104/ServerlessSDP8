@@ -6,36 +6,40 @@ const sns = new SNS({})
 const topicArn = 'arn:aws:sns:us-east-1:263032025301:DemoTopicSNS';
 
 export const handler = async (event) => {
-
+    
     let userId, email;
-
-    try {
+    
+    try
+    {
         userId = event.UserId;
         email = event.email;
-        if (email === undefined || email === null || email.trim() === "") {
+        if(email === undefined || email === null || email.trim() === "")
+        {
             console.log("Please provide a proper email value");
-            return { statusCode: 422, body: JSON.stringify("Please provide a proper email value") };
+            return {statusCode: 422, body: JSON.stringify("Please provide a proper email value")};
         }
-
-        if (userId === undefined || userId === null || userId.trim() === "") {
+        
+        if(userId === undefined || userId === null || userId.trim() === "")
+        {
             console.log("Please provide a proper userId value");
-            return { statusCode: 422, body: JSON.stringify("Please provide a proper userId value") };
+            return {statusCode: 422, body: JSON.stringify("Please provide a proper userId value")};
         }
     }
-    catch (error) {
+    catch (error)
+    {
         console.error("error parsing JSON body:", error);
-        return { statusCode: 422, body: JSON.stringify('Please provide a proper JSON input') };
+        return {statusCode: 422, body: JSON.stringify('Please provide a proper JSON input')};
     }
     const subscribeParams = {
-        Protocol: 'email',  // e.g., 'email', 'sms', etc.
-        TopicArn: topicArn,
-        Endpoint: email,  // e.g., email address or phone number
-        Attributes: {
-            'FilterPolicy': JSON.stringify({ "UserId": [userId, "-1"] })  // Example filter policy based on user_id
-        }
-    };
+  Protocol: 'email',  // e.g., 'email', 'sms', etc.
+  TopicArn: topicArn,
+  Endpoint: email,  // e.g., email address or phone number
+  Attributes: {
+    'FilterPolicy': JSON.stringify({"UserId": [userId, "-1"]})  // Example filter policy based on user_id
+  }
+};
 
-    const subscribeAsync = promisify(sns.subscribe).bind(sns);
+const subscribeAsync = promisify(sns.subscribe).bind(sns);
 
     try {
         const data = await subscribeAsync(subscribeParams);

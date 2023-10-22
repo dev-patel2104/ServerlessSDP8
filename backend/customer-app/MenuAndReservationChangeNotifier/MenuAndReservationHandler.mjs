@@ -9,7 +9,7 @@ export const handler = async (event) => {
 
     // assuming that I will get the updated reservation and menu item changes in my event when it is called from edit reservation and menu item api
     const postOptions = {
-            method: 'PUT',
+            method: 'POST',
             headers: {
             'Content-Type': 'application/json',
             },
@@ -18,8 +18,10 @@ export const handler = async (event) => {
     const reservation = event
     
     postOptions.body = JSON.stringify({email : reservation.customer_id});
-    const userId = await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/user', postOptions);
-
+    const response = await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/user/getuser', postOptions);
+    const body = await response.json()
+    const userId = body.uuid;
+    console.log(userId);
     try {
        
         let message, messageAttributes, params, date;
@@ -39,11 +41,13 @@ export const handler = async (event) => {
               message = 'Your reservation for ' + reservation.restaurant_id + ' on ' + date + ' has been deleted.';   
             }
             
+            
             messageAttributes = { "UserId": { DataType: "String", StringValue: userId } };
             params = {
                 Message: message,
                 MessageAttributes: messageAttributes,
-                TopicArn: topicARN
+                TopicArn: topicARN,
+                Subject: "Your reservation update"
             }
 
             await publishAsync(params);

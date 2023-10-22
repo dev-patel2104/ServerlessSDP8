@@ -1,17 +1,25 @@
-const AWS = require("aws-sdk");
-const uuid = require("uuid");
+import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
+import { promisify } from 'util';
+import { uuid } from 'uuidv4';
 
-const dynamoDB = new AWS.DynamoDB.DocumentClient();
+
+const dynamoDB = new DynamoDBClient({ region: "us-east-1" });
+const putItemAsync = promisify(dynamoDB.send).bind(dynamoDB);
+
 const TABLE_NAME = "SDP8UserData";
+const postOptions = {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: ""
+};
 
-exports.handler = async (event) => {
+
+export const handler = async (event) => {
   try {
-    // get email from request body
-    const requestBody = JSON.parse(event.body);
-    //add more parameters as per request body if modification is needed
-    const { email } = requestBody;
+    const email = event.email;
 
-    // if email was not sent in request body send bad request status
     if (!email) {
       return {
         statusCode: 400,
@@ -19,17 +27,14 @@ exports.handler = async (event) => {
       };
     }
 
-    //check if the email is present in DB already
-    const params = {
-      TableName: TABLE_NAME,
-      Key: {
-        email: email,
-      },
-    };
-    const existingUser = await dynamoDB.get(params).promise();
-
-    //return user already exists and close the lambda
-    if (existingUser.Item) {
+    postOptions.body = JSON.stringify({email : email});
+    const response = await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/user/getuser', postOptions);
+    const body = await response.json()
+    const statusCode = body.statusCode;
+    
+    
+    if(statusCode === 200)
+    {
       return {
         statusCode: 409,
         body: JSON.stringify({
@@ -37,28 +42,33 @@ exports.handler = async (event) => {
         }),
       };
     }
-
-    const uuidValue = uuid.v4();
-
-    const signupParams = {
+    
+    const uuidValue = uuid();
+    const params = {
       TableName: TABLE_NAME,
       Item: {
-        uuid: uuidValue,
-        email: email
+        email: { S: email },
+        uuid: { S: uuidValue },
+
       },
     };
 
-    await dynamoDB.put(signupParams).promise();
+    const putCommand = new PutItemCommand(params);
+
+    await putItemAsync(putCommand);
+
+    postOptions.body = JSON.stringify({ UserId: uuidValue, email: email });
+    await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/subscribe', postOptions);
 
     return {
-      statusCode: 200,
-      body: JSON.stringify({ message: "User added to dynamoDB" }),
+      statusCode: 201, // 201 Created
+      body: JSON.stringify({ message: "User added successfully" }),
     };
   } catch (error) {
     console.error("Error:", error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ message: "Could not add data to DynamoDB" }),
+      body: JSON.stringify({ message: "An error occurred" }),
     };
   }
 };
