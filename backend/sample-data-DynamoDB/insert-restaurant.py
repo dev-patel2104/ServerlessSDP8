@@ -1,6 +1,6 @@
 import boto3
 import json
-
+from credentials import *
 # Initialize the DynamoDB client
 dynamodb = boto3.client(
     'dynamodb',
@@ -43,6 +43,7 @@ for item in data:
                 'category': {'S': menu_item['category']},
                 'item_image_path': {'S': menu_item['item_image_path']},
                 'is_available': {'BOOL': menu_item['is_available']},
+                'item_qty': {'N': str(menu_item['item_qty'])},
                 'item_size_price': {'L': item_size_price_dynamo}
             }
         }

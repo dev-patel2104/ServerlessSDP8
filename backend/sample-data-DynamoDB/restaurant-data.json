@@ -23,6 +23,7 @@
         "item_image_path": "spinach_salad.jpg",
         "item_type":"vegetarian",
         "is_available":true,
+        "item_qty": 60,
         "item_size_price": [
             {
                 "size": "Small",
@@ -62,6 +63,7 @@
         "item_image_path": "croissant.jpg",
         "item_type":"vegan",
         "is_available":true,
+        "item_qty": 250,
         "item_size_price": [
           {
             "size": "Regular",
@@ -96,6 +98,7 @@
         "item_image_path": "margherita_pizza.jpg",
         "item_type":"vegetarian",
         "is_available":true,
+        "item_qty": 150,
         "item_size_price": [
           {
             "size": "Large",
@@ -129,6 +132,7 @@
         "item_image_path": "eggs_benedict.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -162,6 +166,7 @@
         "category": "Drinks",
         "item_image_path": "craft_beer_sampler.jpg",
         "is_available":false,
+        "item_qty": 100,
         "item_size_price": [
           {
             "size": "Sampler",
@@ -196,6 +201,7 @@
         "item_image_path": "lobster_bisque.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 85,
         "item_size_price": [
           {
             "size": "Cup",
@@ -230,6 +236,7 @@
         "item_image_path": "fish_and_chips.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 350,
         "item_size_price": [
           {
             "size": "Regular",
@@ -246,6 +253,7 @@
         "item_image_path": "irish_stew.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 210,
         "item_size_price": [
           {
             "size": "Bowl",
@@ -280,6 +288,7 @@
         "item_image_path": "blueberry_pancakes.jpg",
         "item_type":"vegan",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -296,6 +305,7 @@
         "item_image_path": "eggs_benedict.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 350,
         "item_size_price": [
           {
             "size": "Regular",
@@ -330,6 +340,7 @@
         "item_image_path": "veal_marsala.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 240,
         "item_size_price": [
           {
             "size": "Regular",
@@ -346,6 +357,7 @@
         "item_image_path": "linguine_carbonara.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -380,6 +392,7 @@
         "item_image_path": "shepherds_pie.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 470,
         "item_size_price": [
           {
             "size": "Regular",
@@ -396,6 +409,7 @@
         "item_type":"non-vegetarian",
         "item_image_path": "bangers_and_mash.jpg",
         "is_available":true,
+        "item_qty": 650,
         "item_size_price": [
           {
             "size": "Regular",
