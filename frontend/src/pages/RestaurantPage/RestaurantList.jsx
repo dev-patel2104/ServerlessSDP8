@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Text } from '@chakra-ui/react';
 import { theme } from '../../theme';
-import { useEffect, useState } from 'react';
 
 
 function RestaurantList() {
@@ -13,6 +12,7 @@ function RestaurantList() {
     fetch('https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants')
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setRestaurants(data);
         setLoading(false);
       })
@@ -32,20 +32,21 @@ function RestaurantList() {
 
   return (
     <>
-    <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
-        Restaurant List
+    <Flex w="100%" minHeight="10vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
+    <Text fontSize="5xl" fontWeight="bold">List of all Restaurant with us:</Text>
+        
     </Flex>
-
+    <Flex w="100%" minHeight="5vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
+    <Flex flexDirection="column" alignItems="end">
     <div>
-      <h1>List of all Restaurant with us:</h1>
+
       <ul>
         {restaurants.map((restaurant) => (
           <li key={restaurant.restaurant_id}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
             <Text fontSize="lg">{restaurant.address}</Text>
-            <Text fontSize="lg">{restaurant.start_time}</Text>
-            <Text mt="8px" fontWeight="medium">Opens {restaurant.start_time}</Text>
-            <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
+            <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
+            <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
             <Text fontSize="lg">{restaurant.tagline}</Text>
             <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? 'Yes' : 'No'}</Text>
             <a href={restaurant.store_link} target="_blank" rel="noopener noreferrer">
@@ -63,6 +64,8 @@ function RestaurantList() {
         ))}
       </ul>
     </div>
+    </Flex>
+    </Flex>
     </>
   );
 }
