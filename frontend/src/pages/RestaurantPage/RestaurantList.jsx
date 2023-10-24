@@ -67,7 +67,7 @@ function RestaurantList() {
               <Text ml={2}>Instagram</Text>
             </Link>
           </Text>
-          <NavLink to={`/restaurant/${restaurant.restaurant_id}`}>
+          <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
             <Icon as={FaArrowRightLong} color='blackAlpha.900' boxSize={6} float="end"/>
           </NavLink>
         </Box>
