@@ -6,6 +6,7 @@ import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
 import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
 import BookTable from './pages/BookTable/BookTable';
+import RestaurantList from './pages/RestaurantPage/RestaurantList';
 import Reservation from './pages/Reservation/Reservation';
 import MyReservations from './pages/MyReservations/MyReservations';
 import EditReservation from './pages/EditReservation/EditReservation';
@@ -27,7 +28,11 @@ function App() {
           element: <LandingPage />
         },
         {
-          path: "/restaurant/:restaurant_id/book",
+          path: "/restaurant",
+          element: <RestaurantList />
+        },
+        {
+          path: "/restaurant/:restaurantID/book",
           element: isAuthenticated() ? <BookTable /> : <Navigate to="/user/login"/>
         },
         {

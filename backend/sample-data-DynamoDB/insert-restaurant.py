@@ -1,6 +1,6 @@
 import boto3
 import json
-
+from credentials import *
 # Initialize the DynamoDB client
 dynamodb = boto3.client(
     'dynamodb',
@@ -43,6 +43,7 @@ for item in data:
                 'category': {'S': menu_item['category']},
                 'item_image_path': {'S': menu_item['item_image_path']},
                 'is_available': {'BOOL': menu_item['is_available']},
+                'item_qty': {'N': str(menu_item['item_qty'])},
                 'item_size_price': {'L': item_size_price_dynamo}
             }
         }
@@ -56,7 +57,7 @@ for item in data:
     response = dynamodb.put_item(
         TableName='restaurant',
         Item={
-            'restaurant_id': {'N': item['restaurant_id']},
+            'restaurant_id': {'S': item['restaurant_id']},
             'name': {'S': item['name']},
             'address': {'S': item['address']},
             'start_time': {'S': item['start_time']},
@@ -69,7 +70,8 @@ for item in data:
             'tagline': {'S': item['tagline']},
             'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
             'image_path': {'S': item['image_path']},
-            'menu': {'L': menu_items}
+            'menu': {'L': menu_items},
+            'is_new': {'BOOL': item['is_new']}
         }
     )
 
