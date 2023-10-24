@@ -4,9 +4,9 @@ import { useMediaQuery } from 'react-responsive';
 import { theme } from '../../theme';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { useNavigate, useParams } from 'react-router-dom';
-import { createReservation } from '../../services/ReservationServices/ReservationService';
+import { editReservation, getReservation } from '../../services/ReservationServices/ReservationService';
 
-function BookTable() {
+function EditReservation() {
     const isMobile = useMediaQuery({ query: '(max-width: 1080px)' });
     const [daysArray, setDaysArray] = useState([]);
     const [slots, setSlots] = useState([]);
@@ -14,7 +14,8 @@ function BookTable() {
     const [slotLoading, setSlotLoading] = useState("false");
     const [selectedDay, setSelectedDay] = useState(0);
     const [selectedSlot, setSelectedSlot] = useState(0);
-    const { restaurant_id } = useParams();
+    const { reservation_id } = useParams();
+    const [reservation, setReservation] = useState({});
     const customer_id = localStorage.getItem("foodvaganzaUser");
     const toast = useToast();
     const navigate = useNavigate();
@@ -59,6 +60,13 @@ function BookTable() {
     }
 
     useEffect(() => {
+        const fetchData = async () => {
+            setLoading("true");
+            const reservationResponse = await getReservation(reservation_id);
+            setReservation(reservationResponse);
+            setLoading("false");
+        }
+        fetchData();
         loadDays();
         loadSlots(0);
 
@@ -111,7 +119,7 @@ function BookTable() {
         loadSlots(ind);
     }
 
-    const createNewReservation = async () => {
+    const editCurrentReservation = async () => {
         let reservation_date = daysArray[selectedDay].fullDate;
         reservation_date.setHours(slots[selectedSlot].hours);
         reservation_date.setMinutes(Number(slots[selectedSlot].minutes));
@@ -119,28 +127,28 @@ function BookTable() {
 
         let reservation_time = reservation_date.getTime();
         let reservation_status = "confirmed";
-        const reservationResponse = await createReservation(restaurant_id, reservation_time, customer_id, reservation_status);
+        const reservationResponse = await editReservation(reservation_id, reservation.restaurant_id, reservation_time, customer_id, reservation_status);
 
-        if(reservationResponse.reservation_id){
+        if (reservationResponse.reservation_id) {
             toast({
-                title: 'Reservation Successful',
+                title: 'Reservation Successfully changed',
                 description: "Your table has been booked!",
                 status: 'success',
                 duration: 3000, // Duration in milliseconds
                 isClosable: true,
             });
-            
+
             navigate(`/reservations/${reservationResponse.reservation_id}`);
-        }else{
+        } else {
             toast({
                 title: 'Reservation error',
-                description: "We could not make your booking!",
+                description: "We could not change your booking!",
                 status: 'error',
                 duration: 3000, // Duration in milliseconds
                 isClosable: true,
             });
         }
-        
+
     }
 
     return (
@@ -159,7 +167,7 @@ function BookTable() {
                         <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
                     </Flex>
                     <Flex w="69%" flexDir="column">
-                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Make a reservation!</Text>
+                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Last minute changes?</Text>
                         <Text fontWeight="medium">Select date:</Text>
                         <Flex wrap="wrap" w="60%" gap="16px" rowGap="8px" mt="8px">
                             {
@@ -202,7 +210,7 @@ function BookTable() {
                                 <CircularProgress isIndeterminate color="teal" />
                             </Flex>
                         }
-                        <Button onClick={createNewReservation} mt="32px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Reserve</Button>
+                        <Button onClick={editCurrentReservation} mt="32px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Save changes</Button>
                     </Flex>
                 </Flex> :
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
@@ -211,4 +219,4 @@ function BookTable() {
     );
 }
 
-export default BookTable;
+export default EditReservation;
