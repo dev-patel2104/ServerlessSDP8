@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { isAuthenticated } from './services/AuthenticationServices/AuthenticationServices';
+import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
 
 function App() {
 
@@ -28,8 +29,12 @@ function App() {
           element: <LandingPage />
         },
         {
-          path: "/restaurant",
+          path: "/restaurants",
           element: <RestaurantList />
+        },
+        {
+          path: "/restaurants/:restaurantID",
+          element: <RestaurantDetails />
         },
         {
           path: "/restaurant/:restaurantID/book",
