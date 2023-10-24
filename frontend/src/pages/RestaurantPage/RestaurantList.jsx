@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Text } from '@chakra-ui/react';
+import { Flex, Text, Link, Icon, Box } from '@chakra-ui/react';
 import { theme } from '../../theme';
-
+import { BsFacebook } from 'react-icons/bs';
+import { FaInstagram, FaStaylinked, FaArrowRightLong } from 'react-icons/fa6';
+import { NavLink } from 'react-router-dom';
 
 function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
@@ -32,38 +34,44 @@ function RestaurantList() {
 
   return (
     <>
-    <Flex w="100%" minHeight="10vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
-    <Text fontSize="5xl" fontWeight="bold">List of all Restaurant with us:</Text>
-        
+    <Flex w="100%" minHeight="10vh" p="10px" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
+      <Text fontSize="4xl" fontWeight="bold">List of all Restaurant with us:</Text>
     </Flex>
     <Flex w="100%" minHeight="5vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
-    <Flex flexDirection="column" alignItems="end">
-    <div>
-
-      <ul>
-        {restaurants.map((restaurant) => (
-          <li key={restaurant.restaurant_id}>
+    <Flex flexDirection="column" alignItems="end" >
+      {restaurants.map((restaurant) => (
+        <Box key={restaurant.restaurant_id} w="100%" mt="20px" bg="white" p="20px" rounded="md">
+          <NavLink to={`/restaurant/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
             <Text fontSize="lg">{restaurant.address}</Text>
             <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
             <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
             <Text fontSize="lg">{restaurant.tagline}</Text>
             <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? 'Yes' : 'No'}</Text>
-            <a href={restaurant.store_link} target="_blank" rel="noopener noreferrer">
-              Visit Restaurant Website
-            </a>
-            <br />
-            <a href={restaurant.fb_link} target="_blank" rel="noopener noreferrer">
-              Facebook Page
-            </a>
-            <br />
-            <a href={restaurant.x_link} target="_blank" rel="noopener noreferrer">
-              Location on Google Maps
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+          </NavLink>
+          <Text ml="25px">
+            <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
+              <Icon as={FaStaylinked} color='blackAlpha.900' boxSize={6} />
+              <Text ml={2}>Restaurant Website</Text>
+            </Link>
+          </Text>
+          <Text ml="25px">
+            <Link href={restaurant.fb_link} isExternal display="flex" alignItems="center" align="center">
+              <Icon as={BsFacebook} color='blackAlpha.900' boxSize={6} />
+              <Text ml={2}>Facebook</Text>
+            </Link>
+          </Text>
+          <Text ml="25px">
+            <Link href={restaurant.insta_link} isExternal display="flex" alignItems="center" align="center">
+              <Icon as={FaInstagram} color='blackAlpha.900' boxSize={6} />
+              <Text ml={2}>Instagram</Text>
+            </Link>
+          </Text>
+          <NavLink to={`/restaurant/${restaurant.restaurant_id}`}>
+            <Icon as={FaArrowRightLong} color='blackAlpha.900' boxSize={6} float="end"/>
+          </NavLink>
+        </Box>
+      ))}
     </Flex>
     </Flex>
     </>
