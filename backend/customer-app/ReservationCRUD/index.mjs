@@ -46,10 +46,19 @@ export const handler = async (event, context) => {
                 body = body.Item;
                 break;
             case "GET /reservations":
-                body = await dynamo.send(
-                    new ScanCommand({ TableName: tableName })
-                );
-                body = body.Items;
+               
+                if(event.queryStringParameters.customer_id){
+                    body = await dynamo.send(
+                        new ScanCommand({ TableName: tableName })
+                    );
+                    body = body.Items;
+                    body = body.filter((item) => item.customer_id === event.queryStringParameters.customer_id);
+                }else{
+                    body = await dynamo.send(
+                        new ScanCommand({ TableName: tableName })
+                    );
+                    body = body.Items;
+                }
                 break;
             case "PUT /reservations":
                 let requestJSON = JSON.parse(event.body);
@@ -62,7 +71,8 @@ export const handler = async (event, context) => {
                             restaurant_id: requestJSON.restaurant_id,
                             customer_id: requestJSON.customer_id,
                             reservation_time: requestJSON.reservation_time,
-                            reservation_status: requestJSON.reservation_status
+                            reservation_status: requestJSON.reservation_status,
+                            is_notified: requestJSON.is_notified
                         }
                     })
                 );
