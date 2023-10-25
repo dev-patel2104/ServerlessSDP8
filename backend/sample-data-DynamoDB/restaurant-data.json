@@ -13,6 +13,7 @@
     "tagline": "Local, Organic, Sustainable",
     "max_booking_capacity": 60,
     "image_path": "woodenmonkey.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "101",
@@ -22,6 +23,7 @@
         "item_image_path": "spinach_salad.jpg",
         "item_type":"vegetarian",
         "is_available":true,
+        "item_qty": 60,
         "item_size_price": [
             {
                 "size": "Small",
@@ -51,6 +53,7 @@
     "tagline": "Great Coffee and Pastries",
     "max_booking_capacity": 30,
     "image_path": "tibscafe.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "201",
@@ -60,6 +63,7 @@
         "item_image_path": "croissant.jpg",
         "item_type":"vegan",
         "is_available":true,
+        "item_qty": 250,
         "item_size_price": [
           {
             "size": "Regular",
@@ -84,6 +88,7 @@
     "tagline": "Italian Cuisine by the Waterfront",
     "max_booking_capacity": 80,
     "image_path": "bicyclethief.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "301",
@@ -93,6 +98,7 @@
         "item_image_path": "margherita_pizza.jpg",
         "item_type":"vegetarian",
         "is_available":true,
+        "item_qty": 150,
         "item_size_price": [
           {
             "size": "Large",
@@ -116,6 +122,7 @@
     "tagline": "Brunch and Comfort Food",
     "max_booking_capacity": 40,
     "image_path": "edna.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "401",
@@ -125,6 +132,7 @@
         "item_image_path": "eggs_benedict.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -149,6 +157,7 @@
     "tagline": "Craft Beer and Gastropub Fare",
     "max_booking_capacity": 70,
     "image_path": "stubborngoat.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "501",
@@ -157,6 +166,7 @@
         "category": "Drinks",
         "item_image_path": "craft_beer_sampler.jpg",
         "is_available":false,
+        "item_qty": 100,
         "item_size_price": [
           {
             "size": "Sampler",
@@ -181,6 +191,7 @@
     "tagline": "Locally Sourced Canadian Cuisine",
     "max_booking_capacity": 50,
     "image_path": "chivesbistro.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "601",
@@ -190,6 +201,7 @@
         "item_image_path": "lobster_bisque.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 85,
         "item_size_price": [
           {
             "size": "Cup",
@@ -214,6 +226,7 @@
     "tagline": "Traditional Irish Pub",
     "max_booking_capacity": 80,
     "image_path": "durtynellys.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "701",
@@ -223,6 +236,7 @@
         "item_image_path": "fish_and_chips.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 350,
         "item_size_price": [
           {
             "size": "Regular",
@@ -239,6 +253,7 @@
         "item_image_path": "irish_stew.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 210,
         "item_size_price": [
           {
             "size": "Bowl",
@@ -263,6 +278,7 @@
     "tagline": "Breakfast and Brunch",
     "max_booking_capacity": 40,
     "image_path": "coastalcafe.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "801",
@@ -272,6 +288,7 @@
         "item_image_path": "blueberry_pancakes.jpg",
         "item_type":"vegan",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -288,6 +305,7 @@
         "item_image_path": "eggs_benedict.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 350,
         "item_size_price": [
           {
             "size": "Regular",
@@ -312,6 +330,7 @@
     "tagline": "Italian Fine Dining",
     "max_booking_capacity": 60,
     "image_path": "gio.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "901",
@@ -321,6 +340,7 @@
         "item_image_path": "veal_marsala.jpg",
         "item_type":"non-vegetarian",
         "is_available":false,
+        "item_qty": 240,
         "item_size_price": [
           {
             "size": "Regular",
@@ -337,6 +357,7 @@
         "item_image_path": "linguine_carbonara.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 500,
         "item_size_price": [
           {
             "size": "Regular",
@@ -361,6 +382,7 @@
     "tagline": "Historic Pub and Alehouse",
     "max_booking_capacity": 70,
     "image_path": "henryhouse.jpg",
+    "is_new":true,
     "menu": [
       {
         "item_id": "1001",
@@ -370,6 +392,7 @@
         "item_image_path": "shepherds_pie.jpg",
         "item_type":"non-vegetarian",
         "is_available":true,
+        "item_qty": 470,
         "item_size_price": [
           {
             "size": "Regular",
@@ -386,6 +409,7 @@
         "item_type":"non-vegetarian",
         "item_image_path": "bangers_and_mash.jpg",
         "is_available":true,
+        "item_qty": 650,
         "item_size_price": [
           {
             "size": "Regular",

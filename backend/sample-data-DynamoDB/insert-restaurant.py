@@ -1,6 +1,6 @@
 import boto3
 import json
-
+from credentials import *
 # Initialize the DynamoDB client
 dynamodb = boto3.client(
     'dynamodb',
@@ -43,6 +43,7 @@ for item in data:
                 'category': {'S': menu_item['category']},
                 'item_image_path': {'S': menu_item['item_image_path']},
                 'is_available': {'BOOL': menu_item['is_available']},
+                'item_qty': {'N': str(menu_item['item_qty'])},
                 'item_size_price': {'L': item_size_price_dynamo}
             }
         }
@@ -56,20 +57,21 @@ for item in data:
     response = dynamodb.put_item(
         TableName='restaurant',
         Item={
-            'restaurant_id': {'N': item['restaurant_id']},
+            'restaurant_id': {'S': item['restaurant_id']},
             'name': {'S': item['name']},
             'address': {'S': item['address']},
             'start_time': {'S': item['start_time']},
             'end_time': {'S': item['end_time']},
             'contact': {'N': str(item['contact'])},
             'fb_link': {'S': item['fb_link']},
-            'x_link': {'S': item['x_link']},
+            'insta_link': {'S': item['insta_link']},
             'store_link': {'S': item['store_link']},
             'online_delivery': {'BOOL': item['online_delivery']},
             'tagline': {'S': item['tagline']},
             'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
             'image_path': {'S': item['image_path']},
-            'menu': {'L': menu_items}
+            'menu': {'L': menu_items},
+            'is_new': {'BOOL': item['is_new']}
         }
     )
 

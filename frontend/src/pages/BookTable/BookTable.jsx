@@ -4,6 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import { theme } from '../../theme';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { useNavigate, useParams } from 'react-router-dom';
+import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { createReservation } from '../../services/ReservationServices/ReservationService';
 
 function BookTable() {
@@ -14,54 +15,61 @@ function BookTable() {
     const [slotLoading, setSlotLoading] = useState("false");
     const [selectedDay, setSelectedDay] = useState(0);
     const [selectedSlot, setSelectedSlot] = useState(0);
+    const [restaurant, setRestaurant] = useState({});
     const { restaurant_id } = useParams();
     const customer_id = localStorage.getItem("foodvaganzaUser");
     const toast = useToast();
     const navigate = useNavigate();
 
-    const restaurant = {
-        "restaurant_id": "1",
-        "address": "1707 Grafton St, Halifax, NS",
-        "contact": 9021234567,
-        "end_time": "21:00",
-        "fb_link": "https://www.facebook.com/woodenmonkey",
-        "image_path": "woodenmonkey.jpg",
-        "max_booking_capacity": 60,
-        "menu": [
-            {
-                "category": "Salads",
-                "is_available": true,
-                "item_description": "Fresh organic spinach with a balsamic vinaigrette dressing.",
-                "item_id": "101",
-                "item_image_path": "spinach_salad.jpg",
-                "item_name": "Organic Spinach Salad",
-                "item_size_price": [
-                    {
-                        "price": 8.99,
-                        "size": "Small",
-                        "type": "pcs"
-                    },
-                    {
-                        "price": 12.99,
-                        "size": "Regular",
-                        "type": "pcs"
-                    }
-                ],
-                "item_type": "vegetarian"
-            }
-        ],
-        "name": "The Wooden Monkey",
-        "online_delivery": true,
-        "start_time": "11:00",
-        "store_link": "https://www.woodenmonkey.com",
-        "tagline": "Local, Organic, Sustainable",
-        "x_link": "https://www.google.com/maps/woodenmonkey"
-    }
+    // const restaurant = {
+    //     "restaurant_id": "1",
+    //     "address": "1707 Grafton St, Halifax, NS",
+    //     "contact": 9021234567,
+    //     "end_time": "21:00",
+    //     "fb_link": "https://www.facebook.com/woodenmonkey",
+    //     "image_path": "woodenmonkey.jpg",
+    //     "max_booking_capacity": 60,
+    //     "menu": [
+    //         {
+    //             "category": "Salads",
+    //             "is_available": true,
+    //             "item_description": "Fresh organic spinach with a balsamic vinaigrette dressing.",
+    //             "item_id": "101",
+    //             "item_image_path": "spinach_salad.jpg",
+    //             "item_name": "Organic Spinach Salad",
+    //             "item_size_price": [
+    //                 {
+    //                     "price": 8.99,
+    //                     "size": "Small",
+    //                     "type": "pcs"
+    //                 },
+    //                 {
+    //                     "price": 12.99,
+    //                     "size": "Regular",
+    //                     "type": "pcs"
+    //                 }
+    //             ],
+    //             "item_type": "vegetarian"
+    //         }
+    //     ],
+    //     "name": "The Wooden Monkey",
+    //     "online_delivery": true,
+    //     "start_time": "11:00",
+    //     "store_link": "https://www.woodenmonkey.com",
+    //     "tagline": "Local, Organic, Sustainable",
+    //     "x_link": "https://www.google.com/maps/woodenmonkey"
+    // }
 
     useEffect(() => {
-        loadDays();
-        loadSlots(0);
-
+        const fetchData = async () => {
+            setLoading("true");
+            const restaurantResponse = await getRestaurant(restaurant_id);
+            setRestaurant(restaurantResponse);
+            loadDays();
+            loadSlotsInit(0, restaurantResponse);
+            setLoading("false");
+        }
+        fetchData();
     }, []);
 
     const loadDays = () => {
@@ -86,12 +94,12 @@ function BookTable() {
     const loadSlots = (num) => {
         setSlotLoading("true");
         const currentDate = new Date();
-        let startTime = Number(restaurant.start_time.split(":")[0]);
+        let startTime = Number(restaurant?.start_time?.split(":")[0]);
         if (num === 0 && startTime < Number(currentDate.getHours())) {
-            startTime = Number(currentDate.getHours()) + 1;
+            startTime = Number(currentDate?.getHours()) + 1;
         }
-        let endTime = Number(restaurant.end_time.split(":")[0]);
-        let slotTimeMinutes = restaurant.start_time.split(":")[1];
+        let endTime = Number(restaurant?.end_time?.split(":")[0]);
+        let slotTimeMinutes = restaurant?.start_time?.split(":")[1];
         let slotTime = startTime;
         let slotsArray = [];
 
@@ -105,6 +113,30 @@ function BookTable() {
         setSlots(slotsArray);
         setSlotLoading("false");
     }
+
+    const loadSlotsInit = (num, restaurantDetails) => {
+        setSlotLoading("true");
+        const currentDate = new Date();
+        let startTime = Number(restaurantDetails.start_time.split(":")[0]);
+        if (num === 0 && startTime < Number(currentDate.getHours())) {
+            startTime = Number(currentDate?.getHours()) + 1;
+        }
+        let endTime = Number(restaurantDetails.end_time.split(":")[0]);
+        let slotTimeMinutes = restaurantDetails.start_time.split(":")[1];
+        let slotTime = startTime;
+        let slotsArray = [];
+
+        while (slotTime < endTime) {
+            slotsArray.push({
+                hours: slotTime,
+                minutes: slotTimeMinutes
+            });
+            slotTime += 1;
+        }
+        setSlots(slotsArray);
+        setSlotLoading("false");
+    }
+
 
     const handleDayClick = (ind) => {
         setSelectedDay(ind);
@@ -121,7 +153,7 @@ function BookTable() {
         let reservation_status = "confirmed";
         const reservationResponse = await createReservation(restaurant_id, reservation_time, customer_id, reservation_status);
 
-        if(reservationResponse.reservation_id){
+        if (reservationResponse.reservation_id) {
             toast({
                 title: 'Reservation Successful',
                 description: "Your table has been booked!",
@@ -129,9 +161,9 @@ function BookTable() {
                 duration: 3000, // Duration in milliseconds
                 isClosable: true,
             });
-            
+
             navigate(`/reservations/${reservationResponse.reservation_id}`);
-        }else{
+        } else {
             toast({
                 title: 'Reservation error',
                 description: "We could not make your booking!",
@@ -140,7 +172,7 @@ function BookTable() {
                 isClosable: true,
             });
         }
-        
+
     }
 
     return (
