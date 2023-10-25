@@ -11,8 +11,10 @@ export const handler = async (event) => {
     
     try
     {
-        userId = event.UserId;
-        email = event.email;
+        const request = JSON.parse(event.body);
+        console.log(request);
+        userId = request.UserId;
+        email = request.email;
         if(email === undefined || email === null || email.trim() === "")
         {
             console.log("Please provide a proper email value");

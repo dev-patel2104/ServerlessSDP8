@@ -18,8 +18,9 @@ const postOptions = {
 
 export const handler = async (event) => {
   try {
-    const email = event.email;
-
+    
+    const req = JSON.parse(event.body);
+    const email = req.email;
     if (!email) {
       return {
         statusCode: 400,
@@ -27,13 +28,14 @@ export const handler = async (event) => {
       };
     }
 
-    postOptions.body = JSON.stringify({email : email});
-    const response = await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/user/getuser', postOptions);
+    const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${email}`);
     const body = await response.json()
-    const statusCode = body.statusCode;
+    const statusCode = response.status;
     
+    console.log(email);
+    console.log(body);
     
-    if(statusCode === 200)
+    if(statusCode)
     {
       return {
         statusCode: 409,
@@ -58,7 +60,7 @@ export const handler = async (event) => {
     await putItemAsync(putCommand);
 
     postOptions.body = JSON.stringify({ UserId: uuidValue, email: email });
-    await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/subscribe', postOptions);
+    await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/subscribe', postOptions);
 
     return {
       statusCode: 201, // 201 Created
