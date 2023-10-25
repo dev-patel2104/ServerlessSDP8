@@ -69,11 +69,12 @@ function EditReservation() {
             setReservation(reservationResponse);
             const restaurantResponse = await getRestaurant(reservationResponse?.restaurant_id);
             setRestaurant(restaurantResponse);
+            loadDays();
+            loadSlotsInit(0, restaurantResponse);
             setLoading("false");
         }
         fetchData();
-        loadDays();
-        loadSlots(0);
+
 
     }, []);
 
@@ -99,12 +100,35 @@ function EditReservation() {
     const loadSlots = (num) => {
         setSlotLoading("true");
         const currentDate = new Date();
-        let startTime = Number(restaurant.start_time.split(":")[0]);
+        let startTime = Number(restaurant?.start_time?.split(":")[0]);
         if (num === 0 && startTime < Number(currentDate.getHours())) {
             startTime = Number(currentDate.getHours()) + 1;
         }
-        let endTime = Number(restaurant.end_time.split(":")[0]);
-        let slotTimeMinutes = restaurant.start_time.split(":")[1];
+        let endTime = Number(restaurant?.end_time?.split(":")[0]);
+        let slotTimeMinutes = restaurant?.start_time?.split(":")[1];
+        let slotTime = startTime;
+        let slotsArray = [];
+
+        while (slotTime < endTime) {
+            slotsArray.push({
+                hours: slotTime,
+                minutes: slotTimeMinutes
+            });
+            slotTime += 1;
+        }
+        setSlots(slotsArray);
+        setSlotLoading("false");
+    }
+
+    const loadSlotsInit = (num, restaurantDetails) => {
+        setSlotLoading("true");
+        const currentDate = new Date();
+        let startTime = Number(restaurantDetails.start_time.split(":")[0]);
+        if (num === 0 && startTime < Number(currentDate.getHours())) {
+            startTime = Number(currentDate?.getHours()) + 1;
+        }
+        let endTime = Number(restaurantDetails.end_time.split(":")[0]);
+        let slotTimeMinutes = restaurantDetails.start_time.split(":")[1];
         let slotTime = startTime;
         let slotsArray = [];
 
