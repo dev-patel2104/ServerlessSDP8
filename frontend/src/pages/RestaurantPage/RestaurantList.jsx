@@ -41,7 +41,7 @@ function RestaurantList() {
     <Flex flexDirection="column" alignItems="end" >
       {restaurants.map((restaurant) => (
         <Box key={restaurant.restaurant_id} w="100%" mt="20px" bg="white" p="20px" rounded="md">
-          <NavLink to={`/restaurant/${restaurant.restaurant_id}`}>
+          <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
             <Text fontSize="lg">{restaurant.address}</Text>
             <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
