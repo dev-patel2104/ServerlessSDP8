@@ -15,30 +15,37 @@ export const handler = async (event) => {
             },
             body: ""
         };
-    const reservation = event
+        
     
-    postOptions.body = JSON.stringify({email : reservation.customer_id});
-    const response = await fetch('https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/user/getuser', postOptions);
+    try {
+       
+       let response;
+    const reservation = JSON.parse(event.body);
+    console.log(reservation);
+    const email = reservation.customer_id;
+    
+    response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${email}`);
     const body = await response.json()
     const userId = body.uuid;
     console.log(userId);
-    try {
-       
+    
+    response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${reservation.restaurant_id}`);
+    const data = await response.json();
+    const name = data.name;
         let message, messageAttributes, params, date;
         date = new Date(reservation.reservation_time);
-
             // Also check whether the menu item has been changed or not if yes then do the following changes in the message accordingly
             if(reservation.type.toLowerCase() === 'created')
             {
-              message = 'Your reservation for ' + reservation.restaurant_id + ' has been created for ' + date;  
+              message = 'Your reservation for ' + name + ' has been created for ' + date;  
             }
             else if(reservation.type.toLowerCase() === 'edited')
             {
-              message = 'Your reservation for ' + reservation.restaurant_id + ' has been edited to ' + date;   
+              message = 'Your reservation for ' + name + ' has been edited to ' + date;   
             }
             else if(reservation.type.toLowerCase() === 'deleted')
             {
-              message = 'Your reservation for ' + reservation.restaurant_id + ' on ' + date + ' has been deleted.';   
+              message = 'Your reservation for ' + name + ' on ' + date + ' has been deleted.';   
             }
             
             
