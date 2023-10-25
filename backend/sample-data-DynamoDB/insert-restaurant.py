@@ -64,7 +64,7 @@ for item in data:
             'end_time': {'S': item['end_time']},
             'contact': {'N': str(item['contact'])},
             'fb_link': {'S': item['fb_link']},
-            'x_link': {'S': item['x_link']},
+            'insta_link': {'S': item['insta_link']},
             'store_link': {'S': item['store_link']},
             'online_delivery': {'BOOL': item['online_delivery']},
             'tagline': {'S': item['tagline']},

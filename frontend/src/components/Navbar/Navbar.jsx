@@ -87,6 +87,9 @@ function NavBar() {
       {isAuthenticated() ? (
         <>
           <Flex mr="4" gap="16px" alignItems="center">
+            <NavLink to='/restaurants'>
+              <Text fontWeight="medium" color={theme.secondaryForeground} >Browse all Restaurants</Text>
+            </NavLink>
             <NavLink to='/my-reservations'>
               <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
             </NavLink>
