@@ -8,25 +8,6 @@ const publishAsync = promisify(sns.publish).bind(sns);
 
 export const handler = async (event) => {
 
-    // call harsh's lamda that gives me all the information from the reservation table;
-    // const reservations = [
-    //     {
-    //         id: "1",
-    //         timeStamp: "1697838940",
-    //         isNotified: true
-    //     },
-    //     {
-    //         id: "2",
-    //         timeStamp: "1697842240",
-    //         isNotified: false
-    //     },
-    //     {
-    //         id: "3",
-    //         timeStamp: "1697839240",
-    //         isNotified: false
-    //     }
-    // ];
-
    try {
         const response = await fetch("https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations");
         const reservations = await response.json();
