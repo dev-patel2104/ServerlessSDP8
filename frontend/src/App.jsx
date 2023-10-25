@@ -33,11 +33,11 @@ function App() {
           element: <RestaurantList />
         },
         {
-          path: "/restaurants/:restaurantID",
+          path: "/restaurants/:restaurant_id",
           element: <RestaurantDetails />
         },
         {
-          path: "/restaurant/:restaurantID/book",
+          path: "/restaurants/:restaurant_id/book",
           element: isAuthenticated() ? <BookTable /> : <Navigate to="/user/login"/>
         },
         {

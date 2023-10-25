@@ -93,9 +93,7 @@ function NavBar() {
             <NavLink to='/my-reservations'>
               <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
             </NavLink>
-            <NavLink to='/restaurant/1/book'>
-              <Text fontWeight="medium" color={theme.secondaryForeground} >Book</Text>
-            </NavLink>
+            
             <Button
               onClick={() => {
                 handleSignout();
