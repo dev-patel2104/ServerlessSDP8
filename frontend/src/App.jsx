@@ -6,6 +6,7 @@ import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
 import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
 import BookTable from './pages/BookTable/BookTable';
+import RestaurantList from './pages/RestaurantPage/RestaurantList';
 import Reservation from './pages/Reservation/Reservation';
 import MyReservations from './pages/MyReservations/MyReservations';
 import EditReservation from './pages/EditReservation/EditReservation';
@@ -13,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { isAuthenticated } from './services/AuthenticationServices/AuthenticationServices';
+import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
 
 function App() {
 
@@ -27,7 +29,15 @@ function App() {
           element: <LandingPage />
         },
         {
-          path: "/restaurant/:restaurant_id/book",
+          path: "/restaurants",
+          element: <RestaurantList />
+        },
+        {
+          path: "/restaurants/:restaurant_id",
+          element: <RestaurantDetails />
+        },
+        {
+          path: "/restaurants/:restaurant_id/book",
           element: isAuthenticated() ? <BookTable /> : <Navigate to="/user/login"/>
         },
         {
