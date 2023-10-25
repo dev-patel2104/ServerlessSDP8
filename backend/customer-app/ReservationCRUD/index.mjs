@@ -24,7 +24,7 @@ export const handler = async (event, context) => {
     try {
         switch (event.routeKey) {
             case "DELETE /reservations/{reservation_id}":
-                res = await dynamo.send(
+                let res = await dynamo.send(
                     new GetCommand({
                         TableName: tableName,
                         Key: {
@@ -32,7 +32,7 @@ export const handler = async (event, context) => {
                         },
                     })
                 );
-                let res = body.Item;
+                res = body.Item;
                 await dynamo.send(
                     new DeleteCommand({
                         TableName: tableName,
@@ -57,7 +57,7 @@ export const handler = async (event, context) => {
                 }
 
                 try {
-                    const response = await fetch(`https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/reservation-menu-change`, options);
+                    const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, options);
                 } catch (error) {
                     console.error('Error creating reservation:');
                     
@@ -77,7 +77,7 @@ export const handler = async (event, context) => {
                 break;
             case "GET /reservations":
 
-                if (event.queryStringParameters.customer_id) {
+                if (event.queryStringParameters?.customer_id) {
                     body = await dynamo.send(
                         new ScanCommand({ TableName: tableName })
                     );
@@ -123,7 +123,7 @@ export const handler = async (event, context) => {
                 }
 
                 try {
-                    const response = await fetch(`https://vc22xmcbs7.execute-api.us-east-1.amazonaws.com/Prod/reservation-menu-change`, optionsP);
+                    const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
                 } catch (error) {
                     console.error('Error creating reservation:');
                     

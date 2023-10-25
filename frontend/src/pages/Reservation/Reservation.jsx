@@ -116,11 +116,15 @@ function Reservation() {
 
                         <Flex gap="16px">
                             {
-                                reservationDate.getTime() - new Date().getTime() > 360000 ?
+                                reservationDate.getTime() - new Date().getTime() > 3600000 ?
                                     <Button onClick={() => navigate(`edit`)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
                                     : null
                             }
-                            <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
+                            {
+                                reservationDate.getTime() - new Date().getTime() > 3600000 ?
+                                    <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
+                                    : null
+                            }
                         </Flex>
                     </Flex>
                 </Flex> :
