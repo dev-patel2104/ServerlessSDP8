@@ -1,15 +1,8 @@
 {
-  "name": "addemailtodynamodb",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "aws-sdk": "^2.1476.0",
-    "uuid": "^9.0.1"
+    "dependencies": {
+      "@aws-sdk/client-dynamodb": "^3.429.0",
+      "@aws-sdk/lib-dynamodb": "^3.429.0",
+      "uuidv4": "^6.2.13"
+    }
   }
-}
+  
