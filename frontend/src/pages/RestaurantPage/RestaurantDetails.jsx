@@ -6,13 +6,13 @@ import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
 import { theme } from '../../theme';
 
 function RestaurantDetails() {
-  const { restaurantID } = useParams();
+  const { restaurant_id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(`restaurantID = ${restaurantID}`);
-    fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurantID}`)
+    console.log(`restaurant_id = ${restaurant_id}`);
+    fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurant_id}`)
       .then((response) => response.json())
       .then((data) => {
         setRestaurant(data);
@@ -23,7 +23,7 @@ function RestaurantDetails() {
         console.error('Error fetching restaurant details:', error);
         setLoading(false);
       });
-  }, [restaurantID]);
+  }, [restaurant_id]);
 
   if (loading) {
     return <div>Loading restaurant details...</div>;
@@ -36,7 +36,7 @@ function RestaurantDetails() {
   return (
     <Flex flexDirection="column" alignItems="start" justifyContent="center">
         <Box bg="white" w="100%"  rounded="md" mb="5px">
-            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
+            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
         <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
@@ -78,7 +78,7 @@ function RestaurantDetails() {
             <VStack alignItems="start" spacing="20px" ml="60px" >
                 {restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
-                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
                         <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
                         <Text fontSize="md">{menuItem.item_description}</Text>
                         <Text fontWeight="medium">Category: {menuItem.category}</Text>
