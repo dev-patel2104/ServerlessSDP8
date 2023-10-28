@@ -32,7 +32,20 @@ function Login() {
   function handleGoogleSignIn() {
     signInWithPopup(auth, googleProvider)
       .then(() => {
-        //call AddEmailToDynamoDB API here
+        
+        fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
+      }).then((response) => {
+        if (response.status === 500) {
+          // Handle the success response here
+          throw new Error("Failed to call the API");
+        }
+      }).then((data) => {
+        // Handle the API response data here
         toast({
           title: "Success",
           description: "You have been logged in!",
@@ -40,7 +53,7 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('foodvaganzaUser', email);
         navigate("/user/profile");
       })
       .catch((error) => {
@@ -63,6 +76,15 @@ function Login() {
           });
         }
       });
+    }).catch(() => {
+      toast({
+        title: "Error",
+        description: "The account wasn't logged in, please try again!",
+        status: "error",
+        duration: 3000,
+        isClosable: false,
+      });
+    });
   }
 
   function handleSubmit(event) {
