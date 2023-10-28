@@ -33,7 +33,7 @@ deploy_development_frontend:
       - develop
 
 # Build the frontend on production branch 
-build_main_frontend:
+build_production_frontend:
   stage: build_stage
   image: node:latest
   before_script:
@@ -50,7 +50,7 @@ build_main_frontend:
       - frontend/**/*
 
 # Deploy the frontend build to production to Netlify
-deploy_main_frontend:
+deploy_production_frontend:
     stage: deploy_stage
     before_script:
       - apt update
