@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button } from '@chakra-ui/react';
-import { useParams, NavLink } from 'react-router-dom';
+import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill } from 'react-icons/bs';
 import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
@@ -10,6 +10,7 @@ function RestaurantDetails() {
   const { restaurantID } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(`restaurantID = ${restaurantID}`);
@@ -71,10 +72,8 @@ function RestaurantDetails() {
                     </Link>
                 )}
 
-                <Link to={`/restaurant/${restaurantID}/book`}>
-                    <Button mt="15px" colorScheme='purple'>Reserve your Table</Button>
-                </Link>
-                
+                <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurant/${restaurantID}/book`)}>Reserve your Table</Button>
+
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
             <VStack alignItems="start" spacing="20px" ml="60px" >
