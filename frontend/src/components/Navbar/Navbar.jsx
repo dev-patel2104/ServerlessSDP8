@@ -25,6 +25,7 @@ function NavBar() {
           isClosable: true,
         });
         localStorage.setItem("foodvaganzaUser", "");
+        window.location.reload();
       })
       .catch((error) => {
         console.error(error);
