@@ -1,0 +1,63 @@
+stages:
+  - build_stage
+  - deploy_stage
+
+# Build the frontend on development branch 
+build_development_frontend:
+  stage: build_stage
+  image: node:latest
+  before_script:
+    - cd frontend
+  script:
+    - echo "Build starting  - DEVELOPMENT branch"
+    - npm i 
+    - npm run build 
+    - echo "Build completed - DEVELOPMENT branch"    
+  only:
+    - develop
+  except:
+    changes:
+      - frontend/**/*
+
+# Deploy the frontend build of development to Netlify
+deploy_development_frontend:
+    stage: deploy_stage
+    before_script:
+      - apt update
+      - apt install curl -y
+    script:
+      - echo "Deployment starting  - DEVELOPMENT branch"
+      - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_DEVELOPMENT_ENV_DEPLOY_KEY}" 
+      - echo "Deployment completed - DEVELOPMENT branch"
+    only:
+      - develop
+
+# Build the frontend on production branch 
+build_main_frontend:
+  stage: build_stage
+  image: node:latest
+  before_script:
+    - cd frontend
+  script:
+    - echo "Build starting  - PRODUCTION branch"
+    - npm i 
+    - npm run build 
+    - echo "Build completed - PRODUCTION branch"    
+  only:
+    - main
+  except:
+    changes:
+      - frontend/**/*
+
+# Deploy the frontend build to production to Netlify
+deploy_main_frontend:
+    stage: deploy_stage
+    before_script:
+      - apt update
+      - apt install curl -y
+    script:
+      - echo "Deployment starting  - PRODUCTION branch"
+      - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_PRODUCTION_DEPLOY_KEY}" 
+      - echo "Deployment completed - PRODUCTION branch"    
+    only:
+      - main
