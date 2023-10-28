@@ -32,6 +32,18 @@ function Signup() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         //call AddEmailToDynamoDB API here
+        fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email }),
+      }).then((response) => {
+        if (response.status ===500) {
+          // Handle the success response here
+          throw new Error("Failed to call the API");
+        }
+      }).then((data) => { 
         toast({
           title: "Success!",
           description: "Your account was successfully created!",
@@ -51,6 +63,16 @@ function Signup() {
           isClosable: false,
         });
       });
+    })
+    .catch(() => {
+      toast({
+        title: "Error",
+        description: "The account wasn't created, please try again!",
+        status: "error",
+        duration: 3000,
+        isClosable: false,
+      });
+    });
   }
 
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
