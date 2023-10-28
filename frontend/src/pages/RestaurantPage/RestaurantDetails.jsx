@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Text, Link, Icon, Box, VStack, Wrap, WrapItem, HStack, Image, Grid } from '@chakra-ui/react';
+import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button } from '@chakra-ui/react';
 import { useParams, NavLink } from 'react-router-dom';
 import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill } from 'react-icons/bs';
 import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
+import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { theme } from '../../theme';
 
 function RestaurantDetails() {
-  const { restaurant_id } = useParams();
+  const { restaurantID } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(`restaurant_id = ${restaurant_id}`);
-    fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurant_id}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setRestaurant(data);
-        console.log(data);
+    console.log(`restaurantID = ${restaurantID}`);
+    const fetchData = async () => {
+        const restaurantResponse = await getRestaurant(restaurantID);
+        setRestaurant(restaurantResponse);
+        console.log(restaurantResponse);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching restaurant details:', error);
-        setLoading(false);
-      });
-  }, [restaurant_id]);
+    }
+    fetchData();
+  }, [restaurantID]);
 
   if (loading) {
     return <div>Loading restaurant details...</div>;
@@ -36,7 +33,7 @@ function RestaurantDetails() {
   return (
     <Flex flexDirection="column" alignItems="start" justifyContent="center">
         <Box bg="white" w="100%"  rounded="md" mb="5px">
-            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
+            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
         <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
@@ -57,32 +54,39 @@ function RestaurantDetails() {
 
                 {restaurant.store_link && (
                     <Link href={restaurant.store_link} isExternal p="10px" display="flex" alignItems="center">
-                    <Icon as={FaLink} color='blackAlpha.900' boxSize={6} />
-                    <Text ml={2}>Restaurant Homepage</Text>
+                    <Icon as={FaLink} color='#78C257' boxSize={6} />
+                    <Text ml={2} color="#0244A1">Restaurant Homepage</Text>
                     </Link>
                 )}
                 {restaurant.fb_link && (
                     <Link href={restaurant.fb_link} isExternal p="10px" display="flex" alignItems="center">
-                    <Icon as={BsFacebook} color='blackAlpha.900' boxSize={6} />
-                    <Text ml={2}>Facebook</Text>
+                    <Icon as={BsFacebook} color='#4267B2' boxSize={6} />
+                    <Text ml={2} color="#0244A1">Facebook</Text>
                     </Link>
                 )}
                 {restaurant.insta_link && (
                     <Link href={restaurant.insta_link} isExternal p="10px" display="flex" alignItems="center">
                         <Icon as={FaInstagram} color='blackAlpha.900' boxSize={6} />
-                        <Text ml={2}>Instagram</Text>
+                        <Text ml={2} color="#0244A1">Instagram</Text>
                     </Link>
                 )}
+
+                <Link to={`/restaurant/${restaurantID}/book`}>
+                    <Button mt="15px" colorScheme='purple'>Reserve your Table</Button>
+                </Link>
+                
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
             <VStack alignItems="start" spacing="20px" ml="60px" >
                 {restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
-                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
                         <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
                         <Text fontSize="md">{menuItem.item_description}</Text>
                         <Text fontWeight="medium">Category: {menuItem.category}</Text>
-                        <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
+                        {menuItem.item_type && (
+                            <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
+                        )}
                         {menuItem.is_available ? (
                                 <>  <Text fontSize="lg" color="green.500"> <Icon as={BsFillBagCheckFill} color='green' boxSize={6} /> Available </Text> </>
                              ) : ( 
@@ -92,7 +96,7 @@ function RestaurantDetails() {
                             {menuItem.item_size_price.map((sizePrice) => (
                             <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
                                 <Text fontSize="lg" fontWeight="bold"> {sizePrice.size} </Text>
-                                <Text>{`$${sizePrice.price.toFixed(2)} per ${sizePrice.type}`}</Text>
+                                <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
                             </Box>
                             ))}
                         </HStack>

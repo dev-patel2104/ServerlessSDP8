@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Text, Link, Icon, Box } from '@chakra-ui/react';
 import { theme } from '../../theme';
-import { BsFacebook } from 'react-icons/bs';
+import { BsFacebook, BsFillHouseSlashFill, BsFillHouseHeartFill } from 'react-icons/bs';
 import { FaInstagram, FaStaylinked, FaArrowRightLong } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
+import { getAllRestaurants } from '../../services/RestaurantServices/RestaurantService';
 
 function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
@@ -14,31 +15,22 @@ function RestaurantList() {
 
   
   useEffect(() => {
-    // Make an API request to fetch the restaurant data
-    fetch('https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants')
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-
-        const allOpenRestaurants = data.filter((restaurant) => {
-          // console.log("currentTimeNow "+currentTimeNow);
-          // console.log("restaurant.start_time "+restaurant.start_time);
-          // console.log("restaurant.start_time "+restaurant.start_time);
-          return currentTimeNow >= restaurant.start_time && currentTimeNow <= restaurant.end_time;
-        });
-        const allClosedRestaurants = data.filter((restaurant) => {
-          return currentTimeNow < restaurant.start_time || currentTimeNow > restaurant.end_time;
-        });
-
-        setRestaurants(data);
-        setAllOpenRestaurants(allOpenRestaurants);
-        setAllClosedRestaurants(allClosedRestaurants);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.error('Error fetching restaurant data:', error);
-        setLoading(false);
+    
+    const fetchData = async () => {
+      const restaurantResponse = await getAllRestaurants();
+      const allOpenRestaurants = restaurantResponse.filter((restaurant) => {
+        return currentTimeNow >= restaurant.start_time && currentTimeNow <= restaurant.end_time;
       });
+      const allClosedRestaurants = restaurantResponse.filter((restaurant) => {
+        return currentTimeNow < restaurant.start_time || currentTimeNow > restaurant.end_time;
+      });
+
+      setRestaurants(restaurantResponse);
+      setAllOpenRestaurants(allOpenRestaurants);
+      setAllClosedRestaurants(allClosedRestaurants);
+      setLoading(false);
+    }
+    fetchData();
   }, []);
 
   if (loading) {
@@ -49,8 +41,6 @@ function RestaurantList() {
     return <div>Oops, Couldn't find any Restaurants. Sorry its on us. Please try again in some time.</div>;
   }
 
-
-  
   return (
     <>
     <Flex w="100%" minHeight="10vh" p="10px" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
@@ -59,30 +49,33 @@ function RestaurantList() {
     <Flex w="100%" minHeight="5vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
     <Flex flexDirection="column" alignItems="end" >
       {allOpenRestaurants.map((restaurant) => (
-        <Box key={restaurant.restaurant_id} w="100%" mt="20px" bg="white" p="20px" rounded="md">
+        <Box key={restaurant.restaurant_id} boxShadow='xl' w="100%" mt="20px" bg="#FCFAFA" p="20px" rounded="md">
           <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
-            <Text fontSize="lg">{restaurant.address}</Text>
+            <Text fontSize="lg" color="#8A8896">{restaurant.address}</Text>
             <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
             <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
-            <Text fontSize="lg">{restaurant.tagline}</Text>
-            <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? 'Yes' : 'No'}</Text>
+            <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
+            <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? ( <> <Icon as={BsFillHouseHeartFill} color='green' boxSize={6} /></>):(<><Icon as={BsFillHouseSlashFill} color='red' boxSize={6} /></>)} {restaurant.online_delivery ? 'Yes' : 'No'} </Text>
+            <Text ml="15px">
+              
+            </Text>
           </NavLink>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={FaStaylinked} color='blackAlpha.900' boxSize={6} />
+              <Icon as={FaStaylinked} color='#78C257' boxSize={6} />
               <Text ml={2}>Restaurant Website</Text>
             </Link>
           </Text>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.fb_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={BsFacebook} color='blackAlpha.900' boxSize={6} />
+              <Icon as={BsFacebook} color='#4267B2' boxSize={6} />
               <Text ml={2}>Facebook</Text>
             </Link>
           </Text>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.insta_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={FaInstagram} color='blackAlpha.900' boxSize={6} />
+              <Icon as={FaInstagram} color='#E1306C' boxSize={6} />
               <Text ml={2}>Instagram</Text>
             </Link>
           </Text>
@@ -98,29 +91,30 @@ function RestaurantList() {
 
 
       {allClosedRestaurants.map((restaurant) => (
-        <Box key={restaurant.restaurant_id} w="100%" mt="20px" bg="grey" p="20px" rounded="md">
+        <Box key={restaurant.restaurant_id} boxShadow='xl' w="100%" mt="20px" bg="#F2D5F8" p="20px" rounded="md">
           <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
-            <Text fontSize="lg">{restaurant.address}</Text>
+            <Text fontSize="lg" color="#6B6977">{restaurant.address}</Text>
             <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
             <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
-            <Text fontSize="lg">Home Delivery: {restaurant.online_delivery ? 'Yes' : 'No'}</Text>
+            <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
+            <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? ( <> <Icon as={BsFillHouseHeartFill} color='green' boxSize={6} /></>):(<><Icon as={BsFillHouseSlashFill} color='red' boxSize={6} /></>)} {restaurant.online_delivery ? 'Yes' : 'No'} </Text>
           </NavLink>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={FaStaylinked} color='blackAlpha.900' boxSize={6} />
+              <Icon as={FaStaylinked} color='#78C257' boxSize={6} />
               <Text ml={2}>Restaurant Website</Text>
             </Link>
           </Text>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.fb_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={BsFacebook} color='blackAlpha.900' boxSize={6} />
+              <Icon as={BsFacebook} color='#4267B2' boxSize={6} />
               <Text ml={2}>Facebook</Text>
             </Link>
           </Text>
-          <Text ml="25px">
+          <Text ml="25px" mt="10px" color="#0244A1">
             <Link href={restaurant.insta_link} isExternal display="flex" alignItems="center" align="center">
-              <Icon as={FaInstagram} color='blackAlpha.900' boxSize={6} />
+              <Icon as={FaInstagram} color='#E1306C' boxSize={6} />
               <Text ml={2}>Instagram</Text>
             </Link>
           </Text>
