@@ -32,12 +32,13 @@ function Signup() {
     createUserWithEmailAndPassword(auth, email, password)
       .then(() => {
         //call AddEmailToDynamoDB API here
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: auth.currentUser.email }),
       }).then((response) => {
         if (response.status ===500) {
           // Handle the success response here
@@ -51,7 +52,7 @@ function Signup() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        
         navigate("/user/profile");
       })
       .catch(() => {

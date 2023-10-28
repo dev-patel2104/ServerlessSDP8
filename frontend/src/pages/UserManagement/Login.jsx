@@ -32,13 +32,13 @@ function Login() {
   function handleGoogleSignIn() {
     signInWithPopup(auth, googleProvider)
       .then(() => {
-        
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: email }),
+        body: JSON.stringify({ email: auth.currentUser.email }),
       }).then((response) => {
         if (response.status === 500) {
           // Handle the success response here
@@ -53,7 +53,7 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', email);
+        
         navigate("/user/profile");
       })
       .catch((error) => {
