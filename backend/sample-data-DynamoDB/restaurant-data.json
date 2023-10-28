@@ -1,18 +1,18 @@
 [
   {
-    "restaurant_id": "1",
+    "restaurant_id": "972f782d-40e1-4e61-a251-9c25dbe7cba6",
     "name": "The Wooden Monkey",
     "address": "1707 Grafton St, Halifax, NS",
     "start_time": "11:00",
     "end_time": "21:00",
     "contact": 9021234567,
-    "fb_link": "https://www.facebook.com/woodenmonkey",
-    "x_link": "https://www.google.com/maps/woodenmonkey",
-    "store_link": "https://www.woodenmonkey.com",
+    "fb_link": "https://www.facebook.com/TheWoodenMonkey/",
+    "insta_link": "https://www.instagram.com/thewoodenmonkeyrestaurants/",
+    "store_link": "https://www.thewoodenmonkey.ca/",
     "online_delivery": true,
     "tagline": "Local, Organic, Sustainable",
     "max_booking_capacity": 60,
-    "image_path": "woodenmonkey.jpg",
+    "image_path": "972f782d-40e1-4e61-a251-9c25dbe7cba6.jpg",
     "is_new":true,
     "menu": [
       {
@@ -40,19 +40,19 @@
     ]
   },
   {
-    "restaurant_id": "2",
+    "restaurant_id": "e2b6ccfd-9126-40cf-b286-de1c8faf430b",
     "name": "Two If By Sea Café",
     "address": "66 Ochterloney St, Dartmouth, NS",
     "start_time": "8:00",
     "end_time": "17:00",
     "contact": 9029876543,
-    "fb_link": "https://www.facebook.com/tibscafe",
-    "x_link": "https://www.google.com/maps/tibscafe",
-    "store_link": "https://www.tibscafe.com",
+    "fb_link": "https://www.facebook.com/tibscafe/",
+    "insta_link": "https://www.instagram.com/twoifbyseacafe/?hl=en",
+    "store_link": "https://www.twoifbysea.cafe/",
     "online_delivery": false,
     "tagline": "Great Coffee and Pastries",
     "max_booking_capacity": 30,
-    "image_path": "tibscafe.jpg",
+    "image_path": "e2b6ccfd-9126-40cf-b286-de1c8faf430b.jpg",
     "is_new":true,
     "menu": [
       {
@@ -75,19 +75,19 @@
     ]
   },
   {
-    "restaurant_id": "3",
+    "restaurant_id": "aa8e57df-3a13-4671-be37-3ac4b546ce6b",
     "name": "The Bicycle Thief",
     "address": "1475 Lower Water St, Halifax, NS",
     "start_time": "17:00",
     "end_time": "22:00",
     "contact": 9025554321,
-    "fb_link": "https://www.facebook.com/bicyclethiefhfx",
-    "x_link": "https://www.google.com/maps/bicyclethief",
-    "store_link": "https://www.bicyclethief.ca",
+    "fb_link": "https://www.facebook.com/bicyclethief1475/",
+    "insta_link": "https://www.instagram.com/ourbicyclethief/?hl=en",
+    "store_link": "https://bicyclethief.ca/",
     "online_delivery": true,
     "tagline": "Italian Cuisine by the Waterfront",
     "max_booking_capacity": 80,
-    "image_path": "bicyclethief.jpg",
+    "image_path": "aa8e57df-3a13-4671-be37-3ac4b546ce6b.jpg",
     "is_new":true,
     "menu": [
       {
@@ -109,19 +109,19 @@
     ]
   },
   {
-    "restaurant_id": "4",
+    "restaurant_id": "e206b215-20d6-4688-8537-772a57adb347",
     "name": "Edna",
     "address": "2053 Gottingen St, Halifax, NS",
     "start_time": "9:00",
     "end_time": "15:00",
     "contact": 9027891234,
-    "fb_link": "https://www.facebook.com/ednahfx",
-    "x_link": "https://www.google.com/maps/edna",
-    "store_link": "https://www.ednahfx.com",
+    "fb_link": "https://www.facebook.com/ednasrestaurantBR",
+    "insta_link": "https://www.instagram.com/ednarestaurant/",
+    "store_link": "https://www.ednarestaurant.com/",
     "online_delivery": false,
     "tagline": "Brunch and Comfort Food",
     "max_booking_capacity": 40,
-    "image_path": "edna.jpg",
+    "image_path": "e206b215-20d6-4688-8537-772a57adb347.jpg",
     "is_new":true,
     "menu": [
       {
@@ -144,19 +144,19 @@
     ]
   },
   {
-    "restaurant_id": "5",
+    "restaurant_id": "b9c4f57b-0083-40ca-8c8e-acb11cfc3bea",
     "name": "The Stubborn Goat",
     "address": "1579 Grafton St, Halifax, NS",
     "start_time": "11:00",
     "end_time": "23:00",
     "contact": 9023456789,
-    "fb_link": "https://www.facebook.com/stubborngoathfx",
-    "x_link": "https://www.google.com/maps/stubborngoathfx",
-    "store_link": "https://www.stubborngoat.ca",
+    "fb_link": "https://www.facebook.com/StubbornGoat/",
+    "insta_link": "https://www.instagram.com/thestubborngoat/?hl=en",
+    "store_link": "https://legendaryhospitality.ca/",
     "online_delivery": true,
     "tagline": "Craft Beer and Gastropub Fare",
     "max_booking_capacity": 70,
-    "image_path": "stubborngoat.jpg",
+    "image_path": "b9c4f57b-0083-40ca-8c8e-acb11cfc3bea.jpg",
     "is_new":true,
     "menu": [
       {
@@ -178,19 +178,19 @@
     ]
   },
   {
-    "restaurant_id": "6",
+    "restaurant_id": "09aaaa36-bda3-4175-a083-ffd6053e4c6a",
     "name": "Chives Canadian Bistro",
     "address": "1537 Barrington St, Halifax, NS",
     "start_time": "17:30",
     "end_time": "22:00",
     "contact": 9026781234,
-    "fb_link": "https://www.facebook.com/chiveshfx",
-    "x_link": "https://www.google.com/maps/chiveshfx",
-    "store_link": "https://www.chivesbistro.com",
+    "fb_link": "",
+    "insta_link": "https://www.instagram.com/chivescanadianbistro/?hl=en",
+    "store_link": "",
     "online_delivery": false,
     "tagline": "Locally Sourced Canadian Cuisine",
     "max_booking_capacity": 50,
-    "image_path": "chivesbistro.jpg",
+    "image_path": "09aaaa36-bda3-4175-a083-ffd6053e4c6a.jpg",
     "is_new":true,
     "menu": [
       {
@@ -213,19 +213,19 @@
     ]
   },
   {
-    "restaurant_id": "7",
+    "restaurant_id": "1940574d-5ee9-4b77-ad85-615ed4a226a7",
     "name": "Durty Nelly's Irish Pub",
     "address": "5221 Sackville St, Halifax, NS",
     "start_time": "11:30",
     "end_time": "13:00",
     "contact": 9028765432,
-    "fb_link": "https://www.facebook.com/durtynellyshfx",
-    "x_link": "https://www.google.com/maps/durtynellyshfx",
-    "store_link": "https://www.durtynellys.ca",
+    "fb_link": "https://www.facebook.com/durtynellyspub/",
+    "insta_link": "https://www.instagram.com/durtynellyspub/",
+    "store_link": "https://durtynellys.ca/",
     "online_delivery": true,
     "tagline": "Traditional Irish Pub",
     "max_booking_capacity": 80,
-    "image_path": "durtynellys.jpg",
+    "image_path": "1940574d-5ee9-4b77-ad85-615ed4a226a7.jpg",
     "is_new":true,
     "menu": [
       {
@@ -265,19 +265,19 @@
     ]
   },
   {
-    "restaurant_id": "8",
+    "restaurant_id": "69cf7d07-3d93-4b50-86f6-5060e38bcd0f",
     "name": "The Coastal Cafe",
     "address": "2731 Robie St, Halifax, NS",
     "start_time": "8:00",
     "end_time": "14:30",
     "contact": 9026543210,
-    "fb_link": "https://www.facebook.com/thecoastalcafehfx",
-    "x_link": "https://www.google.com/maps/thecoastalcafehfx",
-    "store_link": "https://www.thecoastalcafe.ca",
+    "fb_link": "https://www.facebook.com/thecoastalcafe/",
+    "insta_link": "https://www.instagram.com/thecoastalcafe/",
+    "store_link": "",
     "online_delivery": false,
     "tagline": "Breakfast and Brunch",
     "max_booking_capacity": 40,
-    "image_path": "coastalcafe.jpg",
+    "image_path": "69cf7d07-3d93-4b50-86f6-5060e38bcd0f.jpg",
     "is_new":true,
     "menu": [
       {
@@ -293,6 +293,21 @@
           {
             "size": "Regular",
             "price": 10.99,
+            "type": "pcs"
+          },
+          {
+            "size": "Large",
+            "price": 20.99,
+            "type": "pcs"
+          },
+          {
+            "size": "X-Large",
+            "price": 25.99,
+            "type": "pcs"
+          },
+          {
+            "size": "2X-Large",
+            "price": 40.99,
             "type": "pcs"
           }
         ]
@@ -317,19 +332,19 @@
     ]
   },
   {
-    "restaurant_id": "9",
+    "restaurant_id": "3b6fec8f-fdcc-4e20-bd4c-be9b096058c4",
     "name": "Gio",
     "address": "1725 Market St, Halifax, NS",
     "start_time": "17:30",
     "end_time": "22:00",
     "contact": 9027895678,
-    "fb_link": "https://www.facebook.com/giohfx",
-    "x_link": "https://www.google.com/maps/giohfx",
-    "store_link": "https://www.giohalifax.com",
+    "fb_link": "https://www.facebook.com/GioHalifax/",
+    "insta_link": "https://www.instagram.com/giohalifax/?hl=en",
+    "store_link": "https://www.giohalifax.com/",
     "online_delivery": true,
     "tagline": "Italian Fine Dining",
     "max_booking_capacity": 60,
-    "image_path": "gio.jpg",
+    "image_path": "3b6fec8f-fdcc-4e20-bd4c-be9b096058c4.jpg",
     "is_new":true,
     "menu": [
       {
@@ -369,19 +384,19 @@
     ]
   },
   {
-    "restaurant_id": "10",
+    "restaurant_id": "bea11723-d11c-49d5-82dd-b033cef31f79",
     "name": "The Henry House",
     "address": "1222 Barrington St, Halifax, NS",
     "start_time": "11:00",
     "end_time": "23:00",
     "contact": 9029876123,
-    "fb_link": "https://www.facebook.com/thehenryhousehfx",
-    "x_link": "https://www.google.com/maps/thehenryhousehfx",
-    "store_link": "https://www.henryhouse.ca",
+    "fb_link": "",
+    "insta_link": "https://www.instagram.com/henryhousepub/?hl=en",
+    "store_link": "https://henryhouse.ca/wordpress/",
     "online_delivery": false,
     "tagline": "Historic Pub and Alehouse",
     "max_booking_capacity": 70,
-    "image_path": "henryhouse.jpg",
+    "image_path": "bea11723-d11c-49d5-82dd-b033cef31f79.jpg",
     "is_new":true,
     "menu": [
       {
