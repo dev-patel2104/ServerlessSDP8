@@ -7,7 +7,7 @@ import { getRestaurant } from '../../services/RestaurantServices/RestaurantServi
 import { theme } from '../../theme';
 
 function RestaurantDetails() {
-  const { restaurantID } = useParams();
+  const { restaurant_id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function RestaurantDetails() {
   return (
     <Flex flexDirection="column" alignItems="start" justifyContent="center">
         <Box bg="white" w="100%"  rounded="md" mb="5px">
-            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
+            <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
         <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
@@ -79,7 +79,7 @@ function RestaurantDetails() {
             <VStack alignItems="start" spacing="20px" ml="60px" >
                 {restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
-                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurantID}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
                         <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
                         <Text fontSize="md">{menuItem.item_description}</Text>
                         <Text fontWeight="medium">Category: {menuItem.category}</Text>

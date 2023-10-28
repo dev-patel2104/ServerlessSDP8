@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import AWS from "aws-sdk";
+import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Button,
@@ -28,12 +30,34 @@ function Chatbot() {
       setMessages(newMessages);
       setUserInput("");
 
-      setTimeout(() => {
-        setMessages([
-          ...newMessages,
-          { type: "bot", content: "This is a response from the chatbot." },
-        ]);
-      }, 500);
+      // Initialize AWS SDK for Lex
+      AWS.config.region = "us-east-1";
+      AWS.config.credentials = new AWS.Credentials(
+        process.env.AWS_ACCESS_KEY_ID,
+        process.env.AWS_SECRET_ACCESS_KEY,
+        process.env.AWS_SESSION_TOKEN
+      );
+
+      const lexruntime = new AWS.LexRuntime();
+      const params = {
+        botAlias: "TestBotAlias",
+        botName: "Foodvaganza-bro",
+        inputText: userInput.trim(),
+        userId: uuidv4(),
+        sessionAttributes: {},
+      };
+
+      lexruntime.postText(params, (err, data) => {
+        if (err) {
+          console.error("Error sending message to Lex:", err);
+          setMessages([
+            ...newMessages,
+            { type: "bot", content: "Sorry, I encountered an error." },
+          ]);
+        } else {
+          setMessages([...newMessages, { type: "bot", content: data.message }]);
+        }
+      });
     }
   };
 
