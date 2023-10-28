@@ -1,22 +1,3 @@
-export const getRestaurant = async (restaurant_id) => {
-    const options = {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    }
-
-    try {
-        const response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurant_id}`, options);
-
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Error fetching restaurant:', error);
-        return null;
-    }
-}
-
 export const getAllRestaurants = async () => {
     const options = {
         method: 'GET',
@@ -32,6 +13,46 @@ export const getAllRestaurants = async () => {
         return data;
     } catch (error) {
         console.error('Error fetching restaurants:', error);
+        return null;
+    }
+}
+
+export const getRestaurant = async (restaurantID) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurantID}`, options);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching restaurant:', error);
+        return null;
+    }
+}
+
+
+
+export const deleteRestaurant = async (restaurantID) => {
+    const options = {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${restaurantID}`, options);
+
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error deleting restaurant:', error);
         return null;
     }
 }
