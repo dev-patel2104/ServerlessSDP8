@@ -5,6 +5,7 @@ import LayoutWithNav from './pages/Layout/LayoutWithNav';
 import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
 import Profile from './pages/UserManagement/Profile';
 import Signup from './pages/UserManagement/Signup';
+import ResetPassword from './pages/UserManagement/ResetPassword';
 import BookTable from './pages/BookTable/BookTable';
 import RestaurantList from './pages/RestaurantPage/RestaurantList';
 import Reservation from './pages/Reservation/Reservation';
@@ -55,8 +56,11 @@ function App() {
         {
           path: "/reservations/:reservation_id/edit",
           element: isAuthenticated() ? <EditReservation />: <Navigate to="/user/login"/>
+        },
+        {
+          path: "/user/passreset",
+          element: !isAuthenticated() ? <ResetPassword />: <Navigate to="/user/profile"/>
         }
-
       ]
     },
     {
