@@ -13,15 +13,15 @@ function RestaurantDetails() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log(`restaurantID = ${restaurantID}`);
+    console.log(`restaurant_id = ${restaurant_id}`);
     const fetchData = async () => {
-        const restaurantResponse = await getRestaurant(restaurantID);
+        const restaurantResponse = await getRestaurant(restaurant_id);
         setRestaurant(restaurantResponse);
         console.log(restaurantResponse);
         setLoading(false);
     }
     fetchData();
-  }, [restaurantID]);
+  }, [restaurant_id]);
 
   if (loading) {
     return <div>Loading restaurant details...</div>;
@@ -72,7 +72,7 @@ function RestaurantDetails() {
                     </Link>
                 )}
 
-                <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurant/${restaurantID}/book`)}>Reserve your Table</Button>
+                <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurant/${restaurant_id}/book`)}>Reserve your Table</Button>
 
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
