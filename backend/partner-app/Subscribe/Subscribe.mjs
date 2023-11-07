@@ -1,4 +1,4 @@
-
+//Updated code for subscribe that was written furing customer app to accomodate partner (restaurants) as well 
 import { SNS } from "@aws-sdk/client-sns";
 import { promisify } from 'util';
 
