@@ -1,18 +1,18 @@
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import {
-    DynamoDBDocumentClient,
-    ScanCommand,
-    PutCommand,
-    GetCommand,
-    DeleteCommand,
-} from "@aws-sdk/lib-dynamodb";
+// import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+// import {
+//     DynamoDBDocumentClient,
+//     ScanCommand,
+//     PutCommand,
+//     GetCommand,
+//     DeleteCommand,
+// } from "@aws-sdk/lib-dynamodb";
 import { uuid } from 'uuidv4';
 
-const client = new DynamoDBClient({});
+// const client = new DynamoDBClient({});
 
-const dynamo = DynamoDBDocumentClient.from(client);
+// const dynamo = DynamoDBDocumentClient.from(client);
 
-const tableName = "reservations";
+// const tableName = "reservations";
 
 export const handler = async (event, context) => {
     let body;
@@ -24,88 +24,158 @@ export const handler = async (event, context) => {
     try {
         switch (event.routeKey) {
             case "DELETE /reservations/{reservation_id}":
-                let res = await dynamo.send(
-                    new GetCommand({
-                        TableName: tableName,
-                        Key: {
-                            reservation_id: event.pathParameters.reservation_id
-                        },
-                    })
-                );
-                res = body.Item;
-                await dynamo.send(
-                    new DeleteCommand({
-                        TableName: tableName,
-                        Key: {
-                            reservation_id: event.pathParameters.reservation_id,
-                        },
-                    })
-                );
+
                 let options = {
-                    method: 'POST',
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(
                         {
-                            restaurant_id: res.restaurant_id,
-                            reservation_id: res.reservation_id,
-                            reservation_time: res.reservation_time,
-                            customer_id: res.customer_id,
-                            type: "deleted"
+                            reservation_id: event.pathParameters.reservation_id,
                         })
                 }
-
                 try {
-                    const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, options);
+                    const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-delete`, options);
+                    const responseData = await response.json();
+
+                    let optionsSNS = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                restaurant_id: responseData.restaurant_id,
+                                reservation_id: event.pathParameters.reservation_id,
+                                reservation_time: responseData.reservation_time,
+                                customer_id: responseData.customer_id,
+                                type: "deleted"
+                            })
+                    }
+
+                    try {
+                        await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsSNS);
+                    } catch (error) {
+                        console.error('Error deleting reservation:');
+
+                    }
                 } catch (error) {
-                    console.error('Error creating reservation:');
-                    
+                    console.error('Error deleting reservation:');
+
                 }
+
                 body = { reservation_id: event.pathParameters.reservation_id };
                 break;
             case "GET /reservations/{reservation_id}":
-                body = await dynamo.send(
-                    new GetCommand({
-                        TableName: tableName,
-                        Key: {
-                            reservation_id: event.pathParameters.reservation_id
-                        },
-                    })
-                );
-                body = body.Item;
+
+                let optionsGetID = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        {
+                            reservation_id: event.pathParameters.reservation_id,
+                        })
+                }
+                try {
+                    const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-get`, optionsGetID);
+                    body = await response.json();
+
+                } catch (error) {
+                    console.error('Error deleting reservation:');
+
+                }
+
                 break;
             case "GET /reservations":
 
                 if (event.queryStringParameters?.customer_id) {
-                    body = await dynamo.send(
-                        new ScanCommand({ TableName: tableName })
-                    );
-                    body = body.Items;
-                    body = body.filter((item) => item.customer_id === event.queryStringParameters.customer_id);
+                    let optionsGetAllCustomerID = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                customer_id: event.queryStringParameters?.customer_id,
+                            })
+                    }
+                    try {
+                        const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-get-all-customer-id`, optionsGetAllCustomerID);
+                        body = await response.json();
+
+                    } catch (error) {
+                        console.error('Error deleting reservation:');
+                    }
+
                 } else {
-                    body = await dynamo.send(
-                        new ScanCommand({ TableName: tableName })
-                    );
-                    body = body.Items;
+                    let optionsGetAll = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }
+                    try {
+                        const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-get-all`, optionsGetAll);
+                        body = await response.json();
+
+                    } catch (error) {
+                        console.error('Error deleting reservation:');
+                    }
                 }
                 break;
             case "PUT /reservations":
                 let requestJSON = JSON.parse(event.body);
                 let r_id = requestJSON.reservation_id ?? uuid();
-                await dynamo.send(
-                    new PutCommand({
-                        TableName: tableName,
-                        Item: {
-                            reservation_id: r_id,
-                            restaurant_id: requestJSON.restaurant_id,
-                            customer_id: requestJSON.customer_id,
-                            reservation_time: requestJSON.reservation_time,
-                            reservation_status: requestJSON.reservation_status,
-                            is_notified: requestJSON.is_notified
-                        }
-                    })
-                );
+
+                if (requestJSON?.reservation_id) {
+                    let optionsEdit = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                reservation_id: r_id,
+                                restaurant_id: requestJSON.restaurant_id,
+                                reservation_time: requestJSON.reservation_time,
+                                customer_id: requestJSON.customer_id,
+                                reservation_status: requestJSON.reservation_status
+                            })
+                    }
+                    try {
+                        await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/edit-reservation`, optionsEdit);
+
+                    } catch (error) {
+                        console.error('Error editing reservation:');
+
+                    }
+                }else{
+                    let optionsCreate = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                reservation_id: r_id,
+                                restaurant_id: requestJSON.restaurant_id,
+                                reservation_time: requestJSON.reservation_time,
+                                customer_id: requestJSON.customer_id,
+                                reservation_status: requestJSON.reservation_status
+                            })
+                    }
+                    try {
+                        await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-create`, optionsCreate);
+
+                    } catch (error) {
+                        console.error('Error creating reservation:');
+
+                    }
+                }
+
                 body = { reservation_id: r_id };
                 let optionsP = {
                     method: 'POST',
@@ -123,10 +193,10 @@ export const handler = async (event, context) => {
                 }
 
                 try {
-                    const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
+                    await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
                 } catch (error) {
                     console.error('Error creating reservation:');
-                    
+
                 }
                 break;
             default:
