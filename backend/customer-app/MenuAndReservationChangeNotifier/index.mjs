@@ -32,9 +32,11 @@ export const handler = async (event) => {
         response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${reservation.restaurant_id}`);
         const data = await response.json();
         const name = data.name;
+ 
         let message, messageAttributes, params, date;
         date = new Date(reservation.reservation_time);
         // Also check whether the menu item has been changed or not if yes then do the following changes in the message accordingly
+        // just add a statement in the message saying with the menu items xyz if the menu items are selected by the customer.
         if (reservation.type.toLowerCase() === 'created') {
             message = 'Your reservation for ' + name + ' has been created for ' + date;
         }
@@ -54,7 +56,14 @@ export const handler = async (event) => {
             Subject: "Your reservation update"
         }
 
+        // Notifying customer about the updated reservation
         await publishAsync(params);
+        
+        // Notifying restaurant about the updated reservation
+        postOptions.body = JSON.stringify(reservation);
+        response = await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change-restaurant', postOptions);
+        const newData = response.json();
+        console.log(newData);
 
         return {
             statusCode: 200,
