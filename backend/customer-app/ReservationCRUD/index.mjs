@@ -130,7 +130,46 @@ export const handler = async (event, context) => {
                 let requestJSON = JSON.parse(event.body);
                 let r_id = requestJSON.reservation_id ?? uuid();
 
+                let currentReservations;
+
+                let optionsGetCount = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        {
+                            restaurant_id: requestJSON.restaurant_id,
+                            reservation_time: requestJSON.reservation_time,
+                        })
+                }
+
+                try {
+                    const resp = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-get-time`, optionsGetCount);
+                    const data = await resp.json();
+                    currentReservations = data.length;
+
+                } catch (error) {
+                    console.error('Error getting current reservations:');
+                }
+                let maxCapacity;
+                try {
+                    const restRes = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${requestJSON.restaurant_id}`);
+                    const resDet = await restRes.json();
+                    
+                    maxCapacity = resDet.max_booking_capacity;
+
+                } catch (error) {
+                    console.error('Error getting max capacity:');
+                }
+              
+                if (maxCapacity <= currentReservations) {
+                    body = { error: "full-capacity" };
+                    break;
+                }
+
                 if (requestJSON?.reservation_id) {
+
                     let optionsEdit = {
                         method: 'PUT',
                         headers: {
@@ -152,7 +191,7 @@ export const handler = async (event, context) => {
                         console.error('Error editing reservation:');
 
                     }
-                }else{
+                } else {
                     let optionsCreate = {
                         method: 'PUT',
                         headers: {
