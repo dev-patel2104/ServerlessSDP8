@@ -32,7 +32,10 @@ export const handler = async (event) => {
         response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${reservation.restaurant_id}`);
         const data = await response.json();
         const name = data.name;
- 
+        
+        response = await fetch(`https://p4mp4ngglh.execute-api.us-east-1.amazonaws.com/items/${reservation.reservation_id}`);
+        const menuData = await response.json();
+
         let message, messageAttributes, params, date;
         date = new Date(reservation.reservation_time);
         // Also check whether the menu item has been changed or not if yes then do the following changes in the message accordingly
@@ -44,9 +47,18 @@ export const handler = async (event) => {
             message = 'Your reservation for ' + name + ' has been edited to ' + date;
         }
         else if (reservation.type.toLowerCase() === 'deleted') {
-            message = 'Your reservation for ' + name + ' on ' + date + ' has been deleted.';
+            message = 'Your reservation for ' + name + ' on ' + date + ' has been deleted';
         }
 
+        if(menuData.items === undefined || menuData.items === null || menuData.items.length === 0)
+        {
+            message += ". The reservation has no menu items associated with it.";
+        }
+        else
+        {
+            message += ". The reservation has been booked with the following menu item: " + menuData.items;
+            reservation.menu_items = menuData.items;
+        }
 
         messageAttributes = { "UserId": { DataType: "String", StringValue: userId } };
         params = {
@@ -67,7 +79,7 @@ export const handler = async (event) => {
 
         return {
             statusCode: 200,
-            body: 'All the customers with updated reservations have been notified fo their changed reservation'
+            body: 'All the parties associated with updated reservations have been notified of their changed reservation'
         };
     }
     catch (err) {
