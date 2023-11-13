@@ -26,26 +26,23 @@ export const handler = async (event) => {
         // just add a statement in the message saying with the menu items xyz if the menu items are selected by the customer.
         if (reservation.type.toLowerCase() === 'created') {
             message = 'A reservation has been done by ' + email + ' for ' + date;
-            if(reservation.menu_items !== undefined)
-            {
-                message += ". The reservation has following menu items associated with it: " + reservation.menu_items;
-            }
         }
         else if (reservation.type.toLowerCase() === 'edited') {
             message = 'The reservation done by ' + email + ' has been changed to ' + date;
-            if(reservation.menu_items !== undefined)
-            {
-                message += ". The reservation has following menu items associated with it: " + reservation.menu_items;
-            }
         }
         else if (reservation.type.toLowerCase() === 'deleted') {
-            message = 'The reservation done by ' + email + ' on ' + date + ' has been deleted.';
-            if(reservation.menu_items !== undefined)
-            {
-                message += " The reservation had following menu items associated with it: " + reservation.menu_items;
-            }
+            message = 'The reservation done by ' + email + ' on ' + date + ' has been deleted';
         }
 
+        if(reservation.menu_items === undefined || reservation.menu_items === null || reservation.menu_items.length === 0)
+        {
+            message += ". The reservation has no menu items associated with it.";
+        }
+        else
+        {
+            message += ". The reservation has been booked with the following menu item: " + reservation.menu_items;
+            
+        }
 
         console.log(reservation.restaurant_id);
         messageAttributes = { "UserId": { DataType: "String", StringValue: reservation.restaurant_id } };
