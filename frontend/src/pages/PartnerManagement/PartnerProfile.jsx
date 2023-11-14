@@ -30,14 +30,13 @@ import {
 } from "firebase/auth";
 import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { auth } from "../../config/firebase";
+import { partnerAuth } from "../../config/firebase";
 import { theme } from "../../theme";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/undraw_person.svg";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 import PasswordChecklist from "react-password-checklist";
 
-function Profile() {
+function PartnerProfile() {
   const navigate = useNavigate();
   const toast = useToast();
   const [loggedIn, setLoggedIn] = useState(null);
@@ -54,7 +53,7 @@ function Profile() {
   const [disabled, setDisabled] = useState(true);
 
   useEffect(() => {
-    const listen = onAuthStateChanged(auth, (user) => {
+    const listen = onAuthStateChanged(partnerAuth, (user) => {
       if (user) {
         setLoggedIn(user);
         setDisplayName(user.displayName);
@@ -137,7 +136,7 @@ function Profile() {
                 />
                 <Flex flex="4" flexDir="column">
                   <Text fontSize="30px" color={theme.accent} mb={5}>
-                    Profile
+                    Partner Profile
                   </Text>
                   <Input
                     color={theme.accent}
@@ -179,7 +178,7 @@ function Profile() {
                         size="sm"
                         onClick={() => {
                           if (editUsername) {
-                            updateProfile(auth.currentUser, {
+                            updateProfile(partnerAuth.currentUser, {
                               displayName: displayName,
                             })
                               .then(() => {
@@ -210,7 +209,7 @@ function Profile() {
                         color={theme.accent}
                         borderColor={theme.accent}
                         onClick={() => {
-                          sendEmailVerification(auth.currentUser).then(() => {
+                          sendEmailVerification(partnerAuth.currentUser).then(() => {
                             toast({
                               title: "Verification Email Sent",
                               description:
@@ -226,7 +225,7 @@ function Profile() {
                       </Button>
                     )}
                     {!(
-                      auth.currentUser.providerData[0].providerId ===
+                      partnerAuth.currentUser.providerData[0].providerId ===
                       "google.com"
                     ) && (
                       <Button
@@ -247,7 +246,7 @@ function Profile() {
                       color={theme.accent}
                       borderColor={theme.accent}
                       onClick={() => {
-                        deleteUser(auth.currentUser)
+                        deleteUser(partnerAuth.currentUser)
                           .then(() => {
                             toast({
                               title: "Success",
@@ -261,9 +260,9 @@ function Profile() {
                           .catch((error) => {
                             console.error(error);
                           });
-                          localStorage.setItem("foodvaganzaUser", "");
-                          localStorage.setItem("userType", "");  
-                        navigate("/user/login");
+                        localStorage.setItem("foodvaganzaPartner", "");
+                        localStorage.setItem("userType", "");  
+                        navigate("/partner/login");
                       }}
                     >
                       Delete Account
@@ -357,7 +356,7 @@ function Profile() {
               colorScheme="green"
               isDisabled={disabled}
               onClick={() => {
-                updatePassword(auth.currentUser, password1)
+                updatePassword(partnerAuth.currentUser, password1)
                   .then(() => {
                     toast({
                       title: "Password Changed",
@@ -371,7 +370,7 @@ function Profile() {
                   .catch((error) => {
                     console.error(error);
                   });
-                signOut(auth)
+                signOut(partnerAuth)
                   .then(() => {
                     toast({
                       title: "Signed Out",
@@ -405,4 +404,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default PartnerProfile;

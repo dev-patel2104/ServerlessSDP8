@@ -111,56 +111,6 @@ export const handler = async (event, context) => {
                     body = [];
                 }
                 break;
-            case "GET /items-count":
-
-                if (event.queryStringParameters?.restaurant_id) {
-                    let optionsGetAllrestaurantID = {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(
-                            {
-                                restaurant_id: event.queryStringParameters?.restaurant_id,
-                            })
-                    }
-                    try {
-                        const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/items-get-restaurant`, optionsGetAllrestaurantID);
-                        const itemsList = await response.json();
-                        
-                        if(itemsList?.error){
-                            body = [];
-                            break;
-                        }
-
-                        const itemMap = new Map();
-
-                        itemsList.forEach((reservation) => {
-                            reservation.items.forEach((item) => {
-                                const { item_id, item_quantity } = item;
-                                if (itemMap.has(item_id)) {
-                                    itemMap.set(item_id, itemMap.get(item_id) + item_quantity);
-                                } else {
-                                    itemMap.set(item_id, item_quantity);
-                                }
-                            });
-                        });
-
-                        const itemList = [];
-
-                        itemMap.forEach((item_quantity, item_id) => {
-                            itemList.push({ item_id, item_quantity });
-                        });
-                        
-                        body = itemList;
-                    } catch (error) {
-                        console.error('Error getting items:');
-                    }
-
-                } else {
-                    body = [];
-                }
-                break;
             case "PUT /items":
                 let requestJSON = JSON.parse(event.body);
 
@@ -184,7 +134,7 @@ export const handler = async (event, context) => {
                         console.error('Error creating items:');
 
                     }
-                } else {
+                }else{
                     let optionsEdit = {
                         method: 'PUT',
                         headers: {

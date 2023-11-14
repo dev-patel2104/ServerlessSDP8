@@ -1,11 +1,17 @@
 import { Navigate, RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Login from './pages/UserManagement/Login';
+import PartnerLogin from './pages/PartnerManagement/PartnerLogin';
 import LandingPage from './pages/LandingPage/LandingPage';
 import LayoutWithNav from './pages/Layout/LayoutWithNav';
 import LayoutWithoutNav from './pages/Layout/LayoutWithoutNav';
+import LoginPage from './pages/CommonPages/LoginPage';
+import SignupPage from './pages/CommonPages/SignupPage';
 import Profile from './pages/UserManagement/Profile';
+import PartnerProfile from './pages/PartnerManagement/PartnerProfile';
 import Signup from './pages/UserManagement/Signup';
+import PartnerSignup from './pages/PartnerManagement/PartnerSignup';
 import ResetPassword from './pages/UserManagement/ResetPassword';
+import PartnerResetPassword from './pages/PartnerManagement/PartnerResetPassword';
 import BookTable from './pages/BookTable/BookTable';
 import RestaurantList from './pages/RestaurantPage/RestaurantList';
 import Reservation from './pages/Reservation/Reservation';
@@ -31,6 +37,14 @@ function App() {
           element: <LandingPage />
         },
         {
+          path: "/login",
+          element: <LoginPage />
+        },
+        {
+          path: "/signup",
+          element: <SignupPage />
+        },
+        {
           path: "/restaurants",
           element: <RestaurantList />
         },
@@ -48,7 +62,11 @@ function App() {
         },
         {
           path: "/user/profile",
-          element: isAuthenticated() ? <Profile /> : <Navigate to="/user/login"/>
+          element: <Profile/>
+        },
+        {
+          path: "/partner/profile",
+          element: <PartnerProfile />
         },
         {
           path: "/reservations/:reservation_id",
@@ -64,8 +82,12 @@ function App() {
         },
         {
           path: "/user/passreset",
-          element: !isAuthenticated() ? <ResetPassword />: <Navigate to="/user/profile"/>
-        }
+          element:<ResetPassword />        
+        },
+        {
+          path: "/partner/passreset",
+          element:<PartnerResetPassword />
+        },
       ]
     },
     {
@@ -76,8 +98,16 @@ function App() {
           element: <Login />
         },
         {
+          path: "/partner/login",
+          element: <PartnerLogin />
+        },
+        {
           path: "/user/signup",
           element: <Signup />
+        },
+        {
+          path: "/partner/signup",
+          element: <PartnerSignup />
         }
       ]
     },

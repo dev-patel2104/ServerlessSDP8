@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import AWS from "aws-sdk";
-import { v4 as uuidv4 } from "uuid";
 import {
   Box,
   Button,
@@ -10,9 +8,7 @@ import {
   IconButton,
   useDisclosure,
 } from "@chakra-ui/react";
-
 import { theme } from "../../../theme";
-
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 
 function Chatbot() {
@@ -20,7 +16,34 @@ function Chatbot() {
   const [userInput, setUserInput] = useState("");
   const { isOpen, onToggle } = useDisclosure();
 
-  const handleSendMessage = () => {
+  // send user input and handle lex response
+  async function sendToLambda(userInput) {
+    try {
+      const response = await fetch(
+        "https://jvevqosxra37hanmjkkgrcdmsy0ytviy.lambda-url.us-east-1.on.aws/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userInput }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.responseTexts;
+    } catch (error) {
+      console.error("Error sending message to Lambda:", error);
+      return "Sorry, I couldn't understand that.";
+    }
+  }
+
+  // handle sending messages by the user
+  const handleSendMessage = async () => {
     if (userInput.trim()) {
       const newMessages = [
         ...messages,
@@ -30,34 +53,26 @@ function Chatbot() {
       setMessages(newMessages);
       setUserInput("");
 
-      // Initialize AWS SDK for Lex
-      AWS.config.region = "us-east-1";
-      AWS.config.credentials = new AWS.Credentials(
-        process.env.AWS_ACCESS_KEY_ID,
-        process.env.AWS_SECRET_ACCESS_KEY,
-        process.env.AWS_SESSION_TOKEN
-      );
+      try {
+        const botResponse = await sendToLambda(userInput.trim());
+        const messageArray = botResponse.split("~"); // Split the response by the delimiter
 
-      const lexruntime = new AWS.LexRuntime();
-      const params = {
-        botAlias: "TestBotAlias",
-        botName: "Foodvaganza-bro",
-        inputText: userInput.trim(),
-        userId: uuidv4(),
-        sessionAttributes: {},
-      };
-
-      lexruntime.postText(params, (err, data) => {
-        if (err) {
-          console.error("Error sending message to Lex:", err);
-          setMessages([
-            ...newMessages,
-            { type: "bot", content: "Sorry, I encountered an error." },
-          ]);
-        } else {
-          setMessages([...newMessages, { type: "bot", content: data.message }]);
-        }
-      });
+        messageArray.forEach((text) => {
+          if (text.trim()) {
+            // Avoid adding empty messages
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              { type: "bot", content: text.trim() },
+            ]);
+          }
+        });
+      } catch (error) {
+        console.error("Error handling the message:", error);
+        setMessages((prevMessages) => [
+          ...prevMessages,
+          { type: "bot", content: "Sorry, I couldn't understand that." },
+        ]);
+      }
     }
   };
 
@@ -116,7 +131,6 @@ function Chatbot() {
                 justifyContent={
                   message.type === "user" ? "flex-end" : "flex-start"
                 }
-                mt={message.type === "user" ? "2" : "0"}
               >
                 <Box
                   display="inline-block"
@@ -159,5 +173,4 @@ function Chatbot() {
     </>
   );
 }
-
 export default Chatbot;
