@@ -49,14 +49,12 @@ for item in data:
         }
         if menu_item.get('item_type'):
             menu_item_dict['M']['item_type'] = {'S': menu_item.get('item_type')}
-            
+        if menu_item.get('discount_percentage'):
+            menu_item_dict['M']['discount_percentage'] = {'N': str(menu_item.get('discount_percentage'))}
+        
         menu_items.append(menu_item_dict)
 
-    # Put each restaurant to DynamoDB Table
-    # https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html
-    response = dynamodb.put_item(
-        TableName='restaurant',
-        Item={
+        Item = {
             'restaurant_id': {'S': item['restaurant_id']},
             'name': {'S': item['name']},
             'address': {'S': item['address']},
@@ -73,8 +71,25 @@ for item in data:
             'menu': {'L': menu_items},
             'is_new': {'BOOL': item['is_new']},
             'is_open': {'BOOL': item['is_open']},
-            'email_id': {'S': item['email_id']}
+            'email_id': {'S': item['email_id']},
         }
+        
+        if item.get('is_offer'):
+            Item['is_offer'] = {'BOOL': item['is_offer']}
+        if item.get('offer_on'):
+            Item['offer_on'] = {'S': item['offer_on']}
+        if item.get('offer_type'):
+            Item['offer_type'] = {'S': item['offer_type']}
+        if item.get('discount_percentage'):
+            Item['discount_percentage'] = {'N': str(item['discount_percentage'])}
+        if item.get('discount_label'):
+            Item['discount_label'] = {'S': item['discount_label']}
+        
+    # Put each restaurant to DynamoDB Table
+    # https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html
+    response = dynamodb.put_item(
+        TableName='restaurant',
+        Item=Item
     )
 
 print("Pushed data successfully to DynamoDB table: 'restaurant'")

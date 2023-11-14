@@ -16,6 +16,9 @@
     "is_new":true,
     "is_open": true,
     "email_id":"pr717348@dal.ca",
+    "is_offer": true,
+    "offer_type": "restaurant",
+    "discount_percentage": 10,
     "menu": [
       {
         "item_id": "101",
@@ -131,6 +134,9 @@
     "is_new":true,
     "is_open": true,
     "email_id":"zainuddin.s@dal.ca",
+    "is_offer": true,
+    "offer_type": "restaurant",
+    "discount_percentage": 10,
     "menu": [
       {
         "item_id": "401",
@@ -295,6 +301,10 @@
     "is_new":true,
     "is_open": true,
     "email_id":"zainuddin.s@dal.ca",
+    "is_offer": true,
+    "offer_on": "restaurant",
+    "offer_type": "percentage",
+    "discount_percentage": 10,
     "menu": [
       {
         "item_id": "801",
@@ -418,6 +428,10 @@
     "is_new":true,
     "is_open": false,
     "email_id":"zainuddin.s@dal.ca",
+    "is_offer": true,
+    "offer_on": "menu_item",
+    "offer_type": "percentage",
+    "discount_percentage": 0,
     "menu": [
       {
         "item_id": "1001",
@@ -432,7 +446,8 @@
           {
             "size": "Regular",
             "price": 14.99,
-            "type": "pcs"
+            "type": "pcs",
+            "discount_percentage": 30
           }
         ]
       },
@@ -449,7 +464,8 @@
           {
             "size": "Regular",
             "price": 13.99,
-            "type": "pcs"
+            "type": "pcs",
+            "discount_percentage": 15
           }
         ]
       }
