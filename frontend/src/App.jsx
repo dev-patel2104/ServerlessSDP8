@@ -54,7 +54,7 @@ function App() {
         },
         {
           path: "/editRestaurants/:restaurant_id",
-          element: <EditRestaurantDetails />
+          element: isAuthenticated() ? <EditRestaurantDetails /> : <Navigate to="/user/login"/>
         },
         {
           path: "/restaurants/:restaurant_id/book",
