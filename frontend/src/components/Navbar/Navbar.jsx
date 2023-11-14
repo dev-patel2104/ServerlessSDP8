@@ -3,12 +3,14 @@ import { useMediaQuery } from "react-responsive";
 import { Link, NavLink } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { theme } from "../../theme";
-import { auth } from "../../config/firebase";
+import { partnerAuth, auth } from "../../config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
+import { useNavigate } from "react-router-dom";
 
 function NavBar() {
+  const navigate = useNavigate();
   const toast = useToast();
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
 
@@ -24,8 +26,36 @@ function NavBar() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem("foodvaganzaUser", "");
-        window.location.reload();
+        localStorage.setItem("foodvaganzaUser","");
+        localStorage.setItem("userType","");
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast({
+          title: "Error",
+          description:
+            "We are unable to sign you out at the moment, please try again later.",
+          status: "error",
+          duration: 3000,
+          isClosable: false,
+        });
+      });
+  }
+
+  function handlePartnerSignout() {
+    signOut(partnerAuth)
+      .then(() => {
+        toast({
+          title: "Signed Out",
+          description: "You have been signed out!",
+          status: "info",
+          duration: 3000,
+          isClosable: true,
+        });
+        localStorage.setItem("foodvaganzaPartner","");
+        localStorage.setItem("userType","");
+        navigate("/");
       })
       .catch((error) => {
         console.error(error);
@@ -77,9 +107,11 @@ function NavBar() {
         <Link to="/">
           <Flex alignItems="center">
             <Image src={logo} alt="Login Image" boxSize="30px" mr="1" />
-            <Text color={theme.accent} fontWeight="bold">
+            {localStorage.getItem('userType') === 'partner' ? (<><Text color={theme.accent} fontWeight="bold">
+              Foodvaganza | Partner
+            </Text></>):(<><Text color={theme.accent} fontWeight="bold">
               Foodvaganza
-            </Text>
+            </Text></>)}
           </Flex>
         </Link>
       </Flex>
@@ -95,7 +127,12 @@ function NavBar() {
             
             <Button
               onClick={() => {
-                handleSignout();
+                if(localStorage.getItem('userType') === 'partner'){
+                  handlePartnerSignout();
+                }
+                if(localStorage.getItem('userType') === 'user'){
+                  handleSignout();
+                }
               }}
               _hover={{ backgroundColor: theme.primaryBackground }}
               color={theme.accent}
@@ -123,7 +160,7 @@ function NavBar() {
 
             <Button
               as={Link}
-              to="/user/login"
+              to="/login"
               _hover={{ backgroundColor: theme.primaryBackground }}
               color={theme.accent}
               borderColor={theme.accent}
@@ -134,7 +171,7 @@ function NavBar() {
             </Button>
             <Button
               as={Link}
-              to="/user/signup"
+              to="/signup"
               _hover={{ backgroundColor: theme.primaryBackground }}
               color={theme.accent}
               borderColor={theme.accent}
