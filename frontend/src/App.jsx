@@ -22,6 +22,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './config/firebase';
 import { isAuthenticated } from './services/AuthenticationServices/AuthenticationServices';
 import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
+import EditRestaurantDetails from './pages/RestaurantPage/EditRestaurantDetails';
 
 function App() {
 
@@ -50,6 +51,10 @@ function App() {
         {
           path: "/restaurants/:restaurant_id",
           element: <RestaurantDetails />
+        },
+        {
+          path: "/editRestaurants/:restaurant_id",
+          element: isAuthenticated() ? <EditRestaurantDetails /> : <Navigate to="/user/login"/>
         },
         {
           path: "/restaurants/:restaurant_id/book",

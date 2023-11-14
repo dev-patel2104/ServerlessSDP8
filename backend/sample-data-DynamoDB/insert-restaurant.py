@@ -71,7 +71,9 @@ for item in data:
             'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
             'image_path': {'S': item['image_path']},
             'menu': {'L': menu_items},
-            'is_new': {'BOOL': item['is_new']}
+            'is_new': {'BOOL': item['is_new']},
+            'is_open': {'BOOL': item['is_open']},
+            'email_id': {'S': item['email_id']}
         }
     )
 

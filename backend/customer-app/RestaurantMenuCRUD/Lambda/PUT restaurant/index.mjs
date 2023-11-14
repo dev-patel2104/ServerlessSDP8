@@ -21,22 +21,7 @@ export const handler = async (event, context) => {
     await dynamo.send(
       new PutCommand({
         TableName: tableName,
-        Item: {
-          restaurant_id: rest_id,
-          menu: requestJSON.menu,
-          contact: requestJSON.contact,
-          image_path: requestJSON.image_path,
-          address: requestJSON.address,
-          start_time: requestJSON.start_time,
-          end_time: requestJSON.end_time,
-          store_link: requestJSON.store_link,
-          name: requestJSON.name,
-          max_booking_capacity: requestJSON.max_booking_capacity,
-          tagline: requestJSON.tagline,
-          fb_link: requestJSON.fb_link,
-          x_link: requestJSON.x_link,
-          is_new: requestJSON.is_new
-        },
+        Item: requestJSON,
       })
     );
     body = {restaurant_id: rest_id};
