@@ -15,13 +15,13 @@ function RestaurantDetails() {
   useEffect(() => {
     console.log(`restaurant_id = ${restaurant_id}`);
     const fetchData = async () => {
-        const restaurantResponse = await getRestaurant(restaurantID);
+        const restaurantResponse = await getRestaurant(restaurant_id);
         setRestaurant(restaurantResponse);
         console.log(restaurantResponse);
         setLoading(false);
     }
     fetchData();
-  }, [restaurantID]);
+  }, [restaurant_id]);
 
   if (loading) {
     return <div>Loading restaurant details...</div>;

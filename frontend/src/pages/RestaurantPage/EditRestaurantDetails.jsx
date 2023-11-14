@@ -57,15 +57,17 @@ function restaurant() {
 
   async function updateMenuDetailChanges(itemId, field, value) {
     const updatedMenu = restaurant.menu.map((item) => item.item_id === itemId ? { ...item, [field]: value } : item);
+    console.log(updatedMenu);
     setRestaurant({ ...restaurant, menu: updatedMenu });
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
+    console.log(restaurant);
   };
 
-  const updateSizePrice = (menuItem, index, field, value) => {
+  async function updateSizePrice (menuItem, index, field, value) {
     const updatedSizePrice = [...menuItem.item_size_price];
     updatedSizePrice[index] = { ...updatedSizePrice[index], [field]: value };
-    updateMenuDetailChanges(menuItem.item_id, 'item_size_price', updatedSizePrice);
+    await updateMenuDetailChanges(menuItem.item_id, 'item_size_price', updatedSizePrice);
     console.log('update size price() , menuItem => ',menuItem);
   };
 
@@ -85,10 +87,10 @@ function restaurant() {
     setInEditMenu(true);
   };
 
-  const saveMenuEditChanges = () => {
+  async function saveMenuEditChanges () {
     setInEditMenu(false);
     console.log(restaurant.menu);
-    updateRestaurantData(restaurant);
+    await updateRestaurantData(restaurant);
     window.location.reload();
   };
 
@@ -175,16 +177,21 @@ function restaurant() {
           {inEditingMode ? (<Text fontSize="4xl" p="20px" fontWeight="bold">Editing Restaurant details:</Text> ) : ( " " ) }
 
             {/* Restaurant Name */}
-            <Text fontSize="4xl" p="20px" fontWeight="bold">
+            {/* <Text fontSize="4xl" p="20px" fontWeight="bold"> */}
               {inEditingMode ? (
                 <>
                   <span style={{ fontSize:'1xl', display: 'inline-block', width: '190px' }}>Restaurant Name:</span>
                   <Input name="name" value={restaurant.name} onChange={(event) => setRestaurant({ ...restaurant, name: event.target.value })} />
                 </>
               ) : (
-                restaurant.name
+                <Flex justifyContent="space-between" alignItems="center">
+                  <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+                  <Button mt="15px" colorScheme='yellow' onClick={() => navigate(`/restaurants/${restaurant_id}`)}>
+                    View as Customer
+                  </Button>
+                </Flex>
               )}
-            </Text>
+            {/* </Text> */}
             <Box bg="white" p="20px" ml="40px" rounded="md">
               {/* Tag line */}
               <Text p="5px" fontSize="lg">
@@ -432,12 +439,12 @@ function restaurant() {
                 <VStack mt="10px" spacing="10px">
                   {menuItem.item_size_price.map((sizePrice, index) => (
                     <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
+                      <Text fontWeight="md">Option #{index+1}</Text>
                       {/*  Size  */}
-                      <Text fontWeight="md">Item #{index+1}</Text>
                       <Flex alignItems="center">
                         <Text fontSize="md" fontWeight="medium" width="80px">Size:</Text>
                         <Input
-                          value={sizePrice.size || ""}
+                          value={sizePrice.size}
                           placeholder="Size"
                           onInput={(event) => { updateSizePrice(menuItem, index, 'size', event.target.value);}}
                         />
