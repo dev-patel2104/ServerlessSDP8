@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Icon, Box, VStack, HStack, Image, Button, Input, Textarea, Select } from '@chakra-ui/react';
+import { Flex, Text, Icon, Box, VStack, HStack, Image, Button, Input, Textarea, useToast  } from '@chakra-ui/react';
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
 import { getRestaurant, updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
 // import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react';
-
 
 function restaurant() {
   const { restaurant_id } = useParams();
@@ -13,7 +12,8 @@ function restaurant() {
   const navigate = useNavigate();
   const [inEditingMode, setInEditingMode] = useState(false); 
   const [inEditMenu, setInEditMenu] = useState(false);
-  
+  const toast = useToast();
+
   const menuDetailTemplate = {
     item_name: '',
     item_description: '',
@@ -29,46 +29,8 @@ function restaurant() {
 
   useEffect(() => {
     const fetchRestaurantData = async () => {
-    // const restaurantResponse = await getRestaurant(restaurant_id);
-      const restaurantResponse = {
-        "menu": [
-            {
-                "item_id": 101,
-                "item_image_path": "spinach_salad.jpg",
-                "item_size_price": [
-                    {
-                        "size": "Small",
-                        "price": 8.99
-                    },
-                    {
-                        "size": "Regular",
-                        "price": 12.99
-                    }
-                ],
-                "item_type": "vegetarian",
-                "item_name": "Organic Spinach Salad",
-                "item_description": "Fresh organic spinach with a balsamic vinaigrette dressing.",
-                "category": "Salads",
-                "item_qty": 60,
-                "is_available": true
-            }
-        ],
-        "online_delivery": true,
-        "restaurant_id": "972f782d-40e1-4e61-a251-9c25dbe7cba6",
-        "is_open": true,
-        "insta_link": "",
-        "contact": 9021234567,
-        "image_path": "972f782d-40e1-4e61-a251-9c25dbe7cba6.jpg",
-        "address": "1707 Grafton St, Halifax, NS",
-        "start_time": "11:00",
-        "end_time": "12:00",
-        "store_link": "https://www.thewoodenmonkey.ca/",
-        "name": "The Wooden Monkey",
-        "max_booking_capacity": "6033",
-        "tagline": "International, Organic, Sustainable",
-        "is_new": false,
-        "fb_link": "https://www.facebook.com/TheWoodenMonkey/"
-    }
+    const restaurantResponse = await getRestaurant(restaurant_id);
+
       setRestaurant(restaurantResponse);
       console.log(restaurantResponse);
       setLoading(false);
@@ -89,14 +51,15 @@ function restaurant() {
     console.log(restaurant);
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
-
   }
 
   // Menu item helper functions:
 
-  const updateMenuDetailChanges = (itemId, field, value) => {
+  async function updateMenuDetailChanges(itemId, field, value) {
     const updatedMenu = restaurant.menu.map((item) => item.item_id === itemId ? { ...item, [field]: value } : item);
     setRestaurant({ ...restaurant, menu: updatedMenu });
+    const restaurantResponse = await updateRestaurantDetails(restaurant);
+    console.log(restaurantResponse);
   };
 
   const updateSizePrice = (menuItem, index, field, value) => {
@@ -126,51 +89,71 @@ function restaurant() {
     setInEditMenu(false);
     console.log(restaurant.menu);
     updateRestaurantData(restaurant);
+    window.location.reload();
   };
 
   // Image upload helper functions:
 
-  const getImageS3PresignedUrl = async (fileName) => {
-    try {
-      const response = await fetch(
-        `YOUR_LAMBDA_ENDPOINT?fileName=${fileName}`
-      );
+  const sendToLambda = async (base64Data, menuItem) => {
+      const lambdaEndpoint = 'https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/upload-image'; 
+      const payload = JSON.stringify({
+        base64_data : base64Data,
+        menu_item_id: menuItem.item_id,
+        restaurant_id: restaurant_id
+      })
+      console.log("menuItem.item_id -> ",menuItem.item_id);
+
+      const response = await fetch(lambdaEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: payload,
+      });
   
       if (!response.ok) {
-        throw new Error('Failed to fetch pre-signed URL');
+        throw new Error('Failed to send data to Lambda');
       }
+      
+      const lambdaResponse = await response.json();
+      console.log('Lambda response:', lambdaResponse);
   
-      return response.json();
-    } catch (error) {
-      console.error('Error fetching pre-signed URL:', error);
-      throw error;
-    }
-  };
+      updateMenuDetailChanges(menuItem.item_id, 'item_image_path', lambdaResponse['key']);
 
-  const uploadImageToS3 = async (file,item_id) => {
-    try {
-      const { upload_url } = await getImageS3PresignedUrl(item_id+'.jpg');
-
-      await fetch(upload_url, {
-        method: 'PUT',
-        body: file,
-        headers: {
-          'Content-Type': file.type,
-        },
+      toast({
+        title: "Image uploaded successfully!",
+        status: "success",
+        duration: 5000, 
+        isClosable: true,
       });
-
-      updateMenuDetailChanges(menuItem.item_id, 'item_image_path', item_id+'.jpg');
-    } catch (error) {
-      console.error('Error uploading file:', error);
-    }
   };
 
-  const initiateImageUpload = async (event) => {
+  const initiateImageUpload = async (event, menuItem) => {
     const file = event.target.files[0];
+  
     if (file) {
-      await uploadImageToS3(file);
+      // Read the file as base64
+      const reader = new FileReader();
+  
+      reader.onload = async (e) => {
+        const base64Data = e.target.result.split(',')[1];
+        await sendToLambda(base64Data, menuItem);
+      };
+  
+      reader.readAsDataURL(file);
     }
   };
+
+  // handle delete menu item
+  async function deleteMenuItem(itemId) {
+    const isConfirmed = window.confirm('Are you sure you want to delete this item?');
+    if (isConfirmed) {
+      const updatedMenu = restaurant.menu.filter(item => item.item_id !== itemId);
+      await updateRestaurantData({ ...restaurant, menu: updatedMenu });
+      window.location.reload();
+    }
+  };
+  
 
   if (loading) {
     return <div>Loading restaurant details...</div>;
@@ -371,7 +354,7 @@ function restaurant() {
               {inEditMenu ? ( 
                 <>
                   <Text fontSize="md" fontWeight="medium" mt="5px">Update item Image:</Text>
-                  <input type="file" onChange={initiateImageUpload} />
+                  <input type="file" onChange={(event) => initiateImageUpload(event,menuItem)} />
                 </>
               ) : ( "" )}              
 
@@ -484,6 +467,9 @@ function restaurant() {
                   ))}
                 </HStack>
               )}
+              {inEditMenu ? ( "" ):(
+                <Button colorScheme="red" mt="35px" onClick={() => deleteMenuItem(menuItem.item_id)}> Delete Item </Button>
+              )}
             </Box>
           ))}
         </VStack>
@@ -493,14 +479,14 @@ function restaurant() {
           <Button colorScheme="purple" onClick={addNewMenuItem}>Add New Menu Item</Button>
         </Box>
 
-
-        </Box>
-
-        <Box ml="auto" mt="20px">
+        <Box ml="15px" mt="20px">
           <NavLink to="/restaurants" p="20px">
             <Icon as={BsArrowLeft} color='blackAlpha.900' boxSize={6} /> Back to Restaurant List
           </NavLink>
         </Box>
+
+        </Box>
+
         <Box mt="50px" h="150px"></Box>
       </Flex>
     </Flex>
