@@ -447,6 +447,7 @@
             "size": "Regular",
             "price": 14.99,
             "type": "pcs",
+            "offer_type": "percentage",
             "discount_percentage": 30
           }
         ]
@@ -465,7 +466,8 @@
             "size": "Regular",
             "price": 13.99,
             "type": "pcs",
-            "discount_percentage": 15
+            "offer_type": "percentage",
+            "discount_percentage": 70
           }
         ]
       }

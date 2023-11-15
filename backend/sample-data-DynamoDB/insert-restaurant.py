@@ -30,8 +30,15 @@ for item in data:
                     'price': {'N': str(size_price['price'])}
                 }
             }
-            if menu_item.get('type'):
-                item_size_dict['M']['type'] = {'S': menu_item.get('type')}
+            if size_price.get('type'):
+                item_size_dict['M']['type'] = {'S': size_price.get('type')}
+            # Offer attributes            
+            if size_price.get('discount_percentage'):
+                item_size_dict['M']['discount_percentage'] = {'N': str(size_price.get('discount_percentage'))}
+            if size_price.get('offer_type'):
+                item_size_dict['M']['offer_type'] = {'S': str(size_price.get('offer_type'))}
+            if size_price.get('discount_label'):
+                item_size_dict['M']['discount_label'] = {'S': str(size_price.get('discount_label'))}
             
             item_size_price_dynamo.append(item_size_dict)
                 
@@ -49,8 +56,7 @@ for item in data:
         }
         if menu_item.get('item_type'):
             menu_item_dict['M']['item_type'] = {'S': menu_item.get('item_type')}
-        if menu_item.get('discount_percentage'):
-            menu_item_dict['M']['discount_percentage'] = {'N': str(menu_item.get('discount_percentage'))}
+        
         
         menu_items.append(menu_item_dict)
 
