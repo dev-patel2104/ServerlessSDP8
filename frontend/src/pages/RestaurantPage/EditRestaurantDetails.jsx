@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Flex, Text, Icon, Box, VStack, HStack, Image, Button, Input, Textarea, useToast  } from '@chakra-ui/react';
+import { Flex, Text, Icon, Box, VStack, HStack, Image, Button, Input, Textarea, useToast, Select } from '@chakra-ui/react';
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
 import { getRestaurant, updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
@@ -155,6 +155,11 @@ function restaurant() {
       window.location.reload();
     }
   };
+
+  // Offer calculation and handling helper functions
+  const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
+    return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
+  };
   
 
   if (loading) {
@@ -177,21 +182,18 @@ function restaurant() {
           {inEditingMode ? (<Text fontSize="4xl" p="20px" fontWeight="bold">Editing Restaurant details:</Text> ) : ( " " ) }
 
             {/* Restaurant Name */}
-            {/* <Text fontSize="4xl" p="20px" fontWeight="bold"> */}
-              {inEditingMode ? (
-                <>
-                  <span style={{ fontSize:'1xl', display: 'inline-block', width: '190px' }}>Restaurant Name:</span>
-                  <Input name="name" value={restaurant.name} onChange={(event) => setRestaurant({ ...restaurant, name: event.target.value })} />
-                </>
-              ) : (
-                <Flex justifyContent="space-between" alignItems="center">
-                  <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
-                  <Button mt="15px" colorScheme='yellow' onClick={() => navigate(`/restaurants/${restaurant_id}`)}>
-                    View as Customer
-                  </Button>
-                </Flex>
-              )}
-            {/* </Text> */}
+            {inEditingMode ? (
+              <>
+                <span style={{ fontSize:'1xl', display: 'inline-block', width: '190px' }}>Restaurant Name:</span>
+                <Input name="name" value={restaurant.name} onChange={(event) => setRestaurant({ ...restaurant, name: event.target.value })} />
+              </>
+            ) : (
+              <Flex justifyContent="space-between" alignItems="center">
+                <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+                <Button mt="15px" colorScheme='yellow' onClick={() => navigate(`/restaurants/${restaurant_id}`)}> View as Customer </Button>
+              </Flex>
+            )}
+
             <Box bg="white" p="20px" ml="40px" rounded="md">
               {/* Tag line */}
               <Text p="5px" fontSize="lg">
@@ -338,6 +340,47 @@ function restaurant() {
                   restaurant.is_open ? 'Yes-Open' : 'No-Closed'
                 )}
               </Text>
+              {/* Offers section */}
+              <Box p="20px" bg="white" rounded="md" boxShadow="md" border="1px solid #ccc">
+                <Text fontSize="xl" fontWeight="bold" mb="10px"> Discounts & Offers Section </Text>
+
+                {/* Enable Offers */}
+                <Text p="5px" fontSize="lg">
+                  <span style={{ display: 'inline-block', width: '190px' }}>Enable Offers:</span>
+                  {inEditingMode ? (
+                    <input type="checkbox" name="is_offer" checked={restaurant.is_offer} onChange={(event) => setRestaurant({ ...restaurant, is_offer: event.target.checked })} />
+                  ) : (
+                    restaurant.is_offer ? 'Enabled - Offers will be applied to Menu Items' : 'Disabled - No Offers set'
+                )}
+                </Text>
+                {/* Discount Percentage */}
+                <Text p="5px" fontSize="lg">
+                  <span style={{ display: 'inline-block', width: '190px' }}>Discount Percentage:</span>
+                  {inEditingMode ? (
+                    <Input type="number" name="discount_percentage" value={restaurant.discount_percentage} onChange={(event) => setRestaurant({ ...restaurant, discount_percentage: event.target.value })} />
+                  ) : (
+                    `${restaurant.discount_percentage ?? 0} %`
+                  )}
+                </Text>
+                {/* offer_on */}
+                <Flex>
+                  <Text p="5px" fontSize="lg" display='inline' width='190px'>Offer Applied On:</Text>
+                  {inEditingMode ? (
+                    <Select name="offer_on" value={restaurant.offer_on} onChange={(event) => setRestaurant({ ...restaurant, offer_on: event.target.value })}>
+                      <option value={null || ""}>None</option>
+                      <option value="menu_type">Menu Item specific</option>
+                      <option value="restaurant">All restaurant items</option>
+                    </Select>
+                  ) : (
+                    <>
+                      <Text p="5px" fontSize="lg">
+                        {restaurant.offer_on ==='restaurant' ? ("All restaurant items") : restaurant.offer_on === 'menu_item' ? ("Menu Item specific"): ("N/A - Offer Not Applied")}
+                      </Text>
+                    </>
+                  )}
+                </Flex>
+
+              </Box>
             
             <Button mt="15px" colorScheme={inEditingMode ? "green" : "purple"} onClick={inEditingMode ? saveEditChanges : enableEditMode}>
               {inEditingMode ? 'Save Changes' : 'Edit Restaurant Details'}
@@ -356,7 +399,7 @@ function restaurant() {
             
             <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
               {/* Menu Item Image */}
-              <Image src={menuItem.item_image_path !== undefined ? `https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}` : `https://foodvaganza.s3.amazonaws.com/default_image.jpg`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+              <Image mb="15px" src={menuItem.item_image_path !== undefined ? `https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}` : `https://foodvaganza.s3.amazonaws.com/default_image.jpg`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
               
               {inEditMenu ? ( 
                 <>
@@ -373,7 +416,7 @@ function restaurant() {
                   <Input name="item_name" value={menuItem.item_name || " "} onChange={(e) => updateMenuDetailChanges(menuItem.item_id, 'item_name', e.target.value)} />
                 </>
               ) : (
-                <Text fontSize="lg" fontWeight="bold">
+                <Text fontSize="lg" p="5px" fontWeight="bold">
                   {menuItem.item_name} 
                 </Text>
               )}
@@ -385,7 +428,7 @@ function restaurant() {
                   <Input name="item_description" value={menuItem.item_description || " "} onChange={(e) => updateMenuDetailChanges(menuItem.item_id, 'item_description', e.target.value)} />                    
                 </>
               ) : (
-                <Text fontSize="md" mt="5px"> {menuItem.item_description} </Text> 
+                <Text fontSize="md" p="5px" mt="5px"> {menuItem.item_description} </Text> 
               )}
               
               {/* Category */}
@@ -443,11 +486,7 @@ function restaurant() {
                       {/*  Size  */}
                       <Flex alignItems="center">
                         <Text fontSize="md" fontWeight="medium" width="80px">Size:</Text>
-                        <Input
-                          value={sizePrice.size}
-                          placeholder="Size"
-                          onInput={(event) => { updateSizePrice(menuItem, index, 'size', event.target.value);}}
-                        />
+                        <Input value={sizePrice.size} placeholder="Size" onInput={(event) => { updateSizePrice(menuItem, index, 'size', event.target.value);}} />
                       </Flex>
                       
                       {/* Price */}
@@ -464,16 +503,33 @@ function restaurant() {
                     </Box>
                   ))}
                 </VStack>
-              ) : (
-                <HStack mt="10px" spacing="10px">
-                  {menuItem.item_size_price.map((sizePrice) => (
-                    <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
-                      <Text fontSize="lg" fontWeight="bold">{sizePrice.size}</Text>
-                      <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                    </Box>
-                  ))}
-                </HStack>
-              )}
+                ) : (
+                  <HStack mt="10px" spacing="10px">
+                    {menuItem.item_size_price.map((sizePrice) => (
+                      <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
+                        <Text fontSize="lg" fontWeight="bold">{sizePrice.size}</Text>
+                        {restaurant.is_offer && restaurant.offer_on === 'restaurant' ? (
+                          <>
+                            <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                            <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                          </>
+                        ) : (
+                          <>
+                            {sizePrice.offer_type === 'percentage' ? (
+                              <>
+                                <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                              </>
+                            ) : (
+                              <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                            )}
+                          </>
+                        )}
+                      </Box>
+                    ))}
+                  </HStack>
+
+                )}
               {inEditMenu ? ( "" ):(
                 <Button colorScheme="red" mt="35px" onClick={() => deleteMenuItem(menuItem.item_id)}> Delete Item </Button>
               )}
