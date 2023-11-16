@@ -3,6 +3,7 @@ import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button } from '@cha
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill } from 'react-icons/bs';
 import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
+import { TbDiscount2, TbDiscountCheckFilled } from "react-icons/tb";
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { theme } from '../../theme';
 
@@ -10,6 +11,7 @@ function RestaurantDetails() {
   const { restaurant_id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [maxDiscount, setMaxDiscount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,15 +21,17 @@ function RestaurantDetails() {
         setRestaurant(restaurantResponse);
         console.log(restaurantResponse);
         setLoading(false);
+        setMaxDiscount(Math.max(...restaurantResponse.menu.flatMap((menuItem) => menuItem.item_size_price.map((sizePrice) => sizePrice.discount_percentage) )));
     }
     fetchData();
+
   }, [restaurant_id]);
 
   // Offer calculation and handling helper functions
   const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
     return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
   };
-  
+
   if (loading) {
     return <div>Loading restaurant details...</div>;
   }
@@ -43,7 +47,21 @@ function RestaurantDetails() {
         </Box>
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
         <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
-            <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+            <Flex alignItems="center">
+                <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+                {restaurant.is_offer && restaurant.offer_on === 'restaurant' && (
+                    <>
+                        <Icon as={TbDiscount2} color="green.500" boxSize={10} />
+                        <Text fontWeight="bold" fontSize="1xl">{`${restaurant.discount_percentage}% OFF`}</Text>
+                    </>
+                )}
+                {restaurant.is_offer && restaurant.offer_on === 'menu_item' && (
+                    <>
+                        <Icon as={TbDiscount2} color="green.500" boxSize={10} />
+                        {`UPTO `}<Text fontWeight="bold" fontSize="1xl" ml="1">{` $${maxDiscount}% OFF`}</Text>
+                    </>
+                )}
+            </Flex>
             <Box bg="white" p="20px" ml="40px" rounded="md">
                 <Text p="5px" fontSize="lg">{restaurant.tagline}</Text>
                 <Text p="5px" fontSize="lg"> <Icon as={FaMapMarkedAlt} color='blackAlpha.900' boxSize={6} /> {restaurant.address} </Text>
@@ -103,14 +121,20 @@ function RestaurantDetails() {
                             {restaurant.is_offer && restaurant.offer_on === 'restaurant' ? (
                             <>
                                 <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                                <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                <Text fontWeight="bold" ml="2">
+                                    <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                                    {`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                                </Text>
                             </>
                             ) : (
                             <>
                                 {sizePrice.offer_type === 'percentage' ? (
                                 <>
                                     <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                                    <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                    <Text fontWeight="bold" ml="2">
+                                        <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                                        {`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                                    </Text>
                                 </>
                                 ) : (
                                 <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
