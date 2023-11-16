@@ -23,6 +23,11 @@ function RestaurantDetails() {
     fetchData();
   }, [restaurant_id]);
 
+  // Offer calculation and handling helper functions
+  const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
+    return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
+  };
+  
   if (loading) {
     return <div>Loading restaurant details...</div>;
   }
@@ -76,32 +81,49 @@ function RestaurantDetails() {
 
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
-            <VStack alignItems="start" spacing="20px" ml="60px" >
+            <VStack alignItems="start" spacing="20px" ml="60px">
                 {restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
-                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
-                        <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
-                        <Text fontSize="md">{menuItem.item_description}</Text>
-                        <Text fontWeight="medium">Category: {menuItem.category}</Text>
-                        {menuItem.item_type && (
-                            <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
-                        )}
-                        {menuItem.is_available ? (
-                                <>  <Text fontSize="lg" color="green.500"> <Icon as={BsFillBagCheckFill} color='green' boxSize={6} /> Available </Text> </>
-                             ) : ( 
-                                <> <Text fontSize="lg" color="red.500"> <Icon as={BsFillBagXFill} color='red' boxSize={6} />  Not Available </Text> </>
-                            )}
-                        <HStack mt="10px" spacing="10px">
-                            {menuItem.item_size_price.map((sizePrice) => (
-                            <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
-                                <Text fontSize="lg" fontWeight="bold"> {sizePrice.size} </Text>
+                    <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+                    <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
+                    <Text fontSize="md">{menuItem.item_description}</Text>
+                    <Text fontWeight="medium">Category: {menuItem.category}</Text>
+                    {menuItem.item_type && (
+                        <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
+                    )}
+                    {menuItem.is_available ? (
+                        <>  <Text fontSize="lg" color="green.500"> <Icon as={BsFillBagCheckFill} color='green' boxSize={6} /> Available </Text> </>
+                    ) : (
+                        <> <Text fontSize="lg" color="red.500"> <Icon as={BsFillBagXFill} color='red' boxSize={6} />  Not Available </Text> </>
+                    )}
+                    <HStack mt="10px" spacing="10px">
+                        {menuItem.item_size_price.map((sizePrice) => (
+                        <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
+                            <Text fontSize="lg" fontWeight="bold">{sizePrice.size}</Text>
+                            {restaurant.is_offer && restaurant.offer_on === 'restaurant' ? (
+                            <>
+                                <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                            </>
+                            ) : (
+                            <>
+                                {sizePrice.offer_type === 'percentage' ? (
+                                <>
+                                    <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                    <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                </>
+                                ) : (
                                 <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                            </Box>
-                            ))}
-                        </HStack>
+                                )}
+                            </>
+                            )}
+                        </Box>
+                        ))}
+                    </HStack>
                     </Box>
                 ))}
-            </VStack>
+                </VStack>
+
             </Box>
 
 
