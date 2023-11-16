@@ -9,7 +9,8 @@ const publishAsync = promisify(sns.publish).bind(sns);
 export const handler = async (event) => {
 
    try {
-        const response = await fetch("https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations");
+        let response;
+        response = await fetch("https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations");
         const reservations = await response.json();
         
         const putOptions = {
@@ -25,13 +26,22 @@ export const handler = async (event) => {
         const thirtyMinutesInMilliseconds = 30 * 60 * 1000;
         for(const reservation of reservations)
         {
-          if (!reservation.is_notified) {
+          if (reservation.is_notified === undefined || reservation.is_notified === null) {
+            continue;
+          }
+          else
+          {
+            if (!reservation.is_notified) {
                 currentTime = new Date();
                 date = new Date(reservation.reservation_time);
                 const timeDifference = date - currentTime;
                 console.log("reservation Date:   " + timeDifference);
                 if (timeDifference <= thirtyMinutesInMilliseconds && timeDifference >= 0) {
-                    messageAttributes = { "UserId": { DataType: "String", StringValue: reservation.customer_id } };
+                    response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${reservation.customer_id}`);
+                    const body = await response.json();
+                    const userId = body.uuid;
+                    console.log(userId);
+                    messageAttributes = { "UserId": { DataType: "String", StringValue: userId} };
                     
                     params = {
                         Message: message,
@@ -50,7 +60,9 @@ export const handler = async (event) => {
                     // console.log("The time difference is less than 30 min");
                   
                 }
-            }  
+            }   
+          }
+            
         }
         if(cnt == 0)
         {
