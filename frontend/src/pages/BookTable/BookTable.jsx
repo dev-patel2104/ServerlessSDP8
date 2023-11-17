@@ -6,6 +6,7 @@ import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { useNavigate, useParams } from 'react-router-dom';
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { createReservation } from '../../services/ReservationServices/ReservationService';
+import { createItems } from '../../services/ReservationServices/MenuReservationService';
 
 function BookTable() {
     const isMobile = useMediaQuery({ query: '(max-width: 1080px)' });
@@ -161,6 +162,10 @@ function BookTable() {
                 duration: 3000, // Duration in milliseconds
                 isClosable: true,
             });
+
+            const items = restaurant?.menu?.map(item => ({ ...item, item_quantity: 0 }));
+
+            await createItems(restaurant_id, reservationResponse.reservation_id, items);
 
             navigate(`/reservations/${reservationResponse.reservation_id}`);
         } else {

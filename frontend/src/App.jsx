@@ -23,6 +23,7 @@ import { auth } from './config/firebase';
 import { isAuthenticated } from './services/AuthenticationServices/AuthenticationServices';
 import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
 import EditRestaurantDetails from './pages/RestaurantPage/EditRestaurantDetails';
+import MenuItemsReservation from './pages/MenuItemsReservation/MenuItemsReservation';
 
 function App() {
 
@@ -79,6 +80,10 @@ function App() {
         {
           path: "/reservations/:reservation_id/edit",
           element: isAuthenticated() ? <EditReservation />: <Navigate to="/user/login"/>
+        },
+        {
+          path: "/reservations/:reservation_id/menu-items",
+          element: isAuthenticated() ? <MenuItemsReservation />: <Navigate to="/user/login"/>
         },
         {
           path: "/user/passreset",
