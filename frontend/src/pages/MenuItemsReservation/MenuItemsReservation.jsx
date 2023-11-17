@@ -139,7 +139,7 @@ function MenuItemsReservation() {
                                 )
                             }
                         </Flex>
-                        <Button onClick={() => updateItems()} mt="64px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Save</Button>
+                        <Button onClick={updateItems} mt="64px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Save</Button>
                     </Flex>
                 </Flex> :
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">

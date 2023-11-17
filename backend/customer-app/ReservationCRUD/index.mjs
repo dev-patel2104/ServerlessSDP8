@@ -89,6 +89,28 @@ export const handler = async (event, context) => {
                 }
 
                 break;
+            case "GET /reservations/restaurants/{restaurant_id}":
+
+                let optionsGetResID = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        {
+                            restaurant_id: event.pathParameters.restaurant_id,
+                        })
+                }
+                try {
+                    const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/reservation-get-all-restaurant-id`, optionsGetResID);
+                    body = await response.json();
+
+                } catch (error) {
+                    console.error('Error getting reservation:');
+
+                }
+
+                break;
             case "GET /reservations":
 
                 if (event.queryStringParameters?.customer_id) {
@@ -156,13 +178,13 @@ export const handler = async (event, context) => {
                 try {
                     const restRes = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${requestJSON.restaurant_id}`);
                     const resDet = await restRes.json();
-                    
+
                     maxCapacity = resDet.max_booking_capacity;
 
                 } catch (error) {
                     console.error('Error getting max capacity:');
                 }
-              
+
                 if (maxCapacity <= currentReservations) {
                     body = { error: "full-capacity" };
                     break;
@@ -236,7 +258,7 @@ export const handler = async (event, context) => {
                 }
 
                 try {
-                    if(requestJSON.type === "variable"){
+                    if (requestJSON.type === "variable") {
                         break;
                     }
                     await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);

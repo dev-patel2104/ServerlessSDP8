@@ -125,6 +125,28 @@ export const getAllReservationsbyCustomerID = async (customer_id) => {
     }
 }
 
+export const getAllReservationsbyRestaurantID = async (restaurant_id) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/restaurants/${restaurant_id}`, options);
+
+        const data = await response.json();
+        if(data?.error){
+            return [];
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+        return [];
+    }
+}
+
 export const deleteReservation = async (reservation_id) => {
     const options = {
         method: 'DELETE',

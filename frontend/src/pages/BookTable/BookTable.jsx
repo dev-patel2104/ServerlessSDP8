@@ -151,7 +151,7 @@ function BookTable() {
         reservation_date.setSeconds(0);
 
         let reservation_time = reservation_date.getTime();
-        let reservation_status = "confirmed";
+        let reservation_status = "unconfirmed";
         const reservationResponse = await createReservation(restaurant_id, reservation_time, customer_id, reservation_status);
 
         if (reservationResponse.reservation_id) {

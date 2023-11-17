@@ -21,6 +21,8 @@ import { isAuthenticated } from './services/AuthenticationServices/Authenticatio
 import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
 import EditRestaurantDetails from './pages/RestaurantPage/EditRestaurantDetails';
 import MenuItemsReservation from './pages/MenuItemsReservation/MenuItemsReservation';
+import PartnerReservations from './pages/MyReservations/PartnerReservations';
+import PartnerReservation from './pages/Reservation/PartnerReservation';
 
 function App() {
 
@@ -73,6 +75,14 @@ function App() {
         {
           path: "/my-reservations",
           element: isAuthenticated() ? <MyReservations /> : <Navigate to="/user/login"/>
+        },
+        {
+          path: "/partner/reservations/restaurants/:restaurant_id",
+          element: isAuthenticated() ? <PartnerReservations /> : <Navigate to="/partner/login"/>
+        },
+        {
+          path: "/partner/reservations/:reservation_id",
+          element: isAuthenticated() ? <PartnerReservation /> : <Navigate to="/partner/login"/>
         },
         {
           path: "/reservations/:reservation_id/edit",
