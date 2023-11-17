@@ -95,7 +95,7 @@ function PartnerProfile() {
           <>
             <Flex
               w="100%"
-              minHeight="100vh"
+              minHeight="90vh"
               backgroundColor={theme.primaryBackground}
               alignItems="center"
               justifyContent="space-evenly"
@@ -261,8 +261,8 @@ function PartnerProfile() {
                             console.error(error);
                           });
                         localStorage.setItem("foodvaganzaPartner", "");
-                        localStorage.setItem("userType", "");  
-                        navigate("/partner/login");
+                        localStorage.setItem("userType", "");
+                        navigate("/");
                       }}
                     >
                       Delete Account
@@ -379,7 +379,9 @@ function PartnerProfile() {
                       duration: 3000,
                       isClosable: true,
                     });
-                    localStorage.setItem("foodvaganzaUser", "");
+                    localStorage.setItem("foodvaganzaPartner", "");
+                    localStorage.setItem("userType", "");
+                    navigate("/partner/login");
                   })
                   .catch((error) => {
                     console.error(error);
@@ -393,6 +395,7 @@ function PartnerProfile() {
                     });
                   });
                 onClose();
+                // window.location.reload();
               }}
             >
               Submit

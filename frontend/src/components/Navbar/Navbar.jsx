@@ -14,7 +14,7 @@ function NavBar() {
   const toast = useToast();
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
 
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(isAuthenticated());
 
   function handleSignout() {
     signOut(auth)
@@ -69,20 +69,26 @@ function NavBar() {
         });
       });
   }
-
   useEffect(() => {
-    const listen = onAuthStateChanged(auth, (user) => {
+    let authToUse = auth; // Default auth object
+  
+    if (localStorage.userType === 'partner') {
+      authToUse = partnerAuth;
+    }
+  
+    const listen = onAuthStateChanged(authToUse, (user) => {
       if (user) {
         setLoggedIn(user);
       } else {
         setLoggedIn(null);
       }
     });
-
+  
     return () => {
       listen();
     };
   }, []);
+  
 
   return isMobile ? (
     <Flex
@@ -115,7 +121,7 @@ function NavBar() {
           </Flex>
         </Link>
       </Flex>
-      {isAuthenticated() ? (
+      {loggedIn ? (
         <>
           <Flex mr="4" gap="16px" alignItems="center">
             <NavLink to='/restaurants'>
@@ -146,7 +152,17 @@ function NavBar() {
             >
               Logout
             </Button>
-            <Button
+            {localStorage.getItem('userType') === 'partner' && <Button
+              as={Link}
+              to="/partner/profile"
+              _hover={{ backgroundColor: theme.primaryBackground }}
+              color={theme.accent}
+              borderColor={theme.accent}
+              variant="outline"
+            >
+              Profile
+            </Button>}
+            {localStorage.getItem('userType') === 'user' && <Button
               as={Link}
               to="/user/profile"
               _hover={{ backgroundColor: theme.primaryBackground }}
@@ -155,7 +171,7 @@ function NavBar() {
               variant="outline"
             >
               Profile
-            </Button>
+            </Button>}
           </Flex>
         </>
       ) : (
