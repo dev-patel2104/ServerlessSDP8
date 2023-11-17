@@ -51,7 +51,7 @@ export const handler = async (event) => {
                     cnt++;
                     await publishAsync(params);
                     reservation.is_notified = true;  // need to change this once fetched from harsh database
-                    
+                    reservation.type = "variable";
                     putOptions.body = JSON.stringify(reservation);
                     const response2 = await fetch('https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations', putOptions);
                     

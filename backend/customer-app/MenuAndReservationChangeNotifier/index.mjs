@@ -19,9 +19,15 @@ export const handler = async (event) => {
 
     try {
 
-        let response;
-        const reservation = JSON.parse(event.body);
+        let response, reservation, temp;
+        reservation = JSON.parse(event.body);
+        temp = reservation.type;
         console.log(reservation);
+        
+        response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/${reservation.reservation_id}`);
+        reservation = await response.json();
+        console.log(reservation);
+        reservation.type = temp;
         const email = reservation.customer_id;
 
         response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${email}`);
@@ -32,9 +38,11 @@ export const handler = async (event) => {
         response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants/${reservation.restaurant_id}`);
         const data = await response.json();
         const name = data.name;
-        
+        console.log(name);
+
         response = await fetch(`https://p4mp4ngglh.execute-api.us-east-1.amazonaws.com/items/${reservation.reservation_id}`);
         const menuData = await response.json();
+        console.log(menuData);
 
         let message, messageAttributes, params, date;
         date = new Date(reservation.reservation_time);
@@ -50,12 +58,10 @@ export const handler = async (event) => {
             message = 'Your reservation for ' + name + ' on ' + date + ' has been deleted';
         }
 
-        if(menuData.items === undefined || menuData.items === null || menuData.items.length === 0)
-        {
+        if (menuData.items === undefined || menuData.items === null || menuData.items.length === 0) {
             message += ". The reservation has no menu items associated with it.";
         }
-        else
-        {
+        else {
             message += ". The reservation has been booked with the following menu item: " + menuData.items;
             reservation.menu_items = menuData.items;
         }
@@ -67,20 +73,21 @@ export const handler = async (event) => {
             TopicArn: topicARN,
             Subject: "Your reservation update"
         }
-
-        // Notifying customer about the updated reservation
-        await publishAsync(params);
         
-        // Notifying restaurant about the updated reservation
-        postOptions.body = JSON.stringify(reservation);
-        response = await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change-restaurant', postOptions);
-        const newData = response.json();
-        console.log(newData);
+         await publishAsync(params);
 
-        return {
-            statusCode: 200,
-            body: 'All the parties associated with updated reservations have been notified of their changed reservation'
-        };
+            // Notifying restaurant about the updated reservation
+            postOptions.body = JSON.stringify(reservation);
+            response = await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change-restaurant', postOptions);
+            const newData = await response.json();
+            console.log(newData);
+
+            return {
+                statusCode: 200,
+                body: 'All the parties associated with updated reservations have been notified of their changed reservation'
+            };
+        
+
     }
     catch (err) {
         console.log("Some error has occurred", err);
