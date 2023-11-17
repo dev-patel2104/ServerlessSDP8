@@ -16,21 +16,6 @@ function NavBar() {
 
   const [loggedIn, setLoggedIn] = useState(isAuthenticated());
 
-  // Function to update loggedIn state based on localStorage
-  const updateLoggedInState = () => {
-    setLoggedIn(isAuthenticated());
-  };
-
-  useEffect(() => {
-    // Listen for changes in localStorage
-    window.addEventListener('storage', updateLoggedInState);
-
-    // Clean up the event listener
-    return () => {
-      window.removeEventListener('storage', updateLoggedInState);
-    };
-  }, []);
-
   function handleSignout() {
     signOut(auth)
       .then(() => {
@@ -84,36 +69,26 @@ function NavBar() {
         });
       });
   }
-
   useEffect(() => {
-    
-    const listen = onAuthStateChanged(auth, (user) => {
+    let authToUse = auth; // Default auth object
+  
+    if (localStorage.userType === 'partner') {
+      authToUse = partnerAuth;
+    }
+  
+    const listen = onAuthStateChanged(authToUse, (user) => {
       if (user) {
         setLoggedIn(user);
       } else {
         setLoggedIn(null);
       }
     });
-
+  
     return () => {
       listen();
     };
   }, []);
-
-  useEffect(() => {
-    
-    const listen = onAuthStateChanged(partnerAuth, (user) => {
-      if (user) {
-        setLoggedIn(user);
-      } else {
-        setLoggedIn(null);
-      }
-    });
-
-    return () => {
-      listen();
-    };
-  }, []);
+  
 
   return isMobile ? (
     <Flex

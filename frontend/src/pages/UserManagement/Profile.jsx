@@ -95,7 +95,7 @@ function Profile() {
           <>
             <Flex
               w="100%"
-              minHeight="100vh"
+              minHeight="90vh"
               backgroundColor={theme.primaryBackground}
               alignItems="center"
               justifyContent="space-evenly"
