@@ -18,11 +18,11 @@ import logo from "../../assets/login.svg";
 import { useState } from "react";
 import { theme } from "../../theme";
 import { signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../../config/firebase";
+import { partnerAuth, googleProvider } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
-function Login() {
+function PartnerLogin() {
   const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState();
@@ -30,22 +30,20 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
 
   function handleGoogleSignIn() {
-    signInWithPopup(auth, googleProvider)
+    signInWithPopup(partnerAuth, googleProvider)
       .then(() => {
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: auth.currentUser.email }),
+        body: JSON.stringify({ email: partnerAuth.currentUser.email }),
       }).then((response) => {
         if (response.status === 500) {
-          // Handle the success response here
           throw new Error("Failed to call the API");
         }
       }).then(() => {
-        // Handle the API response data here
         toast({
           title: "Success",
           description: "You have been logged in!",
@@ -53,10 +51,10 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
-        localStorage.setItem('userType', 'user');
+        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('userType', 'partner');
         console.log(localStorage.getItem('userType'));
-        navigate("/user/profile");
+        navigate("/partner/profile");
       })
       .catch((error) => {
         if (error.message.includes("popup-closed-by-use")) {
@@ -91,7 +89,7 @@ function Login() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(partnerAuth, email, password)
       .then(() => {
         toast({
           title: "Success",
@@ -100,10 +98,9 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
-        localStorage.setItem('userType', 'user');
-        console.log(localStorage.getItem('userType'));
-        navigate("/user/profile");
+        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('userType', 'partner');
+        navigate("/partner/profile");
       })
       .catch((error) => {
         if (error.message.includes("auth/invalid-login-credentials")) {
@@ -184,11 +181,11 @@ function Login() {
         <Flex flex="4" flexDir="column">
           <Flex justify="space-between" alignItems="center" mb="4">
             <Text fontSize="30px" color={theme.accent}>
-              Sign In
+              Partner Sign In
             </Text>
             <Text
               as={Link}
-              to="/user/passreset"
+              to="/partner/passreset"
               fontSize="sm"
               color={theme.accent}
             >
@@ -256,7 +253,7 @@ function Login() {
                 </Button>
                 <Text
                   as={Link}
-                  to="/user/signup"
+                  to="/partner/signup"
                   fontSize="sm"
                   color={theme.accent}
                 >
@@ -282,4 +279,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default PartnerLogin;

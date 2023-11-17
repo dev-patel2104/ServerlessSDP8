@@ -16,10 +16,10 @@ import { useState } from "react";
 import PasswordChecklist from "react-password-checklist";
 import { theme } from "../../theme";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/firebase";
+import { partnerAuth } from "../../config/firebase";
 import { useNavigate } from "react-router-dom";
 
-function Signup() {
+function PartnerSignup() {
   const toast = useToast();
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -29,22 +29,22 @@ function Signup() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
+    createUserWithEmailAndPassword(partnerAuth, email, password)
       .then(() => {
         //call AddEmailToDynamoDB API here
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email: auth.currentUser.email }),
+        body: JSON.stringify({ email: partnerAuth.currentUser.email }),
       }).then((response) => {
         if (response.status ===500) {
           // Handle the success response here
           throw new Error("Failed to call the API");
         }
-      }).then((data) => { 
+      }).then(() => { 
         toast({
           title: "Success!",
           description: "Your account was successfully created!",
@@ -52,9 +52,9 @@ function Signup() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
-        localStorage.setItem('userType', 'user');
-        navigate("/user/profile");
+        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('userType', 'partner');
+        navigate("/partner/profile");
       })
       .catch(() => {
         toast({
@@ -130,11 +130,11 @@ function Signup() {
             <FormControl>
               <Flex justify="space-between" alignItems="center" mb="4">
                 <Text fontSize="30px" color={theme.accent}>
-                  Sign Up
+                  Partner Sign Up
                 </Text>
                 <Text
                   as={Link}
-                  to="/user/login"
+                  to="/partner/login"
                   fontSize="sm"
                   color={theme.accent}
                 >
@@ -229,4 +229,4 @@ function Signup() {
   );
 }
 
-export default Signup;
+export default PartnerSignup;
