@@ -23,12 +23,12 @@ export const handler = async (event) => {
         reservation = JSON.parse(event.body);
         temp = reservation.type;
         console.log(reservation);
-
+        
         response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/${reservation.reservation_id}`);
         reservation = await response.json();
-        console.log(reservation);
         reservation.type = temp;
-
+        console.log(reservation);
+        
         const email = reservation.customer_id;
         response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${email}`);
         const body = await response.json()
@@ -73,21 +73,21 @@ export const handler = async (event) => {
             TopicArn: topicARN,
             Subject: "Your reservation update"
         }
-
+        
         // Notifying customer about the updated reservation
-        await publishAsync(params);
+         await publishAsync(params);
 
-        // Notifying restaurant about the updated reservation
-        postOptions.body = JSON.stringify(reservation);
-        response = await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change-restaurant', postOptions);
-        const newData = await response.json();
-        console.log(newData);
+            // Notifying restaurant about the updated reservation
+            postOptions.body = JSON.stringify(reservation);
+            response = await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change-restaurant', postOptions);
+            const newData = await response.json();
+            console.log(newData);
 
-        return {
-            statusCode: 200,
-            body: 'All the parties associated with updated reservations have been notified of their changed reservation'
-        };
-
+            return {
+                statusCode: 200,
+                body: 'All the parties associated with updated reservations have been notified of their changed reservation'
+            };
+        
 
     }
     catch (err) {
