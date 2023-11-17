@@ -23,27 +23,24 @@ export const handler = async (event, context) => {
                     const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/items-delete`, options);
                     const responseData = await response.json();
 
-                    // let optionsSNS = {
-                    //     method: 'POST',
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //     },
-                    //     body: JSON.stringify(
-                    //         {
-                    //             restaurant_id: responseData.restaurant_id,
-                    //             reservation_id: event.pathParameters.reservation_id,
-                    //             reservation_time: responseData.reservation_time,
-                    //             customer_id: responseData.customer_id,
-                    //             type: "deleted"
-                    //         })
-                    // }
+                    let optionsSNS = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                reservation_id: event.pathParameters.reservation_id,
+                                type: "deleted"
+                            })
+                    }
 
-                    // try {
-                    //     await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsSNS);
-                    // } catch (error) {
-                    //     console.error('Error deleting reservation:');
+                    try {
+                        await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsSNS);
+                    } catch (error) {
+                        console.error('Error deleting reservation:');
 
-                    // }
+                    }
                 } catch (error) {
                     console.error('Error deleting reservation:');
 
@@ -111,6 +108,56 @@ export const handler = async (event, context) => {
                     body = [];
                 }
                 break;
+            case "GET /items-count":
+
+                if (event.queryStringParameters?.restaurant_id) {
+                    let optionsGetAllrestaurantID = {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(
+                            {
+                                restaurant_id: event.queryStringParameters?.restaurant_id,
+                            })
+                    }
+                    try {
+                        const response = await fetch(`https://us-central1-sdp-8-404403.cloudfunctions.net/items-get-restaurant`, optionsGetAllrestaurantID);
+                        const itemsList = await response.json();
+                        
+                        if(itemsList?.error){
+                            body = [];
+                            break
+                        }
+
+                        const itemMap = new Map();
+
+                        itemsList.forEach((reservation) => {
+                            reservation.items.forEach((item) => {
+                                const { item_id, item_quantity } = item;
+                                if (itemMap.has(item_id)) {
+                                    itemMap.set(item_id, itemMap.get(item_id) + item_quantity);
+                                } else {
+                                    itemMap.set(item_id, item_quantity);
+                                }
+                            });
+                        });
+
+                        const itemList = [];
+
+                        itemMap.forEach((item_quantity, item_id) => {
+                            itemList.push({ item_id, item_quantity });
+                        });
+                        
+                        body = itemList;
+                    } catch (error) {
+                        console.error('Error getting items:');
+                    }
+
+                } else {
+                    body = [];
+                }
+                break;
             case "PUT /items":
                 let requestJSON = JSON.parse(event.body);
 
@@ -134,7 +181,7 @@ export const handler = async (event, context) => {
                         console.error('Error creating items:');
 
                     }
-                }else{
+                } else {
                     let optionsEdit = {
                         method: 'PUT',
                         headers: {
@@ -145,6 +192,7 @@ export const handler = async (event, context) => {
                                 reservation_id: requestJSON.reservation_id,
                                 restaurant_id: requestJSON.restaurant_id,
                                 items: requestJSON.items
+                                
                             })
                     }
                     try {
@@ -157,27 +205,25 @@ export const handler = async (event, context) => {
                 }
 
                 body = { reservation_id: requestJSON.reservation_id };
-                // let optionsP = {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json',
-                //     },
-                //     body: JSON.stringify(
-                //         {
-                //             restaurant_id: requestJSON.restaurant_id,
-                //             reservation_id: r_id,
-                //             reservation_time: requestJSON.reservation_time,
-                //             customer_id: requestJSON.customer_id,
-                //             type: requestJSON.reservation_id ? "edited" : "created"
-                //         })
-                // }
+                let optionsP = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(
+                        {
+                            reservation_id: requestJSON.reservation_id,
+                            restaurant_id: requestJSON.restaurant_id,
+                            type: requestJSON.type === "new" ? "created":"edited"
+                        })
+                }
 
-                // try {
-                //     await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
-                // } catch (error) {
-                //     console.error('Error creating reservation:');
+                try {
+                    await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
+                } catch (error) {
+                    console.error('Error creating reservation:');
 
-                // }
+                }
                 break;
             default:
                 throw new Error(`Unsupported route: "${event.routeKey}"`);

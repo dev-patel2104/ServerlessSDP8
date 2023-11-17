@@ -236,6 +236,9 @@ export const handler = async (event, context) => {
                 }
 
                 try {
+                    if(requestJSON.type === "variable"){
+                        break;
+                    }
                     await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/reservation-change`, optionsP);
                 } catch (error) {
                     console.error('Error creating reservation:');
