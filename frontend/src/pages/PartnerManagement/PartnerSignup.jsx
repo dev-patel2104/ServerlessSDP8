@@ -52,7 +52,8 @@ function PartnerSignup() {
           duration: 3000,
           isClosable: true,
         });
-        
+        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('userType', 'partner');
         navigate("/partner/profile");
       })
       .catch(() => {

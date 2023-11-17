@@ -33,7 +33,6 @@ import { useMediaQuery } from "react-responsive";
 import { auth } from "../../config/firebase";
 import { theme } from "../../theme";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../../assets/undraw_person.svg";
 import { EditIcon, CheckIcon } from "@chakra-ui/icons";
 import PasswordChecklist from "react-password-checklist";
 
@@ -262,8 +261,8 @@ function Profile() {
                             console.error(error);
                           });
                           localStorage.setItem("foodvaganzaUser", "");
-                          localStorage.setItem("userType", "");  
-                        navigate("/user/login");
+                          localStorage.setItem("userType", "");
+                        navigate("/");
                       }}
                     >
                       Delete Account
@@ -381,6 +380,8 @@ function Profile() {
                       isClosable: true,
                     });
                     localStorage.setItem("foodvaganzaUser", "");
+                    localStorage.setItem("userType", "");
+                    navigate("/user/login");
                   })
                   .catch((error) => {
                     console.error(error);

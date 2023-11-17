@@ -52,7 +52,8 @@ function Signup() {
           duration: 3000,
           isClosable: true,
         });
-        
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('userType', 'user');
         navigate("/user/profile");
       })
       .catch(() => {

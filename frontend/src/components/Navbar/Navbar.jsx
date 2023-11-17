@@ -14,7 +14,22 @@ function NavBar() {
   const toast = useToast();
   const isMobile = useMediaQuery({ query: "(max-width: 1080px)" });
 
-  const [loggedIn, setLoggedIn] = useState(null);
+  const [loggedIn, setLoggedIn] = useState(isAuthenticated());
+
+  // Function to update loggedIn state based on localStorage
+  const updateLoggedInState = () => {
+    setLoggedIn(isAuthenticated());
+  };
+
+  useEffect(() => {
+    // Listen for changes in localStorage
+    window.addEventListener('storage', updateLoggedInState);
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('storage', updateLoggedInState);
+    };
+  }, []);
 
   function handleSignout() {
     signOut(auth)
@@ -71,7 +86,23 @@ function NavBar() {
   }
 
   useEffect(() => {
+    
     const listen = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setLoggedIn(user);
+      } else {
+        setLoggedIn(null);
+      }
+    });
+
+    return () => {
+      listen();
+    };
+  }, []);
+
+  useEffect(() => {
+    
+    const listen = onAuthStateChanged(partnerAuth, (user) => {
       if (user) {
         setLoggedIn(user);
       } else {
@@ -115,7 +146,7 @@ function NavBar() {
           </Flex>
         </Link>
       </Flex>
-      {isAuthenticated() ? (
+      {loggedIn ? (
         <>
           <Flex mr="4" gap="16px" alignItems="center">
             <NavLink to='/restaurants'>
@@ -146,7 +177,17 @@ function NavBar() {
             >
               Logout
             </Button>
-            <Button
+            {localStorage.getItem('userType') === 'partner' && <Button
+              as={Link}
+              to="/partner/profile"
+              _hover={{ backgroundColor: theme.primaryBackground }}
+              color={theme.accent}
+              borderColor={theme.accent}
+              variant="outline"
+            >
+              Profile
+            </Button>}
+            {localStorage.getItem('userType') === 'user' && <Button
               as={Link}
               to="/user/profile"
               _hover={{ backgroundColor: theme.primaryBackground }}
@@ -155,7 +196,7 @@ function NavBar() {
               variant="outline"
             >
               Profile
-            </Button>
+            </Button>}
           </Flex>
         </>
       ) : (
