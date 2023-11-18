@@ -20,6 +20,7 @@ import EditReservation from './pages/EditReservation/EditReservation';
 import { isAuthenticated } from './services/AuthenticationServices/AuthenticationServices';
 import RestaurantDetails from './pages/RestaurantPage/RestaurantDetails';
 import EditRestaurantDetails from './pages/RestaurantPage/EditRestaurantDetails';
+import PartnerDashboard from './pages/DashBoards/PartnerDashboard';
 import MenuItemsReservation from './pages/MenuItemsReservation/MenuItemsReservation';
 import PartnerReservations from './pages/MyReservations/PartnerReservations';
 import PartnerReservation from './pages/Reservation/PartnerReservation';
@@ -35,6 +36,10 @@ function App() {
         {
           path: "/",
           element: <LandingPage />
+        },
+        {
+          path: "/partner/dashboard",
+          element: <PartnerDashboard />
         },
         {
           path: "/login",
