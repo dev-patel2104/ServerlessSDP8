@@ -108,6 +108,11 @@ export const handler = async (event) => {
 
             }
         }
+
+        return {
+            statusCode: 200,
+            body: 'All the restaurants notified successufully.'
+        }
     }
     catch (err) {
         console.log("Some error has occurred", err);
