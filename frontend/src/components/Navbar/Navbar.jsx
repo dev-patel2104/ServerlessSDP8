@@ -7,7 +7,9 @@ import { partnerAuth, auth } from "../../config/firebase";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
+import { updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 function NavBar() {
   const navigate = useNavigate();
@@ -69,6 +71,15 @@ function NavBar() {
         });
       });
   }
+
+  async function create_restaurant() {
+    let restaurant_id = uuidv4();
+    let restaurant = {"restaurant_id":restaurant_id,"email_id":localStorage.getItem("foodvaganzaPartner"), "menu":{}};
+    const restaurantResponse = await updateRestaurantDetails(restaurant);
+    console.log(restaurantResponse);
+    navigate(`/editRestaurants/${restaurant_id}`)
+  }
+
   useEffect(() => {
     let authToUse = auth; // Default auth object
   
@@ -135,6 +146,16 @@ function NavBar() {
               <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
             </NavLink>
             
+            { localStorage.getItem('userType') === 'partner' ? ( 
+              <Button
+                onClick={create_restaurant}
+                _hover={{ backgroundColor: theme.primaryBackground }}
+                color={theme.accent}
+                borderColor={theme.accent}
+                variant="outline"
+              > Add Restaurant </Button>
+            ) : ( "" )}
+
             <Button
               onClick={() => {
                 if(localStorage.getItem('userType') === 'partner'){
