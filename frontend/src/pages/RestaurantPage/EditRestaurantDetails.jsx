@@ -3,6 +3,7 @@ import { Flex, Text, Icon, Box, VStack, HStack, Image, Button, Input, Textarea, 
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsArrowLeft } from 'react-icons/bs';
 import { getRestaurant, updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
+import {  TbDiscountCheckFilled } from "react-icons/tb";
 // import { NumberInput, NumberInputField, NumberInputStepper, NumberIncrementStepper, NumberDecrementStepper } from '@chakra-ui/react';
 
 function restaurant() {
@@ -42,8 +43,8 @@ function restaurant() {
     setInEditingMode(true);
   };
 
-  const saveEditChanges = () => {
-    updateRestaurantData(restaurant);
+  async function saveEditChanges() {
+    await updateRestaurantData(restaurant);
     setInEditingMode(false);
   };
 
@@ -51,6 +52,7 @@ function restaurant() {
     console.log(restaurant);
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
+    window.location.reload();
   }
 
   // Menu item helper functions:
@@ -348,7 +350,20 @@ function restaurant() {
                 <Text p="5px" fontSize="lg">
                   <span style={{ display: 'inline-block', width: '190px' }}>Enable Offers:</span>
                   {inEditingMode ? (
-                    <input type="checkbox" name="is_offer" checked={restaurant.is_offer} onChange={(event) => setRestaurant({ ...restaurant, is_offer: event.target.checked })} />
+                    <input type="checkbox" name="is_offer" checked={restaurant.is_offer} onChange={(event) => 
+                      setRestaurant({ ...restaurant, 
+                        is_offer: event.target.checked, // Set the boolean is_offer flag
+                        // if is_offer is false then reset to default values
+                        discount_percentage: event.target.checked ? restaurant.discount_percentage : 0, 
+                        offer_on: event.target.checked ? restaurant.offer_on : null,
+                        // reset menu offer attributes as well
+                        menu: restaurant.menu.map((menuItem) => ({
+                          ...menuItem, item_size_price: menuItem.item_size_price.map((sizePrice) => ({ ...sizePrice, 
+                                                                                    discount_percentage: event.target.checked ? sizePrice.discount_percentage : 0, 
+                                                                                    offer_type: event.target.checked ? sizePrice.offer_type : null,
+                                                                })),
+                                                  })),
+                      })} />
                   ) : (
                     restaurant.is_offer ? 'Enabled - Offers will be applied to Menu Items' : 'Disabled - No Offers set'
                 )}
@@ -356,8 +371,8 @@ function restaurant() {
                 {/* Discount Percentage */}
                 <Text p="5px" fontSize="lg">
                   <span style={{ display: 'inline-block', width: '190px' }}>Discount Percentage:</span>
-                  {inEditingMode ? (
-                    <Input type="number" name="discount_percentage" value={restaurant.discount_percentage} onChange={(event) => setRestaurant({ ...restaurant, discount_percentage: event.target.value })} />
+                  {inEditingMode && restaurant.is_offer ? (
+                    <Input type="number" name="discount_percentage" value={restaurant.discount_percentage} onChange={(event) => setRestaurant({ ...restaurant, discount_percentage: event.target.value <= 100 ? (event.target.value >=0 ? event.target.value : 0) : 100 })} />
                   ) : (
                     `${restaurant.discount_percentage ?? 0} %`
                   )}
@@ -365,20 +380,21 @@ function restaurant() {
                 {/* offer_on */}
                 <Flex>
                   <Text p="5px" fontSize="lg" display='inline' width='190px'>Offer Applied On:</Text>
-                  {inEditingMode ? (
-                    <Select name="offer_on" value={restaurant.offer_on} onChange={(event) => setRestaurant({ ...restaurant, offer_on: event.target.value })}>
+                  {inEditingMode && restaurant.is_offer ? (
+                    <Select name="offer_on" value={restaurant.offer_on || ""} onChange={(event) => setRestaurant({ ...restaurant, offer_on: event.target.value })}>
                       <option value={null || ""}>None</option>
-                      <option value="menu_type">Menu Item specific</option>
+                      <option value="menu_item">Menu Item specific</option>
                       <option value="restaurant">All restaurant items</option>
                     </Select>
                   ) : (
                     <>
                       <Text p="5px" fontSize="lg">
-                        {restaurant.offer_on ==='restaurant' ? ("All restaurant items") : restaurant.offer_on === 'menu_item' ? ("Menu Item specific"): ("N/A - Offer Not Applied")}
+                        {restaurant.offer_on ==='restaurant' ? ("All restaurant items") : (restaurant.offer_on === 'menu_item' ? ("Menu Item specific"): ("N/A - Offer Not Applied"))}
                       </Text>
                     </>
                   )}
                 </Flex>
+                
 
               </Box>
             
@@ -500,6 +516,24 @@ function restaurant() {
                         <Text fontSize="md" fontWeight="medium" width="80px">Type:</Text>
                         <Input value={sizePrice.type || ""} placeholder="Type" onInput={(event) => { updateSizePrice(menuItem, index, 'type', event.target.value); }} />
                       </Flex>
+
+                      {/* offer_type  */}
+                      <Flex alignItems="center" mt="10px">
+                        <Text fontSize="md" fontWeight="medium" width="80px">Offer/Discount Type:</Text>
+                        <Select name="offer_type" value={sizePrice.offer_type} onInput={(event) => { updateSizePrice(menuItem, index, 'offer_type', event.target.value); }} >
+                          <option value={null || ""}>None</option>
+                          <option value="percentage">Percentage</option>
+                          {/* <option value="restaurant">Label</option> label option to add in future */}
+                        </Select>
+                      </Flex>
+
+                      {/* percentage discount */}
+                      <Flex alignItems="center" mt="10px">
+                        <Text fontSize="md" fontWeight="medium" width="80px">Discount Percentage:</Text>
+                        <Input type="number" name="discount_percentage" value={sizePrice.discount_percentage || "0"} onInput={(event) => { updateSizePrice(menuItem, index, 'discount_percentage', event.target.value <= 100 ? (event.target.value >=0 ? event.target.value : 0) : 100 ); }}
+                          disabled={sizePrice.offer_type !== 'percentage'} >
+                        </Input>
+                      </Flex>
                     </Box>
                   ))}
                 </VStack>
@@ -511,14 +545,20 @@ function restaurant() {
                         {restaurant.is_offer && restaurant.offer_on === 'restaurant' ? (
                           <>
                             <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                            <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                            <Text fontWeight="bold" ml="2">
+                              <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                              {`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                            </Text>
                           </>
                         ) : (
                           <>
-                            {sizePrice.offer_type === 'percentage' ? (
+                            {restaurant.is_offer && sizePrice.offer_type === 'percentage' ? (
                               <>
                                 <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                                <Text fontWeight="bold" ml="2">{`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                <Text fontWeight="bold" ml="2">
+                                  <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                                  {`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                                </Text>
                               </>
                             ) : (
                               <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
