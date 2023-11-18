@@ -36,8 +36,6 @@ export const getRestaurant = async (restaurantID) => {
     }
 }
 
-
-
 export const deleteRestaurant = async (restaurantID) => {
     const options = {
         method: 'DELETE',
@@ -66,23 +64,6 @@ export const updateRestaurantDetails = async (requestJSON) => {
         },
         body: JSON.stringify(
             requestJSON
-            // {
-            //     restaurant_id: requestJSON.restaurantID,
-            //     name: requestJSON.name,
-            //     address: requestJSON.address,
-            //     start_time: requestJSON.start_time,
-            //     end_time: requestJSON.end_time,
-            //     contact: requestJSON.contact,
-            //     fb_link: requestJSON.fb_link,
-            //     insta_link: requestJSON.insta_link,
-            //     store_link: requestJSON.store_link,
-            //     online_delivery: requestJSON.online_delivery,
-            //     tagline: requestJSON.tagline,
-            //     max_booking_capacity: requestJSON.max_booking_capacity,
-            //     image_path: requestJSON.image_path,
-            //     is_new: requestJSON.is_new,
-            //     menu: requestJSON.menu
-            // }
             )
     }
 
