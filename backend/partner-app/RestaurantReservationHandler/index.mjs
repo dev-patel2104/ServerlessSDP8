@@ -40,7 +40,10 @@ export const handler = async (event) => {
         }
         else
         {
-            message += ". The reservation has been booked with the following menu item: " + reservation.menu_items;
+            message += ". The reservation has been booked with the following menu item: \n" ;
+            reservation.menu_items.forEach((item, index) => {
+                message += (index + 1) + ") " + item.item_name + ": quantity -----> " + item.item_quantity + ".\n";
+            })
             
         }
 
