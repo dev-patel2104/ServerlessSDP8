@@ -64,9 +64,10 @@ function restaurant() {
       alert('Please fill in all mandatory fields.');
       return;
     }
+    console.log(restaurant);
     let response = await updateRestaurantData(restaurant);
     setInEditingMode(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   async function updateRestaurantData(restaurant) {
@@ -454,7 +455,8 @@ function restaurant() {
                 <Flex>
                 <Text p="5px" fontSize="lg" display='inline' width='190px'>Offer Applied On:</Text>
                   {inEditingMode && restaurant.is_offer ? (
-                    <Select name="offer_on" value={restaurant.offer_on || ""} onChange={(event) => {
+                    <Select name="offer_on" value={restaurant.offer_on || "none"} onChange={(event) => {
+                      console.log('sssoasada: ',event.target.value);
                       if (event.target.value === 'restaurant') {
                         // if discount applied restaurant wide then reset menu_item specifc attributes 
                         const updatedMenuItems = restaurant.menu.map(item => ({ ...item, offer_on: null, discount_percentage: 0 }));
@@ -464,6 +466,7 @@ function restaurant() {
                         setRestaurant({ ...restaurant, offer_on: event.target.value, discount_percentage: 0 });
                       }   
                     }}>
+                      <option value="none">None</option>
                       <option value="menu_item">Menu Item specific</option>
                       <option value="restaurant">All restaurant items</option>
                       </Select>

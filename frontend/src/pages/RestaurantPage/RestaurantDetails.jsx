@@ -21,7 +21,7 @@ function RestaurantDetails() {
         setRestaurant(restaurantResponse);
         console.log(restaurantResponse);
         setLoading(false);
-        setMaxDiscount(Math.max(...restaurantResponse.menu.flatMap((menuItem) => menuItem.item_size_price.map((sizePrice) => sizePrice.discount_percentage) )));
+        setMaxDiscount(Math.max(...restaurantResponse.menu.flatMap((menuItem) => menuItem.item_size_price.map((sizePrice) => parseFloat(sizePrice.discount_percentage)) )));
     }
     fetchData();
 
