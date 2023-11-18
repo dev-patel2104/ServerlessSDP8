@@ -42,6 +42,12 @@ function RestaurantDetails() {
 
   return (
     <Flex flexDirection="column" alignItems="start" justifyContent="center">
+        {/* {Object.keys(restaurant).length < 5 && restaurant["email_id"] && restaurant["menu"] && restaurant["restaurant_id"] ? ( */}
+            {/* <Text fontSize="3xl" fontWeight="bold" color="red" textAlign="center" mt="20px"> */}
+            {/* OOPS! Restaurant under construction */}
+          {/* </Text> */}
+            {/* ) : ( */}
+                {/* <> */}
         <Box bg="white" w="100%"  rounded="md" mb="5px">
             <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
@@ -100,7 +106,8 @@ function RestaurantDetails() {
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
             <VStack alignItems="start" spacing="20px" ml="60px">
-                {restaurant.menu.map((menuItem) => (
+            {Array.isArray(restaurant.menu) && restaurant.menu.length > 0 ? ( 
+                restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
                     <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
                     <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
@@ -145,8 +152,12 @@ function RestaurantDetails() {
                         ))}
                     </HStack>
                     </Box>
-                ))}
+                ))
+                ) : (
+                    <Text as="span" fontWeight="bold" color="purple.500">No menu items present in Menu.</Text>
+                  )}
                 </VStack>
+
 
             </Box>
 
@@ -160,6 +171,8 @@ function RestaurantDetails() {
 
         </Box>
     </Flex> 
+    {/* </> */}
+    {/* )} */}
     </Flex>
   );
 }
