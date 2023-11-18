@@ -100,7 +100,6 @@ function PartnerLogin() {
         });
         localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
-        console.log(localStorage.getItem('userType'));
         navigate("/partner/profile");
       })
       .catch((error) => {

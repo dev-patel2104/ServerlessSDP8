@@ -21,6 +21,7 @@ export const handler = async (event) => {
     
     const req = JSON.parse(event.body);
     const email = req.email;
+    const userType = "customer";
     if (!email) {
       return {
         statusCode: 400,
@@ -31,19 +32,30 @@ export const handler = async (event) => {
     const response = await fetch(`https://e4x258613e.execute-api.us-east-1.amazonaws.com/user/${email}`);
     const body = await response.json()
     const statusCode = response.status;
-    
+  
     console.log(email);
     console.log(body);
     
-    if(statusCode)
+    if(statusCode == 200)
     {
       return {
-        statusCode: 409,
+        statusCode: 200,
         body: JSON.stringify({
           message: "The DB already contains this email address",
         }),
       };
     }
+    else if(statusCode == 400)
+    {
+      return{
+        statusCode: 404,
+        body: JSON.stringify({
+          message: "The email required to fetch the user data from the dynamoDB is not available"
+        }),
+      };
+    }
+    
+    
     
     const uuidValue = uuid();
     const params = {
@@ -51,6 +63,7 @@ export const handler = async (event) => {
       Item: {
         email: { S: email },
         uuid: { S: uuidValue },
+        type: {S: userType },
 
       },
     };
@@ -59,7 +72,8 @@ export const handler = async (event) => {
 
     await putItemAsync(putCommand);
 
-    postOptions.body = JSON.stringify({ UserId: uuidValue, email: email });
+    // hardcoding the value of user type to customer since this function is use only to add the customer to the database.
+    postOptions.body = JSON.stringify({ UserId: uuidValue, email: email, type: userType });
     await fetch('https://e4x258613e.execute-api.us-east-1.amazonaws.com/subscribe', postOptions);
 
     return {
