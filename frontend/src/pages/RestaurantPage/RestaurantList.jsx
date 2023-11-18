@@ -6,11 +6,13 @@ import { FaInstagram, FaStaylinked, FaArrowRightLong } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import { getAllRestaurants, deleteRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
+import { TbDiscount2 } from "react-icons/tb";
 
 function RestaurantList() {
   const [restaurants, setRestaurants] = useState([]);
   const [allOpenRestaurants, setAllOpenRestaurants] = useState([]);
   const [allClosedRestaurants, setAllClosedRestaurants] = useState([]);
+  const [allRestaurantDiscounts, setAllRestaurantDiscounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const currentTimeNow = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -35,6 +37,9 @@ function RestaurantList() {
       });
       console.log('allClosedRestaurants : ',allClosedRestaurants)
       console.log(restaurants);
+      var restaurantDiscounts = calculateDiscounts(restaurantResponse);
+      setAllRestaurantDiscounts(restaurantDiscounts);
+      console.log('restaurantDiscounts: ',restaurantDiscounts);
       setRestaurants(restaurantResponse);
       setAllOpenRestaurants(allOpenRestaurants);
       setAllClosedRestaurants(allClosedRestaurants);
@@ -60,6 +65,43 @@ function RestaurantList() {
     }    
   }
 
+  function calculateDiscounts(restaurants) {
+    const discounts = {};
+  
+    restaurants.forEach(restaurant => {
+      // restaurant
+      if (restaurant.is_offer && restaurant.offer_on === 'restaurant') {
+        discounts[restaurant.restaurant_id] = {
+          discountType: 'restaurant',
+          discountPercentage: restaurant.discount_percentage || 0
+        };
+      // menu item
+      } else if (restaurant.is_offer && restaurant.offer_on === 'menu_item' && Array.isArray(restaurant.menu)) {
+        let maxDiscount = 0;
+        restaurant.menu.forEach(menuItem => {
+          if (Array.isArray(menuItem.item_size_price)) {
+            menuItem.item_size_price.forEach(sizePrice => {
+              if (sizePrice.discount_percentage > maxDiscount) {
+                maxDiscount = sizePrice.discount_percentage;
+              }
+            });
+          }
+        });
+        discounts[restaurant.restaurant_id] = {
+          discountType: 'menu_item',
+          maxDiscountPercentage: maxDiscount
+        };
+      } else {
+        discounts[restaurant.restaurant_id] = {
+          discountType: 'no_discount',
+          discount: 0
+        };
+      }
+    });
+  
+    return discounts;
+  }
+
   if (loading) {
     return <div>Please give us a few minutes fetching the Restaurants...</div>;
   }
@@ -77,12 +119,16 @@ function RestaurantList() {
         <Text fontSize="4xl" fontWeight="bold">List of all Restaurant with us:</Text>
       )} 
     </Flex>
-    <Flex w="100%" minHeight="5vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
+    <Flex w="100%" minHeight="5vh" backgroundColor={theme.primaryBackground}   justifyContent="space-around">
     
     { !checkUserType("partner") ? ( 
 
-      <Flex flexDirection="column" alignItems="end" >
-        {allOpenRestaurants.map((restaurant) => (
+      <Flex flexDirection="column" alignItems="center" >
+        {allOpenRestaurants.length === 0 ? (
+          <Text fontSize="xl" textAlign="center" color="white" mt="20px">
+            No open restaurants at the moment! Explore closed restaurants below.
+          </Text>
+        ) : ( allOpenRestaurants.map((restaurant) => (
           <Box key={restaurant.restaurant_id} boxShadow='xl' w="100%" mt="20px" bg="#FCFAFA" p="20px" rounded="md">
             <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
               <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
@@ -91,6 +137,22 @@ function RestaurantList() {
               <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
               <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
               <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? ( <> <Icon as={BsFillHouseHeartFill} color='green' boxSize={6} /></>):(<><Icon as={BsFillHouseSlashFill} color='red' boxSize={6} /></>)} {restaurant.online_delivery ? 'Yes' : 'No'} </Text>
+              
+              {allRestaurantDiscounts[restaurant.restaurant_id] && (
+                <>
+                  {allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' ? (<>
+                      
+                      <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />{allRestaurantDiscounts[restaurant.restaurant_id].discountPercentage}% Discount all Items.</Text>
+                    </>
+                  ) : (
+                    allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && (<>
+                      
+                      <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />Up To {allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage}% Discount.</Text>
+                      </>
+                    )
+                  )}
+                </>
+              )}
               <Text ml="15px">
                 
               </Text>
@@ -119,7 +181,7 @@ function RestaurantList() {
               </Flex>
             </NavLink>
           </Box>
-        ))}
+        )))}
 
         <Text fontSize="4xl" fontWeight="bold" mt="20px" mb="20px">Currently Closed:</Text>
 
@@ -133,6 +195,21 @@ function RestaurantList() {
               <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
               <Text fontSize="lg">Online Delivery: {restaurant.online_delivery ? ( <> <Icon as={BsFillHouseHeartFill} color='green' boxSize={6} /></>):(<><Icon as={BsFillHouseSlashFill} color='red' boxSize={6} /></>)} {restaurant.online_delivery ? 'Yes' : 'No'} </Text>
             </NavLink>
+            {allRestaurantDiscounts[restaurant.restaurant_id] && (
+                <>
+                  {allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' ? (<>
+                      
+                      <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />{allRestaurantDiscounts[restaurant.restaurant_id].discountPercentage}% Discount all Items.</Text>
+                    </>
+                  ) : (
+                    allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && (<>
+                      
+                      <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />Up To {allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage}% Discount.</Text>
+                      </>
+                    )
+                  )}
+                </>
+              )}
             <Text ml="25px" mt="10px" color="#0244A1">
               <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
                 <Icon as={FaStaylinked} color='#78C257' boxSize={6} />

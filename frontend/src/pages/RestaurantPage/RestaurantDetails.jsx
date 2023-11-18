@@ -27,6 +27,13 @@ function RestaurantDetails() {
 
   }, [restaurant_id]);
 
+  function checkUserType(userType) {
+    if (localStorage.getItem("userType") === userType)
+      return true;
+    else 
+      return false;
+  }
+  
   // Offer calculation and handling helper functions
   const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
     return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
@@ -100,8 +107,9 @@ function RestaurantDetails() {
                         <Text ml={2} color="#0244A1">Instagram</Text>
                     </Link>
                 )}
-
-                <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurants/${restaurant_id}/book`)}>Reserve your Table</Button>
+                {checkUserType("partner") && (
+                    <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurants/${restaurant_id}/book`)}>Reserve your Table</Button>
+                )}
 
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>

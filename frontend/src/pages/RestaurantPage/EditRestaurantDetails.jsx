@@ -64,15 +64,15 @@ function restaurant() {
       alert('Please fill in all mandatory fields.');
       return;
     }
-    await updateRestaurantData(restaurant);
+    let response = await updateRestaurantData(restaurant);
     setInEditingMode(false);
+    window.location.reload();
   };
 
   async function updateRestaurantData(restaurant) {
     console.log(restaurant);
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
-    // window.location.reload();
   };
 
   // Menu item helper functions:
@@ -425,23 +425,29 @@ function restaurant() {
                 <Text p="5px" fontSize="lg">
                   <span style={{ display: 'inline-block', width: '190px' }}>Enable Offers:</span>
                   {inEditingMode ? (
-                    <input type="checkbox" name="is_offer" checked={restaurant.is_offer} onChange={(event) => 
-                      setRestaurant({ ...restaurant, 
-                        is_offer: event.target.checked, // Set the boolean is_offer flag
-                        // if is_offer is false then reset to default values
-                        discount_percentage: event.target.checked ? restaurant.discount_percentage : 0, 
-                        offer_on: event.target.checked ? restaurant.offer_on : null,
-                        // reset menu offer attributes as well
-                        menu: restaurant.menu.map((menuItem) => ({
-                          ...menuItem, item_size_price: menuItem.item_size_price.map((sizePrice) => ({ ...sizePrice, 
-                                                                                    discount_percentage: event.target.checked ? sizePrice.discount_percentage : 0, 
-                                                                                    offer_type: event.target.checked ? sizePrice.offer_type : null,
-                                                                })),
-                                                  })),
-                      })} />
+                    <input type="checkbox" name="is_offer" checked={restaurant.is_offer} 
+                      onChange={(event) => 
+                        setRestaurant({  ...restaurant,  is_offer: event.target.checked, // Set the boolean is_offer flag
+                          // if is_offer is false then reset to default values
+                          discount_percentage: event.target.checked ? restaurant.discount_percentage : 0, 
+                          offer_on: event.target.checked ? restaurant.offer_on : null,
+                          menu: Array.isArray(restaurant.menu) ? (
+                            restaurant.menu.map((menuItem) => ({
+                              ...menuItem, 
+                              item_size_price: Array.isArray(menuItem.item_size_price) ?
+                                menuItem.item_size_price.map((sizePrice) => ({
+                                  ...sizePrice, 
+                                  discount_percentage: event.target.checked ? sizePrice.discount_percentage : 0, 
+                                  offer_type: event.target.checked ? sizePrice.offer_type : null,
+                                })) : []
+                            }))
+                          ) : []
+                        })
+                      }
+                    />
                   ) : (
                     restaurant.is_offer ? 'Enabled - Offers will be applied to Menu Items' : 'Disabled - No Offers set'
-                )}
+                  )}
                 </Text>
                 
                 {/* offer_on */}
@@ -460,7 +466,7 @@ function restaurant() {
                     }}>
                       <option value="menu_item">Menu Item specific</option>
                       <option value="restaurant">All restaurant items</option>
-                    </Select>
+                      </Select>
                   ) : (
                     <>
                       <Text p="5px" fontSize="lg">
@@ -485,6 +491,8 @@ function restaurant() {
             <Button mt="15px" colorScheme={inEditingMode ? "green" : "purple"} onClick={inEditingMode ? saveEditChanges : enableEditMode}>
               {inEditingMode ? 'Save Changes' : 'Edit Restaurant Details'}
             </Button>
+            {/* <Button mt="15px" ml="15px" colorScheme="yellow" onClick={() => setRestaurant(previousState)}>Cancel Changes</Button> */}
+
           </Box>
 
           <Text fontSize="4xl" p="20px" fontWeight="bold"> Menu Items </Text>
