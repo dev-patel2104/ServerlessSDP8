@@ -6,93 +6,116 @@ const topicARN = 'arn:aws:sns:us-east-1:263032025301:RestaurantTopic';
 const publishAsync = promisify(sns.publish).bind(sns);
 
 export const handler = async (event) => {
+    try {
+        let response, restaurants, reservations, menuData, messageAttributes = "";
+        let message = "";
+        let bookingThreshold = 20, maxBooking;
+        let itemReservation = {};
+        let startTime, endTime, result, cnt;
 
-    let response, restaurants, reservations, menuData, messageAttributes = "";
-    let message = "";
-    let bookingThreshold = 20, maxBooking;
-    let itemReservation = {};
+        response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants`);
+        restaurants = await response.json();
 
-    response = await fetch(`https://hc4eabn0s8.execute-api.us-east-1.amazonaws.com/restaurants`);
-    restaurants = await response.json();
+        const params = {
+            Message: message,
+            MessageAttributes: messageAttributes,
+            TopicArn: topicARN,
+            Subject: "Your booking statistics"
+        };
+        console.log("Restaurants:" + restaurants.length);
 
-    const params = {
-        Message: message,
-        MessageAttributes: messageAttributes,
-        TopicArn: topicARN,
-        Subject: "Your booking statistics"
-    };
-    console.log("Restaurants:" + restaurants.length);
 
-    let startTime, endTime, result, cnt = 0;
-    for (const restaurant of restaurants) {
-        if (restaurant.start_time === undefined) {
-            continue;
-        }
+        for (const restaurant of restaurants) {
 
-        startTime = restaurant.start_time.split(":");
-        endTime = restaurant.end_time.split(":");
-        startTime = parseInt(startTime);
-        endTime = parseInt(endTime);
-        result = endTime - startTime;
-        //console.log("Result:" + result);
+            cnt = 0;
+            itemReservation = {};
+            message = "";
+            messageAttributes = "";
+            maxBooking = 0;
 
-        response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/restaurants/${restaurant.restaurant_id}`);
-        reservations = await response.json();
-
-        if (reservations.error) {
-            continue;
-        }
-        else {
-            maxBooking = result * parseInt(restaurant.max_booking_capacity);
-            if (reservations.length >= maxBooking - bookingThreshold) {
-                message += "You are being overbooked. Currently, you have " + reservations.length + " reservations and the max booking capacity is " + maxBooking + ".\n";
+            if (!restaurant.start_time || !restaurant.end_time) {
+                continue;
             }
 
-            for (const reservation of reservations) {
-                // fetching information of the menu items booked for that particular reservation
-                response = await fetch(`https://p4mp4ngglh.execute-api.us-east-1.amazonaws.com/items/${reservation.reservation_id}`);
-                menuData = await response.json();
+            startTime = restaurant.start_time.split(":");
+            endTime = restaurant.end_time.split(":");
+            startTime = parseInt(startTime);
+            endTime = parseInt(endTime);
+            result = endTime - startTime;
+            //console.log("Result:" + result);
 
-                if (menuData.error) {
-                    continue;
-                }
-                else {
-                    menuData.items.forEach(item => {
-                        const itemId = parseInt(item.item_id);
-                        const quantity = parseInt(item.item_quantity);
-                        const itemName = item.item_name;
-                        itemReservation[itemId] = (itemReservation[itemId])
-                            ? { item_name: itemReservation[itemId].item_name, quantity: itemReservation[itemId].quantity + quantity }
-                            : { item_name: itemName, quantity: quantity };
-                    });
-                }
+            response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/restaurants/${restaurant.restaurant_id}`);
+            reservations = await response.json();
+
+            if (reservations.error) {
+                continue;
             }
+            else {
+                if (!restaurant.max_booking_capacity) {
+                    return {
+                        statusCode: 404,
+                        body: 'No information is available about the max booking capacity'
+                    };
+                }
+                maxBooking = result * parseInt(restaurant.max_booking_capacity);
+                if (reservations.length >= maxBooking - bookingThreshold) {
+                    message += "You are being overbooked. Currently, you have " + reservations.length + " reservations and the max booking capacity is " + maxBooking + ".\n";
+                }
 
-            if (Object.keys(itemReservation).length !== 0) {
-                const entries = Object.entries(itemReservation);
-                console.log(entries);
+                for (const reservation of reservations) {
+                    // fetching information of the menu items booked for that particular reservation
+                    response = await fetch(`https://p4mp4ngglh.execute-api.us-east-1.amazonaws.com/items/${reservation.reservation_id}`);
+                    menuData = await response.json();
 
-                entries.sort((a, b) => b[1].quantity - a[1].quantity);
-
-                message += "Following are the top booked items: \n";
-                for (const entry of entries) {
-                    if (cnt >= 3) {
-                        break;
+                    if (menuData.error) {
+                        continue;
                     }
-                    cnt++;
-                    message += cnt + ") " + entry[1].item_name + "\n";
+                    else {
+                        menuData.items.forEach(item => {
+                            const itemId = parseInt(item.item_id);
+                            const quantity = parseInt(item.item_quantity);
+                            const itemName = item.item_name;
+                            itemReservation[itemId] = (itemReservation[itemId])
+                                ? { item_name: itemReservation[itemId].item_name, quantity: itemReservation[itemId].quantity + quantity }
+                                : { item_name: itemName, quantity: quantity };
+                        });
+                    }
                 }
-            }
 
-            if (message !== "") {
-                messageAttributes = { "UserId": { DataType: "String", StringValue: restaurant.restaurant_id } };
-                params.Message = message;
-                params.MessageAttributes = messageAttributes;
-                console.log(params);
-                publishAsync(params);
-            }
+                if (Object.keys(itemReservation).length !== 0) {
+                    const entries = Object.entries(itemReservation);
+                    console.log(entries);
 
+                    entries.sort((a, b) => b[1].quantity - a[1].quantity);
+
+                    message += "Following are the top booked items: \n";
+                    for (const entry of entries) {
+                        if (cnt >= 3) {
+                            break;
+                        }
+                        cnt++;
+                        message += cnt + ") " + entry[1].item_name + "\n";
+                    }
+                }
+
+                if (message !== "") {
+                    messageAttributes = { "UserId": { DataType: "String", StringValue: restaurant.restaurant_id } };
+                    params.Message = message;
+                    params.MessageAttributes = messageAttributes;
+                    console.log(params);
+                    publishAsync(params);
+                }
+
+            }
         }
     }
+    catch (err) {
+        console.log("Some error has occurred", err);
+        return {
+            statusCode: 500,
+            body: 'Error publishing message to SNS. Internal Server Error'
+        };
+    }
+
 
 };
