@@ -368,15 +368,7 @@ function restaurant() {
                     restaurant.is_offer ? 'Enabled - Offers will be applied to Menu Items' : 'Disabled - No Offers set'
                 )}
                 </Text>
-                {/* Discount Percentage */}
-                <Text p="5px" fontSize="lg">
-                  <span style={{ display: 'inline-block', width: '190px' }}>Discount Percentage:</span>
-                  {inEditingMode && restaurant.is_offer ? (
-                    <Input type="number" name="discount_percentage" value={restaurant.discount_percentage} onChange={(event) => setRestaurant({ ...restaurant, discount_percentage: event.target.value <= 100 ? (event.target.value >=0 ? event.target.value : 0) : 100 })} />
-                  ) : (
-                    `${restaurant.discount_percentage ?? 0} %`
-                  )}
-                </Text>
+                
                 {/* offer_on */}
                 <Flex>
                   <Text p="5px" fontSize="lg" display='inline' width='190px'>Offer Applied On:</Text>
@@ -394,7 +386,15 @@ function restaurant() {
                     </>
                   )}
                 </Flex>
-                
+                {/* Discount Percentage */}
+                <Text p="5px" fontSize="lg">
+                  <span style={{ display: 'inline-block', width: '190px' }}>Discount Percentage:</span>
+                  {inEditingMode && restaurant.is_offer && restaurant.offer_on === "restaurant" ? (
+                    <Input type="number" name="discount_percentage" value={restaurant.discount_percentage} onChange={(event) => setRestaurant({ ...restaurant, discount_percentage: event.target.value <= 100 ? (event.target.value >=0 ? event.target.value : 0) : 100 })} />
+                  ) : (
+                    `${restaurant.discount_percentage ?? 0} %`
+                  )}
+                </Text>
 
               </Box>
             

@@ -27,11 +27,13 @@ function RestaurantList() {
       }
       restaurantResponse = await getAllRestaurants();
       const allOpenRestaurants = restaurantResponse.filter((restaurant) => {
-        return currentTimeNow >= restaurant.start_time && currentTimeNow <= restaurant.end_time;
+        return currentTimeNow >= restaurant.start_time && currentTimeNow <= restaurant.end_time && restaurant.is_open === true;
       });
+      console.log('allOpenRestaurants : ',allOpenRestaurants)
       const allClosedRestaurants = restaurantResponse.filter((restaurant) => {
-        return currentTimeNow < restaurant.start_time || currentTimeNow > restaurant.end_time;
+        return currentTimeNow < restaurant.start_time || currentTimeNow > restaurant.end_time || restaurant.is_open === false;
       });
+      console.log('allClosedRestaurants : ',allClosedRestaurants)
       console.log(restaurants);
       setRestaurants(restaurantResponse);
       setAllOpenRestaurants(allOpenRestaurants);

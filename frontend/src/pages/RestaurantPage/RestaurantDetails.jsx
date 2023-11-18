@@ -52,13 +52,13 @@ function RestaurantDetails() {
                 {restaurant.is_offer && restaurant.offer_on === 'restaurant' && (
                     <>
                         <Icon as={TbDiscount2} color="green.500" boxSize={10} />
-                        <Text fontWeight="bold" fontSize="1xl">{`${restaurant.discount_percentage}% OFF`}</Text>
+                        <Text fontWeight="bold" fontSize="1xl">{`${restaurant.discount_percentage}% OFF (on All Menu Items)`}</Text>
                     </>
                 )}
                 {restaurant.is_offer && restaurant.offer_on === 'menu_item' && (
                     <>
                         <Icon as={TbDiscount2} color="green.500" boxSize={10} />
-                        {`UPTO `}<Text fontWeight="bold" fontSize="1xl" ml="1">{` $${maxDiscount}% OFF`}</Text>
+                        {`DISCOUNTS UPTO `}<Text fontWeight="bold" fontSize="1xl" ml="1" mr="1">{` $${maxDiscount}% OFF `}</Text> {`(on Selected Menu Items)`}
                     </>
                 )}
             </Flex>
