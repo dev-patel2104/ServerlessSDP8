@@ -156,7 +156,7 @@ function EditReservation() {
 
         let reservation_time = reservation_date.getTime();
         let reservation_status = "confirmed";
-        const reservationResponse = await editReservation(reservation_id, reservation.restaurant_id, reservation_time, customer_id, reservation_status);
+        const reservationResponse = await editReservation(reservation_id, reservation.restaurant_id, reservation_time, customer_id, reservation_status, reservation?.is_notified, reservation?.is_restaurant_notified);
 
         if (reservationResponse.reservation_id) {
             toast({

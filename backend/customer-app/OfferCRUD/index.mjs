@@ -58,8 +58,9 @@ export const handler = async (event, context) => {
             Item: {
               offer_id: requestJSON.offer_id,
               is_new: requestJSON.is_new,
+              offer_on: requestJSON.offer_on,
               offer_description: requestJSON.offer_description,
-              restaurant_id: requestJSON.restaurant_id
+              discount: requestJSON.discount,
             },
           })
         );

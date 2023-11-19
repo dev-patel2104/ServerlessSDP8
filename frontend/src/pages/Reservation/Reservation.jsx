@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { deleteReservation, getReservation } from '../../services/ReservationServices/ReservationService';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
+import { deleteItems } from '../../services/ReservationServices/MenuReservationService';
 
 
 
@@ -73,6 +74,7 @@ function Reservation() {
 
     const handleDelete = async () => {
         const deleteResponse = await deleteReservation(reservation_id);
+        const deleteMenuItems = await deleteItems(reservation_id);
         if (deleteResponse.reservation_id) {
             toast({
                 title: 'Reservation Successfully Deleted',
@@ -125,6 +127,9 @@ function Reservation() {
                                     <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
                                     : null
                             }
+
+                            <Button onClick={() => navigate(`/reservations/${reservation_id}/menu-items`)} mt="16px" variant="solid" w="156px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Select Menu Items</Button>
+
                         </Flex>
                     </Flex>
                 </Flex> :

@@ -3,6 +3,7 @@ import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button } from '@cha
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill } from 'react-icons/bs';
 import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
+import { TbDiscount2, TbDiscountCheckFilled } from "react-icons/tb";
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { theme } from '../../theme';
 
@@ -10,6 +11,7 @@ function RestaurantDetails() {
   const { restaurant_id } = useParams();
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [maxDiscount, setMaxDiscount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,9 +21,23 @@ function RestaurantDetails() {
         setRestaurant(restaurantResponse);
         console.log(restaurantResponse);
         setLoading(false);
+        setMaxDiscount(Math.max(...restaurantResponse.menu.flatMap((menuItem) => menuItem.item_size_price.map((sizePrice) => parseFloat(sizePrice.discount_percentage)) )));
     }
     fetchData();
+
   }, [restaurant_id]);
+
+  function checkUserType(userType) {
+    if (localStorage.getItem("userType") === userType)
+      return true;
+    else 
+      return false;
+  }
+  
+  // Offer calculation and handling helper functions
+  const calculateDiscountedPrice = (originalPrice, discountPercentage) => {
+    return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
+  };
 
   if (loading) {
     return <div>Loading restaurant details...</div>;
@@ -33,12 +49,32 @@ function RestaurantDetails() {
 
   return (
     <Flex flexDirection="column" alignItems="start" justifyContent="center">
+        {/* {Object.keys(restaurant).length < 5 && restaurant["email_id"] && restaurant["menu"] && restaurant["restaurant_id"] ? ( */}
+            {/* <Text fontSize="3xl" fontWeight="bold" color="red" textAlign="center" mt="20px"> */}
+            {/* OOPS! Restaurant under construction */}
+          {/* </Text> */}
+            {/* ) : ( */}
+                {/* <> */}
         <Box bg="white" w="100%"  rounded="md" mb="5px">
             <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
         <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
-            <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+            <Flex alignItems="center">
+                <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
+                {restaurant.is_offer && restaurant.offer_on === 'restaurant' && (
+                    <>
+                        <Icon as={TbDiscount2} color="green.500" boxSize={10} />
+                        <Text fontWeight="bold" fontSize="1xl">{`${restaurant.discount_percentage}% OFF (on All Menu Items)`}</Text>
+                    </>
+                )}
+                {restaurant.is_offer && restaurant.offer_on === 'menu_item' && (
+                    <>
+                        <Icon as={TbDiscount2} color="green.500" boxSize={10} />
+                        {`DISCOUNTS UPTO `}<Text fontWeight="bold" fontSize="1xl" ml="1" mr="1">{` $${maxDiscount}% OFF `}</Text> {`(on Selected Menu Items)`}
+                    </>
+                )}
+            </Flex>
             <Box bg="white" p="20px" ml="40px" rounded="md">
                 <Text p="5px" fontSize="lg">{restaurant.tagline}</Text>
                 <Text p="5px" fontSize="lg"> <Icon as={FaMapMarkedAlt} color='blackAlpha.900' boxSize={6} /> {restaurant.address} </Text>
@@ -71,37 +107,66 @@ function RestaurantDetails() {
                         <Text ml={2} color="#0244A1">Instagram</Text>
                     </Link>
                 )}
-
-                <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurants/${restaurant_id}/book`)}>Reserve your Table</Button>
+                {checkUserType("partner") && (
+                    <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurants/${restaurant_id}/book`)}>Reserve your Table</Button>
+                )}
 
             </Box>
             <Text fontSize="4xl" p="20px" fontWeight="bold">Our Menu Items</Text>
-            <VStack alignItems="start" spacing="20px" ml="60px" >
-                {restaurant.menu.map((menuItem) => (
+            <VStack alignItems="start" spacing="20px" ml="60px">
+            {Array.isArray(restaurant.menu) && restaurant.menu.length > 0 ? ( 
+                restaurant.menu.map((menuItem) => (
                     <Box key={menuItem.item_id} bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
-                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
-                        <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
-                        <Text fontSize="md">{menuItem.item_description}</Text>
-                        <Text fontWeight="medium">Category: {menuItem.category}</Text>
-                        {menuItem.item_type && (
-                            <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
-                        )}
-                        {menuItem.is_available ? (
-                                <>  <Text fontSize="lg" color="green.500"> <Icon as={BsFillBagCheckFill} color='green' boxSize={6} /> Available </Text> </>
-                             ) : ( 
-                                <> <Text fontSize="lg" color="red.500"> <Icon as={BsFillBagXFill} color='red' boxSize={6} />  Not Available </Text> </>
-                            )}
-                        <HStack mt="10px" spacing="10px">
-                            {menuItem.item_size_price.map((sizePrice) => (
-                            <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
-                                <Text fontSize="lg" fontWeight="bold"> {sizePrice.size} </Text>
+                    <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${menuItem.item_image_path}`} alt={menuItem.item_name} w="100%" h="200px" objectFit="cover" />
+                    <Text fontSize="lg" fontWeight="bold"> {menuItem.item_name} </Text>
+                    <Text fontSize="md">{menuItem.item_description}</Text>
+                    <Text fontWeight="medium">Category: {menuItem.category}</Text>
+                    {menuItem.item_type && (
+                        <Text fontWeight="medium">Type: {menuItem.item_type}</Text>
+                    )}
+                    {menuItem.is_available ? (
+                        <>  <Text fontSize="lg" color="green.500"> <Icon as={BsFillBagCheckFill} color='green' boxSize={6} /> Available </Text> </>
+                    ) : (
+                        <> <Text fontSize="lg" color="red.500"> <Icon as={BsFillBagXFill} color='red' boxSize={6} />  Not Available </Text> </>
+                    )}
+                    <HStack mt="10px" spacing="10px">
+                        {menuItem.item_size_price.map((sizePrice) => (
+                        <Box key={sizePrice.size} bg="gray.100" p="10px" rounded="md">
+                            <Text fontSize="lg" fontWeight="bold">{sizePrice.size}</Text>
+                            {restaurant.is_offer && restaurant.offer_on === 'restaurant' ? (
+                            <>
+                                <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                <Text fontWeight="bold" ml="2">
+                                    <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                                    {`$${calculateDiscountedPrice(sizePrice.price, restaurant.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                                </Text>
+                            </>
+                            ) : (
+                            <>
+                                {sizePrice.offer_type === 'percentage' ? (
+                                <>
+                                    <Text as="s" color="gray.500">{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
+                                    <Text fontWeight="bold" ml="2">
+                                        <Icon as={TbDiscountCheckFilled} color="green.500" boxSize={5} mr="5px"/>
+                                        {`$${calculateDiscountedPrice(sizePrice.price, sizePrice.discount_percentage)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}
+                                    </Text>
+                                </>
+                                ) : (
                                 <Text>{`$${sizePrice.price.toFixed(2)}${sizePrice.type ? ` per ${sizePrice.type}` : ''}`}</Text>
-                            </Box>
-                            ))}
-                        </HStack>
+                                )}
+                            </>
+                            )}
+                        </Box>
+                        ))}
+                    </HStack>
                     </Box>
-                ))}
-            </VStack>
+                ))
+                ) : (
+                    <Text as="span" fontWeight="bold" color="purple.500">No menu items present in Menu.</Text>
+                  )}
+                </VStack>
+
+
             </Box>
 
 
@@ -114,6 +179,8 @@ function RestaurantDetails() {
 
         </Box>
     </Flex> 
+    {/* </> */}
+    {/* )} */}
     </Flex>
   );
 }

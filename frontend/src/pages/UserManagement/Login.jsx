@@ -44,7 +44,7 @@ function Login() {
           // Handle the success response here
           throw new Error("Failed to call the API");
         }
-      }).then((data) => {
+      }).then(() => {
         // Handle the API response data here
         toast({
           title: "Success",
@@ -53,7 +53,8 @@ function Login() {
           duration: 3000,
           isClosable: true,
         });
-        
+        localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('userType', 'user');
         navigate("/user/profile");
       })
       .catch((error) => {
@@ -99,6 +100,8 @@ function Login() {
           isClosable: true,
         });
         localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
+        localStorage.setItem('userType', 'user');
+        console.log(localStorage.getItem('userType'));
         navigate("/user/profile");
       })
       .catch((error) => {
