@@ -15,20 +15,27 @@ function Chatbot() {
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
   const { isOpen, onToggle } = useDisclosure();
+  const getApiUrl = () => {
+    const userType = localStorage.getItem("userType");
+    console.log(userType);
+    return userType === "partner"
+      ? "https://kdhzrsyp76gcnjvb6sltjs4xu40pqatp.lambda-url.us-east-1.on.aws/"
+      : "https://jvevqosxra37hanmjkkgrcdmsy0ytviy.lambda-url.us-east-1.on.aws/";
+  };
 
   // send user input and handle lex response
   async function sendToLambda(userInput) {
+    console.log(JSON.stringify({ userInput }));
+    const apiUrl = getApiUrl();
     try {
-      const response = await fetch(
-        "https://jvevqosxra37hanmjkkgrcdmsy0ytviy.lambda-url.us-east-1.on.aws/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userInput }),
-        }
-      );
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
+        body: JSON.stringify({ userInput }),
+      });
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -55,6 +62,7 @@ function Chatbot() {
 
       try {
         const botResponse = await sendToLambda(userInput.trim());
+        console.log(botResponse);
         const messageArray = botResponse.split("~"); // Split the response by the delimiter
 
         messageArray.forEach((text) => {
