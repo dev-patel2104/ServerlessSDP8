@@ -88,7 +88,7 @@ function restaurant() {
 
     let response = await updateRestaurantData(restaurant);
     setInEditingMode(false);
-    window.location.reload();
+    // window.location.reload();
   };
 
   async function updateRestaurantData(restaurant) {
@@ -513,27 +513,29 @@ function restaurant() {
               {/* offer_on */}
               <Flex>
                 <Text p="5px" fontSize="lg" display='inline' width='190px'>Offer Applied On:</Text>
-                {inEditingMode && restaurant.is_offer ? (
-                  <Select name="offer_on" value={restaurant.offer_on || ""} onChange={(event) => {
-                    if (event.target.value === 'restaurant') {
-                      // if discount applied restaurant wide then reset menu_item specifc attributes 
-                      const updatedMenuItems = restaurant.menu.map(item => ({ ...item, offer_on: null, discount_percentage: 0 }));
+                  {inEditingMode && restaurant.is_offer ? (
+                    <Select name="offer_on" value={restaurant.offer_on || "none"} onChange={(event) => {
+                      console.log('sssoasada: ',event.target.value);
+                      if (event.target.value === 'restaurant') {
+                        // if discount applied restaurant wide then reset menu_item specifc attributes 
+                        const updatedMenuItems = restaurant.menu.map(item => ({ ...item, offer_on: null, discount_percentage: 0 }));
 
-                      setRestaurant({ ...restaurant, offer_on: event.target.value, menu: updatedMenuItems });
-                    } else {
-                      setRestaurant({ ...restaurant, offer_on: event.target.value, discount_percentage: 0 });
-                    }
-                  }}>
-                    <option value="menu_item">Menu Item specific</option>
-                    <option value="restaurant">All restaurant items</option>
-                  </Select>
-                ) : (
-                  <>
-                    <Text p="5px" fontSize="lg">
-                      {restaurant.offer_on === 'restaurant' ? ("All restaurant items") : (restaurant.offer_on === 'menu_item' ? ("Menu Item specific") : ("N/A - Offer Not Applied"))}
-                    </Text>
-                  </>
-                )}
+                        setRestaurant({ ...restaurant, offer_on: event.target.value, menu: updatedMenuItems });
+                      } else {
+                        setRestaurant({ ...restaurant, offer_on: event.target.value, discount_percentage: 0 });
+                      }   
+                    }}>
+                      <option value="none">None</option>
+                      <option value="menu_item">Menu Item specific</option>
+                      <option value="restaurant">All restaurant items</option>
+                      </Select>
+                  ) : (
+                    <>
+                      <Text p="5px" fontSize="lg">
+                        {restaurant.offer_on === 'restaurant' ? ("All restaurant items") : (restaurant.offer_on === 'menu_item' ? ("Menu Item specific") : ("N/A - Offer Not Applied"))}
+                      </Text>
+                    </>
+                  )}
 
               </Flex>
               {/* Discount Percentage */}

@@ -1,6 +1,6 @@
 export const isAuthenticated = () => {
-    const user = localStorage.getItem('userType');
-    if(user === 'user' || user === 'partner'){
+    const user = localStorage.getItem('foodvaganzaUser');
+    if(user){
         return true;
     }else{
         return false;

@@ -3,14 +3,14 @@ import { useMediaQuery } from 'react-responsive';
 import { theme } from '../../theme';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { deleteReservation, getReservation } from '../../services/ReservationServices/ReservationService';
+import { deleteReservation, editReservation, getReservation } from '../../services/ReservationServices/ReservationService';
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
 import { deleteItems } from '../../services/ReservationServices/MenuReservationService';
 
 
 
-function Reservation() {
+function PartnerReservation() {
     const isMobile = useMediaQuery({ query: '(max-width: 1080px)' });
     const { reservation_id } = useParams();
     const [loading, setLoading] = useState("false");
@@ -33,44 +33,6 @@ function Reservation() {
         fetchData();
     }, []);
 
-    // const restaurant = {
-    //     "restaurant_id": "1",
-    //     "address": "1707 Grafton St, Halifax, NS",
-    //     "contact": 9021234567,
-    //     "end_time": "21:00",
-    //     "fb_link": "https://www.facebook.com/woodenmonkey",
-    //     "image_path": "woodenmonkey.jpg",
-    //     "max_booking_capacity": 60,
-    //     "menu": [
-    //         {
-    //             "category": "Salads",
-    //             "is_available": true,
-    //             "item_description": "Fresh organic spinach with a balsamic vinaigrette dressing.",
-    //             "item_id": "101",
-    //             "item_image_path": "spinach_salad.jpg",
-    //             "item_name": "Organic Spinach Salad",
-    //             "item_size_price": [
-    //                 {
-    //                     "price": 8.99,
-    //                     "size": "Small",
-    //                     "type": "pcs"
-    //                 },
-    //                 {
-    //                     "price": 12.99,
-    //                     "size": "Regular",
-    //                     "type": "pcs"
-    //                 }
-    //             ],
-    //             "item_type": "vegetarian"
-    //         }
-    //     ],
-    //     "name": "The Wooden Monkey",
-    //     "online_delivery": true,
-    //     "start_time": "11:00",
-    //     "store_link": "https://www.woodenmonkey.com",
-    //     "tagline": "Local, Organic, Sustainable",
-    //     "x_link": "https://www.google.com/maps/woodenmonkey"
-    // }
 
     const handleDelete = async () => {
         const deleteResponse = await deleteReservation(reservation_id);
@@ -84,7 +46,7 @@ function Reservation() {
                 isClosable: true,
             });
 
-            navigate(`/my-reservations`);
+            navigate(`/partner/reservations/restaurants/${reservation.restaurant_id}`);
         } else {
             toast({
                 title: 'Reservation deletion error',
@@ -95,6 +57,31 @@ function Reservation() {
             });
         }
     }
+
+    const handleApprove = async () => {
+        const aprroveResponse = await editReservation(reservation.reservation_id, reservation.restaurant_id, reservation.reservation_time, reservation.customer_id, "confirmed", reservation.is_notified, reservation.is_);
+      
+        if (aprroveResponse.reservation_id) {
+            toast({
+                title: 'Reservation Successfully Approved',
+                description: "Please serve the customer accordingly!",
+                status: 'success',
+                duration: 3000, // Duration in milliseconds
+                isClosable: true,
+            });
+
+            navigate(`/partner/reservations/restaurants/${reservation.restaurant_id}`);
+        } else {
+            toast({
+                title: 'Reservation deletion error',
+                description: "We could not delete this booking!",
+                status: 'error',
+                duration: 3000, // Duration in milliseconds
+                isClosable: true,
+            });
+        }
+    }
+
 
     return (
         isMobile ?
@@ -112,14 +99,16 @@ function Reservation() {
                         <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
                     </Flex>
                     <Flex w="69%" flexDir="column">
-                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Have a great experience!</Text>
+                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Reservation Details:</Text>
+                        <Text mt="8px" fontWeight="medium">Customer: {reservation.customer_id}</Text>
                         <Text mt="8px" fontWeight="medium">Reservation Time:</Text>
                         <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
 
-                        <Flex gap="16px">
+                        <Flex gap="16px" alignItems="center">
                             {
                                 reservationDate.getTime() - new Date().getTime() > 3600000 ?
-                                    <Button onClick={() => navigate(`edit`)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Edit</Button>
+                                    reservation.reservation_status === "confirmed"? <Text mt="8px" fontWeight="medium">Approved</Text>:
+                                    <Button onClick={handleApprove} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Approve</Button>
                                     : null
                             }
                             {
@@ -127,8 +116,6 @@ function Reservation() {
                                     <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
                                     : null
                             }
-
-                            <Button onClick={() => navigate(`/reservations/${reservation_id}/menu-items`)} mt="16px" variant="solid" w="156px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Select Menu Items</Button>
 
                         </Flex>
                     </Flex>
@@ -139,4 +126,4 @@ function Reservation() {
     );
 }
 
-export default Reservation;
+export default PartnerReservation;
