@@ -77,6 +77,10 @@ function NavBar() {
     let restaurant = {"restaurant_id":restaurant_id,"email_id":localStorage.getItem("foodvaganzaPartner"), "menu":{}};
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
+
+    const response = await notifyUserAddRestaurant(localStorage.getItem("foodvaganzaPartner"),restaurant["restaurant_id"]);
+    console.log(response);
+    
     navigate(`/editRestaurants/${restaurant_id}`)
   }
 
