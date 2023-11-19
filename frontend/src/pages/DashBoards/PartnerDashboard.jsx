@@ -1,49 +1,25 @@
-import { React, useState } from "react";
-import { Flex, Text, Badge } from "@chakra-ui/react";
+import { React, useEffect, useState } from "react";
+import { Flex, Text, Badge, CircularProgress } from "@chakra-ui/react";
 import { useMediaQuery } from "react-responsive";
 import { theme } from "../../theme";
+import { getAllReservationsForPartner } from "../../services/DashboardServices/DashboardServices";
 
 function PartnerDashboard() {
-  let dummyData = [
-    {
-      id: 1,
-      customerName: "John Doe",
-      dateTime: "2023-11-18T12:30:00.000Z",
-      partySize: 4,
-    },
-    {
-      id: 2,
-      customerName: "Jane Smith",
-      dateTime: "2023-11-20T18:00:00.000Z",
-      partySize: 2,
-    },
-    {
-        id: 2,
-        customerName: "Jeniffer Lawrence",
-        dateTime: "2023-11-20T18:45:00.000Z",
-        partySize: 2,
-      },
-    {
-      id: 3,
-      customerName: "Alice Johnson",
-      dateTime: "2023-11-22T19:45:00.000Z",
-      partySize: 3,
-    },
-    {
-      id: 4,
-      customerName: "Bob Anderson",
-      dateTime: "2023-11-03T13:15:00.000Z",
-      partySize: 5,
-    },
-    {
-        id: 5,
-        customerName: "Percy Riptide",
-        dateTime: "2023-11-29T13:15:00.000Z",
-        partySize: 1,
-      },
-  ];
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState("false");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading("true");
+      const reservationResponse = await getAllReservationsForPartner();
+      setData(reservationResponse);
+      setLoading("false");
+    }
+    fetchData();
+  }, []);
+
   // Filter reservations for today, this week, and this month
-  const todayReservations = dummyData.filter((reservation) => {
+  const todayReservations = data.filter((reservation) => {
     const reservationDate = new Date(reservation.dateTime);
     const today = new Date();
     return (
@@ -53,14 +29,14 @@ function PartnerDashboard() {
     );
   });
 
-  const thisWeekReservations = dummyData.filter((reservation) => {
+  const thisWeekReservations = data.filter((reservation) => {
     const reservationDate = new Date(reservation.dateTime);
     const today = new Date();
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
     return reservationDate >= today && reservationDate <= nextWeek;
   });
 
-  const thisMonthReservations = dummyData.filter((reservation) => {
+  const thisMonthReservations = data.filter((reservation) => {
     const reservationDate = new Date(reservation.dateTime);
     const today = new Date();
     return (
@@ -69,7 +45,7 @@ function PartnerDashboard() {
     );
   });
 
-  
+
   const convertToDateTime = (dateTime) => new Date(dateTime);
 
   // Sort reservations by both date and time
@@ -127,84 +103,85 @@ function PartnerDashboard() {
       Mobile Landing Page
     </Flex>
   ) : (
-    <Flex
-      w="100%"
-      minHeight="90vh"
-      backgroundColor={theme.primaryBackground}
-      alignItems="center"
-      justifyContent="space-evenly"
-      flexDir="column"
-    >
-      <Flex mb={4}>
-        <Text
-          onClick={() => handleTabChange("today")}
-          cursor="pointer"
-          fontWeight={currentTab === "today" ? "bold" : "normal"}
-          mr={4}
-        >
-          Today
-        </Text>
-        <Text
-          onClick={() => handleTabChange("thisWeek")}
-          cursor="pointer"
-          fontWeight={currentTab === "thisWeek" ? "bold" : "normal"}
-          mr={4}
-        >
-          This Week
-        </Text>
-        <Text
-          onClick={() => handleTabChange("thisMonth")}
-          cursor="pointer"
-          fontWeight={currentTab === "thisMonth" ? "bold" : "normal"}
-        >
-          This Month
-        </Text>
+
+    loading === "false" ?
+      <Flex
+        w="100%"
+        minHeight="90vh"
+        backgroundColor={theme.primaryBackground}
+        alignItems="center"
+        justifyContent="space-evenly"
+        flexDir="column"
+      >
+        <Flex mb={4}>
+          <Text
+            onClick={() => handleTabChange("today")}
+            cursor="pointer"
+            fontWeight={currentTab === "today" ? "bold" : "normal"}
+            mr={4}
+          >
+            Today
+          </Text>
+          <Text
+            onClick={() => handleTabChange("thisWeek")}
+            cursor="pointer"
+            fontWeight={currentTab === "thisWeek" ? "bold" : "normal"}
+            mr={4}
+          >
+            This Week
+          </Text>
+          <Text
+            onClick={() => handleTabChange("thisMonth")}
+            cursor="pointer"
+            fontWeight={currentTab === "thisMonth" ? "bold" : "normal"}
+          >
+            This Month
+          </Text>
+        </Flex>
+
+        <Flex flexDir="column">
+          {currentTab === "today" && renderCount(sortedTodayReservations)}
+          {currentTab === "today" &&
+            sortedTodayReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+
+          {currentTab === "thisWeek" && renderCount(sortedThisWeekReservations)}
+          {currentTab === "thisWeek" &&
+            sortedThisWeekReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+
+          {currentTab === "thisMonth" && renderCount(sortedThisMonthReservations)}
+          {currentTab === "thisMonth" &&
+            sortedThisMonthReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+        </Flex>
+      </Flex> : <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
+        <CircularProgress isIndeterminate color="teal" />
       </Flex>
-
-      <Flex flexDir="column">
-        {currentTab === "today" && renderCount(sortedTodayReservations)}
-        {currentTab === "today" &&
-          sortedTodayReservations.map((reservation) => (
-            // Render your data as needed
-            <Text
-              key={reservation.id}
-              color={theme.primaryForeground}
-              fontWeight="bold"
-            >
-              {reservation.customerName} - {reservation.dateTime} - Party
-              Size: {reservation.partySize}
-            </Text>
-          ))}
-
-        {currentTab === "thisWeek" && renderCount(sortedThisWeekReservations)}
-        {currentTab === "thisWeek" &&
-          sortedThisWeekReservations.map((reservation) => (
-            // Render your data as needed
-            <Text
-              key={reservation.id}
-              color={theme.primaryForeground}
-              fontWeight="bold"
-            >
-              {reservation.customerName} - {reservation.dateTime} - Party
-              Size: {reservation.partySize}
-            </Text>
-          ))}
-
-        {currentTab === "thisMonth" && renderCount(sortedThisMonthReservations)}
-        {currentTab === "thisMonth" &&
-          sortedThisMonthReservations.map((reservation) => (
-            // Render your data as needed
-            <Text
-              key={reservation.id}
-              color={theme.primaryForeground}
-              fontWeight="bold"
-            >
-              {reservation.customerName} - {reservation.dateTime} - Party
-              Size: {reservation.partySize}
-            </Text>
-          ))}
-      </Flex>
-    </Flex>
   );
 }
 

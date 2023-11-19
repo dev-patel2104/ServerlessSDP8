@@ -55,7 +55,6 @@ function Login() {
         });
         localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         localStorage.setItem('userType', 'user');
-        console.log(localStorage.getItem('userType'));
         navigate("/user/profile");
       })
       .catch((error) => {
