@@ -36,7 +36,7 @@ function RestaurantList() {
         return currentTimeNow < restaurant.start_time || currentTimeNow > restaurant.end_time || restaurant.is_open === false;
       });
       console.log('allClosedRestaurants : ',allClosedRestaurants)
-      console.log(restaurants);
+      console.log('restaurants: ',restaurantResponse);
       var restaurantDiscounts = calculateDiscounts(restaurantResponse);
       setAllRestaurantDiscounts(restaurantDiscounts);
       console.log('restaurantDiscounts: ',restaurantDiscounts);
@@ -238,8 +238,9 @@ function RestaurantList() {
       </Flex>
     
     ) : (
-      <Flex flexDirection="column" alignItems="end" >
-        {restaurants.filter((restaurant_detail, index) => restaurant_detail.email_id === localStorage.getItem('foodvaganzaUser')).map((restaurant) => (
+      
+      <Flex flexDirection="column" alignItems="end">
+        {restaurants.filter((restaurant_detail, index) => restaurant_detail.email_id === localStorage.getItem('foodvaganzaPartner')).map((restaurant) => (
           <Box key={restaurant.restaurant_id} boxShadow='xl' w="100%" mt="20px" bg="#FCFAFA" p="20px" rounded="md">
           <NavLink to={`/editRestaurants/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
