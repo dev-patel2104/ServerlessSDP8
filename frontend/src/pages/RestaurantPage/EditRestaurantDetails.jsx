@@ -88,7 +88,7 @@ function restaurant() {
 
     let response = await updateRestaurantData(restaurant);
     setInEditingMode(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   async function updateRestaurantData(restaurant) {

@@ -8,6 +8,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
 import { updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
+import { notifyUserAddRestaurant } from '../../services/NotificationServices/NotificationService';
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
