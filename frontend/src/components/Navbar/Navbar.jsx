@@ -28,8 +28,8 @@ function NavBar() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem("foodvaganzaUser","");
-        localStorage.setItem("userType","");
+        localStorage.setItem("foodvaganzaUser", "");
+        localStorage.setItem("userType", "");
         navigate("/");
       })
       .catch((error) => {
@@ -55,8 +55,8 @@ function NavBar() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem("foodvaganzaPartner","");
-        localStorage.setItem("userType","");
+        localStorage.setItem("foodvaganzaUser", "");
+        localStorage.setItem("userType", "");
         navigate("/");
       })
       .catch((error) => {
@@ -74,7 +74,7 @@ function NavBar() {
 
   async function create_restaurant() {
     let restaurant_id = uuidv4();
-    let restaurant = {"restaurant_id":restaurant_id,"email_id":localStorage.getItem("foodvaganzaPartner"), "menu":{}};
+    let restaurant = { "restaurant_id": restaurant_id, "email_id": localStorage.getItem("foodvaganzaUser"), "menu": {} };
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
 
@@ -86,11 +86,11 @@ function NavBar() {
 
   useEffect(() => {
     let authToUse = auth; // Default auth object
-  
+
     if (localStorage.userType === 'partner') {
       authToUse = partnerAuth;
     }
-  
+
     const listen = onAuthStateChanged(authToUse, (user) => {
       if (user) {
         setLoggedIn(user);
@@ -98,12 +98,12 @@ function NavBar() {
         setLoggedIn(null);
       }
     });
-  
+
     return () => {
       listen();
     };
   }, []);
-  
+
 
   return isMobile ? (
     <Flex
@@ -130,7 +130,7 @@ function NavBar() {
             <Image src={logo} alt="Login Image" boxSize="30px" mr="1" />
             {localStorage.getItem('userType') === 'partner' ? (<><Text color={theme.accent} fontWeight="bold">
               Foodvaganza | Partner
-            </Text></>):(<><Text color={theme.accent} fontWeight="bold">
+            </Text></>) : (<><Text color={theme.accent} fontWeight="bold">
               Foodvaganza
             </Text></>)}
           </Flex>
@@ -141,16 +141,23 @@ function NavBar() {
           <Flex mr="4" gap="16px" alignItems="center">
             <NavLink to='/restaurants'>
               <Text fontWeight="medium" color={theme.secondaryForeground}>
-                { localStorage.getItem('userType') === 'admin' ? ( "View all Restaurants" 
-                ) : localStorage.getItem('userType') === 'partner' ? ("My Restaurants" 
-                ) : ( "Browse all Restaurants" )}
+                {localStorage.getItem('userType') === 'admin' ? ("View all Restaurants"
+                ) : localStorage.getItem('userType') === 'partner' ? ("My Restaurants"
+                ) : ("Browse all Restaurants")}
               </Text>
             </NavLink>
-            <NavLink to='/my-reservations'>
-              <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
-            </NavLink>
-            
-            { localStorage.getItem('userType') === 'partner' ? ( 
+            {
+              localStorage.getItem('userType') === 'partner' ?
+                <NavLink to='/partner/dashboard'>
+                  <Text fontWeight="medium" color={theme.secondaryForeground} >My Dashboard</Text>
+                </NavLink> :
+                <NavLink to='/my-reservations'>
+                  <Text fontWeight="medium" color={theme.secondaryForeground} >My Reservations</Text>
+                </NavLink>
+            }
+
+
+            {localStorage.getItem('userType') === 'partner' ? (
               <Button
                 onClick={create_restaurant}
                 _hover={{ backgroundColor: theme.primaryBackground }}
@@ -158,14 +165,14 @@ function NavBar() {
                 borderColor={theme.accent}
                 variant="outline"
               > Add Restaurant </Button>
-            ) : ( "" )}
+            ) : ("")}
 
             <Button
               onClick={() => {
-                if(localStorage.getItem('userType') === 'partner'){
+                if (localStorage.getItem('userType') === 'partner') {
                   handlePartnerSignout();
                 }
-                if(localStorage.getItem('userType') === 'user'){
+                if (localStorage.getItem('userType') === 'user') {
                   handleSignout();
                 }
               }}
@@ -173,7 +180,7 @@ function NavBar() {
               color={theme.accent}
               borderColor={theme.accent}
               variant="outline"
-              
+
             >
               Logout
             </Button>

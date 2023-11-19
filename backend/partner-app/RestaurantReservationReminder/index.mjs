@@ -40,16 +40,17 @@ export const handler = async (event) => {
                     if (menuData.items === undefined || menuData.items === null || menuData.items.length === 0) {
                         if (timeDifference <= tenMinutesInMilliseconds && timeDifference >= 0) {
                             messageAttributes = { "UserId": { DataType: "String", StringValue: reservation.restaurant_id } };
-                            message = "You have an upcoming reservation made by: " + reservation.customer_id + " in approximately 10 min without any menu items booked which is at " + date ;
+                            message = "You have an upcoming reservation made by: " + reservation.customer_id + " in approximately 10 min without any menu items booked which is at " + date;
                             params = {
                                 Message: message,
                                 MessageAttributes: messageAttributes,
-                                TopicArn: topicARN
+                                TopicArn: topicARN,
+                                Subject: "Your reservation reminder"
                             };
                             cnt++;
                             await publishAsync(params);
-                            reservation.is_restaurant_notified = true;  // ask harsh to add this key-value pair in the reservation table
-
+                            reservation.is_restaurant_notified = true;
+                            reservation.type = "variable";
                             putOptions.body = JSON.stringify(reservation);
                             const response2 = await fetch('https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations', putOptions);
 
@@ -63,16 +64,20 @@ export const handler = async (event) => {
                     else {
                         if (timeDifference <= oneHourInMilliseconds && timeDifference >= 0) {
                             messageAttributes = { "UserId": { DataType: "String", StringValue: reservation.restaurant_id } };
-                            message = "You have an upcoming reservation made by: " + reservation.customer_id + " in approximately 1 hour which is at " + date + " with the following menu items " + menuData.items;
+                            message = "You have an upcoming reservation made by: " + reservation.customer_id + " in approximately 1 hour which is at " + date + " with the following menu items: \n";
+                            menuData.items.forEach((item, index) => {
+                                message += (index + 1) + ") " + item.item_name + ": quantity -----> " + item.item_quantity + ".\n";
+                            })
                             params = {
                                 Message: message,
                                 MessageAttributes: messageAttributes,
-                                TopicArn: topicARN
+                                TopicArn: topicARN,
+                                Subject: "Your reservation reminder"
                             };
                             cnt++;
                             await publishAsync(params);
-                            reservation.is_restaurant_notified = true;  // ask harsh to add this key-value pair in the reservation table
-
+                            reservation.is_restaurant_notified = true;
+                            reservation.type = "variable";
                             putOptions.body = JSON.stringify(reservation);
                             const response2 = await fetch('https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations', putOptions);
 
@@ -82,7 +87,7 @@ export const handler = async (event) => {
 
                         }
                     }
-                    
+
                 }
             }
 
