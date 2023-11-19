@@ -8,6 +8,7 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import logo from "../../assets/food-color-sushi-svgrepo-com.svg";
 import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
 import { updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
+import { notifyUserAddRestaurant } from '../../services/NotificationServices/NotificationService';
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -77,6 +78,10 @@ function NavBar() {
     let restaurant = { "restaurant_id": restaurant_id, "email_id": localStorage.getItem("foodvaganzaUser"), "menu": {} };
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
+
+    const response = await notifyUserAddRestaurant(localStorage.getItem("foodvaganzaPartner"),restaurant["restaurant_id"]);
+    console.log(response);
+    
     navigate(`/editRestaurants/${restaurant_id}`)
   }
 
