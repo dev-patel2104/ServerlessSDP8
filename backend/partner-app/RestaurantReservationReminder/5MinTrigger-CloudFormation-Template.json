@@ -1,0 +1,23 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "CloudFormation template for EventBridge rule '5MinTrigger'",
+  "Resources": {
+    "EventRule0": {
+      "Type": "AWS::Events::Rule",
+      "Properties": {
+        "Description": "A trigger that will fire up every 5 minutes",
+        "EventBusName": "default",
+        "Name": "5MinTrigger",
+        "ScheduleExpression": "rate(5 minutes)",
+        "State": "DISABLED",
+        "Targets": [{
+          "Id": "5jyy47xfalvut9y2ueb",
+          "Arn": "arn:aws:lambda:us-east-1:263032025301:function:ReservationReminder"
+        }, {
+          "Id": "twltzjmqx6kl52ec6fy",
+          "Arn": "arn:aws:lambda:us-east-1:263032025301:function:RestaurantReservationReminder"
+        }]
+      }
+    }
+  }
+}
