@@ -260,7 +260,7 @@ function PartnerProfile() {
                           .catch((error) => {
                             console.error(error);
                           });
-                        localStorage.setItem("foodvaganzaPartner", "");
+                        localStorage.setItem("foodvaganzaUser", "");
                         localStorage.setItem("userType", "");
                         navigate("/");
                       }}
@@ -379,7 +379,7 @@ function PartnerProfile() {
                       duration: 3000,
                       isClosable: true,
                     });
-                    localStorage.setItem("foodvaganzaPartner", "");
+                    localStorage.setItem("foodvaganzaUser", "");
                     localStorage.setItem("userType", "");
                     navigate("/partner/login");
                   })

@@ -11,7 +11,8 @@ export const createReservation = async (restaurant_id, reservation_time, custome
                 reservation_time: reservation_time,
                 customer_id: customer_id,
                 reservation_status: reservation_status,
-                is_notified: false
+                is_notified: false,
+                is_restaurant_notified: false
             })
     }
 
@@ -27,7 +28,7 @@ export const createReservation = async (restaurant_id, reservation_time, custome
 
 }
 
-export const editReservation = async (reservation_id, restaurant_id, reservation_time, customer_id, reservation_status, is_notified) => {
+export const editReservation = async (reservation_id, restaurant_id, reservation_time, customer_id, reservation_status, is_notified, is_restaurant_notified) => {
 
     const options = {
         method: 'PUT',
@@ -41,7 +42,8 @@ export const editReservation = async (reservation_id, restaurant_id, reservation
                 reservation_time: reservation_time,
                 customer_id: customer_id,
                 reservation_status: reservation_status,
-                is_notified: is_notified
+                is_notified: is_notified,
+                is_restaurant_notified: is_restaurant_notified
             })
     }
 
@@ -69,10 +71,13 @@ export const getReservation = async (reservation_id) => {
         const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/${reservation_id}`, options);
 
         const data = await response.json();
+        if(data?.error){
+            return [];
+        }
         return data;
     } catch (error) {
         console.error('Error fetching reservation:', error);
-        return null;
+        return [];
     }
 }
 
@@ -88,10 +93,13 @@ export const getAllReservations = async () => {
         const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations`, options);
 
         const data = await response.json();
+        if(data?.error){
+            return [];
+        }
         return data;
     } catch (error) {
         console.error('Error fetching reservations:', error);
-        return null;
+        return [];
     }
 }
 
@@ -107,10 +115,35 @@ export const getAllReservationsbyCustomerID = async (customer_id) => {
         const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations?customer_id=${customer_id}`, options);
 
         const data = await response.json();
+        if(data?.error){
+            return [];
+        }
         return data;
     } catch (error) {
         console.error('Error fetching reservations:', error);
-        return null;
+        return [];
+    }
+}
+
+export const getAllReservationsbyRestaurantID = async (restaurant_id) => {
+    const options = {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    }
+
+    try {
+        const response = await fetch(`https://v2occhudvh.execute-api.us-east-1.amazonaws.com/reservations/restaurants/${restaurant_id}`, options);
+
+        const data = await response.json();
+        if(data?.error){
+            return [];
+        }
+        return data;
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+        return [];
     }
 }
 

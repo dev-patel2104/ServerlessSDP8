@@ -51,9 +51,8 @@ function PartnerLogin() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
-        console.log(localStorage.getItem('userType'));
         navigate("/partner/profile");
       })
       .catch((error) => {
@@ -98,7 +97,7 @@ function PartnerLogin() {
           duration: 3000,
           isClosable: true,
         });
-        localStorage.setItem('foodvaganzaPartner', partnerAuth.currentUser.email);
+        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
         navigate("/partner/profile");
       })
