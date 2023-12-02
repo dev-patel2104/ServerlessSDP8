@@ -30,7 +30,7 @@ function SignupPage() {
       <Flex
         w="100%"
         height="60vh"
-        maxW="700px"
+        maxW="400px"
         p="10"
         borderRadius="lg"
         backgroundColor={theme.secondaryBackground}
@@ -75,30 +75,6 @@ function SignupPage() {
             borderColor={theme.accent}
           >
             Partner Signup
-          </Button>
-        </Flex>
-        <Divider
-          orientation="vertical"
-          mr="4"
-          ml="4"
-          borderColor={theme.accent}
-          borderWidth="1px"
-          borderRadius="30px"
-        />
-        <Flex flexDir="column">
-          <Box display={{ base: "none", md: "block" }}>
-            <Image src={admin_logo} alt="Login Image" width='200px' height='350px'/>
-          </Box>
-          <Button
-            mt="1"
-            variant="outline"
-            as={Link}
-            to="/admin/signup"
-            _hover={{ backgroundColor: theme.primaryBackground }}
-            color={theme.accent}
-            borderColor={theme.accent}
-          >
-            Admin Signup
           </Button>
         </Flex>
       </Flex>
