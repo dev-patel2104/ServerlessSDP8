@@ -79,9 +79,9 @@ function NavBar() {
     const restaurantResponse = await updateRestaurantDetails(restaurant);
     console.log(restaurantResponse);
 
-    const response = await notifyUserAddRestaurant(localStorage.getItem("foodvaganzaPartner"),restaurant["restaurant_id"]);
+    const response = await notifyUserAddRestaurant(localStorage.getItem("foodvaganzaPartner"), restaurant["restaurant_id"]);
     console.log(response);
-    
+
     navigate(`/editRestaurants/${restaurant_id}`)
   }
 
@@ -110,12 +110,16 @@ function NavBar() {
     <Flex
       as="nav"
       alignItems="center"
-      justify="space-between"
       h="10vh"
       w="100%"
       backgroundColor={theme.secondaryBackground}
     >
-      Mobile Navbar
+      <Image src={logo} alt="Login Image" boxSize="30px" mr="1" />
+      {localStorage.getItem('userType') === 'partner' ? (<><Text color={theme.accent} fontWeight="bold">
+        Foodvaganza | Partner
+      </Text></>) : (<><Text color={theme.accent} fontWeight="bold">
+        Foodvaganza
+      </Text></>)}
     </Flex>
   ) : (
     <Flex

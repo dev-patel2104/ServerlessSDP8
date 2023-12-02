@@ -182,9 +182,65 @@ function EditReservation() {
 
     return (
         isMobile ?
-            <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
-                Mobile Landing Page
-            </Flex>
+            loading === "false" ?
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
+                    <Flex w="90%" flexDirection="column" alignItems="start">
+                        <Image src={logo} boxSize="256px" alt={restaurant.name} />
+                        <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
+                        <Text fontSize="lg">{restaurant.address}</Text>
+                        <Text mt="8px" fontWeight="medium">Opens {restaurant.start_time}</Text>
+                        <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
+                    </Flex>
+                    <Flex w="90%" flexDir="column">
+                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Last minute changes?</Text>
+                        <Text fontWeight="medium">Select date:</Text>
+                        <Flex wrap="wrap" w="100%" gap="16px" rowGap="8px" mt="8px">
+                            {
+                                daysArray.map((day, ind) =>
+                                    selectedDay === ind ?
+                                        <button onClick={() => handleDayClick(ind)}>
+                                            <Flex flexDirection="column" alignItems="center" border="2px" p="6px" borderRadius="8px" backgroundColor={theme.accent}>
+                                                <Text fontWeight="medium">{day.day}</Text>
+                                                <Text fontWeight="medium">{day.date}</Text>
+                                            </Flex>
+                                        </button> :
+                                        <button onClick={() => handleDayClick(ind)}>
+                                            <Flex flexDirection="column" alignItems="center">
+                                                <Text>{day.day}</Text>
+                                                <Text>{day.date}</Text>
+                                            </Flex>
+                                        </button>)
+                            }
+                        </Flex>
+
+                        <Text fontWeight="medium" mt="16px">Select time:</Text>
+                        {slotLoading === "false" ?
+                            <Flex wrap="wrap" w="100%" gap="16px" rowGap="8px" mt="8px">
+                                {
+                                    slots.map((slot, ind) =>
+                                        selectedSlot === ind ?
+                                            <button onClick={() => setSelectedSlot(ind)}>
+                                                <Flex flexDirection="column" alignItems="center" border="2px" p="6px" borderRadius="8px" backgroundColor={theme.accent}>
+                                                    <Text fontWeight="medium">{slot.hours}:{slot.minutes}</Text>
+                                                </Flex>
+                                            </button> :
+                                            <button onClick={() => setSelectedSlot(ind)}>
+                                                <Flex flexDirection="column" alignItems="center">
+                                                    <Text>{slot.hours}:{slot.minutes}</Text>
+                                                </Flex>
+                                            </button>)
+                                }
+                            </Flex> :
+                            <Flex w="60%" gap="16px" rowGap="8px" mt="8px">
+                                <CircularProgress isIndeterminate color="teal" />
+                            </Flex>
+                        }
+                        <Button onClick={editCurrentReservation} mt="32px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Save changes</Button>
+                    </Flex>
+                </Flex> :
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
+                    <CircularProgress isIndeterminate color="teal" />
+                </Flex>
             :
             loading === "false" ?
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
