@@ -240,7 +240,7 @@ function RestaurantList() {
     ) : (
       
       <Flex flexDirection="column" alignItems="end">
-        {restaurants.filter((restaurant_detail, index) => restaurant_detail.email_id === localStorage.getItem('foodvaganzaPartner')).map((restaurant) => (
+        {restaurants.filter((restaurant_detail, index) => restaurant_detail.email_id === localStorage.getItem('foodvaganzaUser')).map((restaurant) => (
           <Box key={restaurant.restaurant_id} boxShadow='xl' w="100%" mt="20px" bg="#FCFAFA" p="20px" rounded="md">
           <NavLink to={`/editRestaurants/${restaurant.restaurant_id}`}>
             <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
