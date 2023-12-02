@@ -107,7 +107,7 @@ function RestaurantDetails() {
                         <Text ml={2} color="#0244A1">Instagram</Text>
                     </Link>
                 )}
-                {checkUserType("partner") && (
+                {checkUserType("user") && (
                     <Button mt="15px" colorScheme='purple' onClick={() => navigate(`/restaurants/${restaurant_id}/book`)}>Reserve your Table</Button>
                 )}
 
