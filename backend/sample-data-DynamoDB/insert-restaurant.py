@@ -1,13 +1,7 @@
 import boto3
 import json
-from credentials import *
 # Initialize the DynamoDB client
-dynamodb = boto3.client(
-    'dynamodb',
-    region_name=REGION,
-    aws_access_key_id=ACCESS_KEY,
-    aws_secret_access_key=SECRET_KEY,
-    aws_session_token=SESSION_TOKEN)
+dynamodb = boto3.client('dynamodb')
 
 file_to_upload = 'restaurant-data.json'
 
@@ -57,39 +51,50 @@ for item in data:
         if menu_item.get('item_type'):
             menu_item_dict['M']['item_type'] = {'S': menu_item.get('item_type')}
         
-        
         menu_items.append(menu_item_dict)
-
-        Item = {
-            'restaurant_id': {'S': item['restaurant_id']},
-            'name': {'S': item['name']},
-            'address': {'S': item['address']},
-            'start_time': {'S': item['start_time']},
-            'end_time': {'S': item['end_time']},
-            'contact': {'N': str(item['contact'])},
-            'fb_link': {'S': item['fb_link']},
-            'insta_link': {'S': item['insta_link']},
-            'store_link': {'S': item['store_link']},
-            'online_delivery': {'BOOL': item['online_delivery']},
-            'tagline': {'S': item['tagline']},
-            'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
-            'image_path': {'S': item['image_path']},
-            'menu': {'L': menu_items},
-            'is_new': {'BOOL': item['is_new']},
-            'is_open': {'BOOL': item['is_open']},
-            'email_id': {'S': item['email_id']},
-        }
         
-        if item.get('is_offer'):
-            Item['is_offer'] = {'BOOL': item['is_offer']}
-        if item.get('offer_on'):
-            Item['offer_on'] = {'S': item['offer_on']}
-        if item.get('offer_type'):
-            Item['offer_type'] = {'S': item['offer_type']}
-        if item.get('discount_percentage'):
-            Item['discount_percentage'] = {'N': str(item['discount_percentage'])}
-        if item.get('discount_label'):
-            Item['discount_label'] = {'S': item['discount_label']}
+    review_items = []
+    for review in item.get('reviews'):
+        review_items.append({
+            'M': {
+                'customer_id': {'S': review['customer_id']},
+                'rating': {'S': review['rating']},
+                'review': {'S': review['review']}
+            }
+        })
+    
+
+    Item = {
+        'restaurant_id': {'S': item['restaurant_id']},
+        'name': {'S': item['name']},
+        'address': {'S': item['address']},
+        'start_time': {'S': item['start_time']},
+        'end_time': {'S': item['end_time']},
+        'contact': {'N': str(item['contact'])},
+        'fb_link': {'S': item['fb_link']},
+        'insta_link': {'S': item['insta_link']},
+        'store_link': {'S': item['store_link']},
+        'online_delivery': {'BOOL': item['online_delivery']},
+        'tagline': {'S': item['tagline']},
+        'max_booking_capacity': {'N': str(item['max_booking_capacity'])},
+        'image_path': {'S': item['image_path']},
+        'menu': {'L': menu_items},
+        'reviews': {'L': review_items},
+        'is_new': {'BOOL': item['is_new']},
+        'is_open': {'BOOL': item['is_open']},
+        'email_id': {'S': item['email_id']},
+    }
+        
+    if item.get('is_offer'):
+        Item['is_offer'] = {'BOOL': item['is_offer']}
+    if item.get('offer_on'):
+        Item['offer_on'] = {'S': item['offer_on']}
+    if item.get('offer_type'):
+        Item['offer_type'] = {'S': item['offer_type']}
+    if item.get('discount_percentage'):
+        Item['discount_percentage'] = {'N': str(item['discount_percentage'])}
+    if item.get('discount_label'):
+        Item['discount_label'] = {'S': item['discount_label']}
         
     # Put each restaurant to DynamoDB Table
     # https://docs.aws.amazon.com/cli/latest/reference/dynamodb/put-item.html
