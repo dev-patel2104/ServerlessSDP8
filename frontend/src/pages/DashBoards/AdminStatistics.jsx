@@ -2,11 +2,11 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel, Box } from '@chakra-ui/react';
 
 function AdminStatistics() {
     const iframeSources = [
-        'https://lookerstudio.google.com/embed/reporting/4a081105-04fd-4e2c-94ed-259e3fe02fd5/page/pW2jD',
-        'https://example.com/iframe2',
-        'https://example.com/iframe3',
-        'https://lookerstudio.google.com/embed/reporting/91bc11ca-b60f-4617-afd5-105e3d5c3031/page/Te2jD',
-        'https://example.com/iframe5',
+        'https://lookerstudio.google.com/embed/reporting/452cd61b-545e-4b5a-990f-428182add46f/page/eK5jD',
+        'https://lookerstudio.google.com/embed/reporting/641739dc-2a64-429e-8f5b-59b560f1c30b/page/IC5jD',
+        'https://lookerstudio.google.com/embed/reporting/3e570b6f-ce33-409b-81e9-5edf0227c6af/page/7O5jD',
+        'https://lookerstudio.google.com/embed/reporting/d14ecee9-1d2d-49cb-920e-4619b61f0bfe/page/FI5jD',
+        'https://lookerstudio.google.com/embed/reporting/1534b4f9-08af-49e7-9d33-480285a2bb23/page/1i5jD',
       ];
   return (
     <Tabs isLazy>
