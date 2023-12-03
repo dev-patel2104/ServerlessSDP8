@@ -24,7 +24,6 @@ deploy:
   only:
     - "main"
   script:
-    - cd frontend
     - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
     - gcloud auth activate-service-account --key-file gcloud-service-key.json
     - gcloud config set project $GCP_PROJECT_ID
