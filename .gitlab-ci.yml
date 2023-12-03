@@ -1,84 +1,84 @@
 stages:
-  - dependencies
-  - deploy
-  # - build_stage
-  # - deploy_stage
+  # - dependencies
+  # - deploy
+  - build_stage
+  - deploy_stage
 
-install_dependencies:
-  stage: dependencies
-  image: node
-  script:
+# install_dependencies:
+#   stage: dependencies
+#   image: node
+#   script:
+#     - cd frontend
+#     - npm install
+# deploy:
+#   stage: deploy
+#   image: google/cloud-sdk
+#   services:
+#     - docker:dind
+#   only:
+#     - "main"
+#   script:
+#     - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
+#     - gcloud auth activate-service-account --key-file gcloud-service-key.json
+#     - gcloud config set project $GCP_PROJECT_ID
+#     - gcloud builds submit . --config=cloudbuild.yml
+
+# Build the frontend on development branch 
+build_development_frontend:
+  stage: build_stage
+  image: node:latest
+  before_script:
     - cd frontend
-    - npm install
-deploy:
-  stage: deploy
-  image: google/cloud-sdk
-  services:
-    - docker:dind
-  only:
-    - "main"
   script:
-    - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
-    - gcloud auth activate-service-account --key-file gcloud-service-key.json
-    - gcloud config set project $GCP_PROJECT_ID
-    - gcloud builds submit . --config=cloudbuild.yml
+    - echo "Build starting  - DEVELOPMENT branch"
+    - npm i 
+    - npm run build 
+    - echo "Build completed - DEVELOPMENT branch"    
+  only:
+    - develop
+  except:
+    changes:
+      - frontend/**/*
 
-# # Build the frontend on development branch 
-# build_development_frontend:
-#   stage: build_stage
-#   image: node:latest
-#   before_script:
-#     - cd frontend
-#   script:
-#     - echo "Build starting  - DEVELOPMENT branch"
-#     - npm i 
-#     - npm run build 
-#     - echo "Build completed - DEVELOPMENT branch"    
-#   only:
-#     - develop
-#   except:
-#     changes:
-#       - frontend/**/*
+# Deploy the frontend build of development to Netlify
+deploy_development_frontend:
+    stage: deploy_stage
+    before_script:
+      - apt update
+      - apt install curl -y
+    script:
+      - echo "Deployment starting  - DEVELOPMENT branch"
+      - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_DEVELOPMENT_ENV_DEPLOY_KEY}" 
+      - echo "Deployment completed - DEVELOPMENT branch"
+    only:
+      - develop
 
-# # Deploy the frontend build of development to Netlify
-# deploy_development_frontend:
-#     stage: deploy_stage
-#     before_script:
-#       - apt update
-#       - apt install curl -y
-#     script:
-#       - echo "Deployment starting  - DEVELOPMENT branch"
-#       - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_DEVELOPMENT_ENV_DEPLOY_KEY}" 
-#       - echo "Deployment completed - DEVELOPMENT branch"
-#     only:
-#       - develop
+# Build the frontend on production branch 
+build_production_frontend:
+  stage: build_stage
+  image: node:latest
+  before_script:
+    - cd frontend
+  script:
+    - echo "Build starting  - PRODUCTION branch"
+    - npm i 
+    - npm run build 
+    - echo "Build completed - PRODUCTION branch"    
+  only:
+    - main
+  except:
+    changes:
+      - frontend/**/*
 
-# # Build the frontend on production branch 
-# build_production_frontend:
-#   stage: build_stage
-#   image: node:latest
-#   before_script:
-#     - cd frontend
-#   script:
-#     - echo "Build starting  - PRODUCTION branch"
-#     - npm i 
-#     - npm run build 
-#     - echo "Build completed - PRODUCTION branch"    
-#   only:
-#     - main
-#   except:
-#     changes:
-#       - frontend/**/*
-
-# # Deploy the frontend build to production to Netlify
-# deploy_production_frontend:
-#     stage: deploy_stage
-#     before_script:
-#       - apt update
-#       - apt install curl -y
-#     script:
-#       - echo "Deployment starting  - PRODUCTION branch"
-#       - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_PRODUCTION_DEPLOY_KEY}" 
-#       - echo "Deployment completed - PRODUCTION branch"    
-#     only:
-#       - main
+# Deploy the frontend build to production to Netlify
+deploy_production_frontend:
+    stage: deploy_stage
+    before_script:
+      - apt update
+      - apt install curl -y
+    script:
+      - echo "Deployment starting  - PRODUCTION branch"
+      - curl -X POST "https://api.netlify.com/build_hooks/${NETLIFY_PRODUCTION_DEPLOY_KEY}" 
+      - echo "Deployment completed - PRODUCTION branch"    
+    only:
+      - main
