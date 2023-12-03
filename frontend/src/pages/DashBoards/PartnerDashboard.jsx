@@ -92,16 +92,85 @@ function PartnerDashboard() {
   };
 
   return isMobile ? (
-    <Flex
-      w="100%"
-      minHeight="90vh"
-      backgroundColor={theme.primaryBackground}
-      flexDir="column"
-      alignItems="center"
-      justifyContent="start"
-    >
-      Mobile Landing Page
-    </Flex>
+    loading === "false" ?
+      <Flex
+        w="100%"
+        minHeight="90vh"
+        backgroundColor={theme.primaryBackground}
+        flexDir="column"
+        alignItems="center"
+        justifyContent="start"
+      >
+        <Flex mb={4}>
+          <Text
+            onClick={() => handleTabChange("today")}
+            cursor="pointer"
+            fontWeight={currentTab === "today" ? "bold" : "normal"}
+            mr={4}
+          >
+            Today
+          </Text>
+          <Text
+            onClick={() => handleTabChange("thisWeek")}
+            cursor="pointer"
+            fontWeight={currentTab === "thisWeek" ? "bold" : "normal"}
+            mr={4}
+          >
+            This Week
+          </Text>
+          <Text
+            onClick={() => handleTabChange("thisMonth")}
+            cursor="pointer"
+            fontWeight={currentTab === "thisMonth" ? "bold" : "normal"}
+          >
+            This Month
+          </Text>
+        </Flex>
+
+        <Flex flexDir="column">
+          {currentTab === "today" && renderCount(sortedTodayReservations)}
+          {currentTab === "today" &&
+            sortedTodayReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+
+          {currentTab === "thisWeek" && renderCount(sortedThisWeekReservations)}
+          {currentTab === "thisWeek" &&
+            sortedThisWeekReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+
+          {currentTab === "thisMonth" && renderCount(sortedThisMonthReservations)}
+          {currentTab === "thisMonth" &&
+            sortedThisMonthReservations.map((reservation) => (
+              // Render your data as needed
+              <Text
+                key={reservation.id}
+                color={theme.primaryForeground}
+                fontWeight="bold"
+              >
+                {reservation.customerName} - {new Date(reservation.dateTime).toLocaleString()}
+              </Text>
+            ))}
+        </Flex>
+      </Flex> :
+      <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
+        <CircularProgress isIndeterminate color="teal" />
+      </Flex>
   ) : (
 
     loading === "false" ?
