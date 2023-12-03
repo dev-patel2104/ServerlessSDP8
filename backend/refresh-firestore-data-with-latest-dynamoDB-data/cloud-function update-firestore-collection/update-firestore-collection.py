@@ -24,7 +24,7 @@ def hello_http(request):
         cred = credentials.ApplicationDefault()
         if not firebase_admin._apps:
             firebase_admin.initialize_app(cred, {
-                'projectId': 'csci5408-data-management',
+                'projectId': 'sdp-8-404403',
             })
         else:
             firebase_admin.get_app(name='[DEFAULT]')

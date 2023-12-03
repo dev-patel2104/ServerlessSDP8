@@ -262,6 +262,7 @@ function Profile() {
                           });
                           localStorage.setItem("foodvaganzaUser", "");
                           localStorage.setItem("userType", "");
+                          window.location.reload();
                         navigate("/");
                       }}
                     >
