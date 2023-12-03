@@ -24,11 +24,12 @@ import PartnerDashboard from './pages/DashBoards/PartnerDashboard';
 import MenuItemsReservation from './pages/MenuItemsReservation/MenuItemsReservation';
 import PartnerReservations from './pages/MyReservations/PartnerReservations';
 import PartnerReservation from './pages/Reservation/PartnerReservation';
+import AdminLogin from './pages/AdminPages/AdminLogin';
+import AdminResetPassword from './pages/AdminPages/AdminResetPassword';
+import AdminProfile from './pages/AdminPages/AdminProfile';
+import AdminStatistics from './pages/DashBoards/AdminStatistics';
 
 function App() {
-
-  // const [loggedIn, setLoggedIn] = useState(null);
-
   const router = createBrowserRouter([
     {
       element: <LayoutWithNav />,
@@ -39,7 +40,11 @@ function App() {
         },
         {
           path: "/partner/dashboard",
-          element: <PartnerDashboard />
+          element: isAuthenticated() === "partner" ? <PartnerDashboard /> : <Navigate to="/partner/login"/>
+        },
+        {
+          path: "/admin/statistics",
+          element: isAuthenticated() === "admin" ? <AdminStatistics /> : <Navigate to="/admin/login"/>
         },
         {
           path: "/login",
@@ -59,43 +64,43 @@ function App() {
         },
         {
           path: "/editRestaurants/:restaurant_id",
-          element: isAuthenticated() ? <EditRestaurantDetails /> : <Navigate to="/partner/login"/>
+          element: isAuthenticated() === "partner" ? <EditRestaurantDetails /> : <Navigate to="/partner/login"/>
         },
         {
           path: "/restaurants/:restaurant_id/book",
-          element: isAuthenticated() ? <BookTable /> : <Navigate to="/user/login"/>
+          element: isAuthenticated() === "user" ? <BookTable /> : <Navigate to="/user/login"/>
         },
         {
           path: "/user/profile",
-          element: <Profile/>
+          element:<Profile/>
         },
         {
           path: "/partner/profile",
-          element: <PartnerProfile />
+          element:<PartnerProfile />
         },
         {
           path: "/reservations/:reservation_id",
-          element: isAuthenticated() ? <Reservation />: <Navigate to="/user/login"/>
+          element: isAuthenticated() === "user" ? <Reservation />: <Navigate to="/user/login"/>
         },
         {
           path: "/my-reservations",
-          element: isAuthenticated() ? <MyReservations /> : <Navigate to="/user/login"/>
+          element: isAuthenticated() === "user" ? <MyReservations /> : <Navigate to="/user/login"/>
         },
         {
           path: "/partner/reservations/restaurants/:restaurant_id",
-          element: isAuthenticated() ? <PartnerReservations /> : <Navigate to="/partner/login"/>
+          element: isAuthenticated() === "partner" ? <PartnerReservations /> : <Navigate to="/partner/login"/>
         },
         {
           path: "/partner/reservations/:reservation_id",
-          element: isAuthenticated() ? <PartnerReservation /> : <Navigate to="/partner/login"/>
+          element: isAuthenticated() === "partner" ? <PartnerReservation /> : <Navigate to="/partner/login"/>
         },
         {
           path: "/reservations/:reservation_id/edit",
-          element: isAuthenticated() ? <EditReservation />: <Navigate to="/user/login"/>
+          element: isAuthenticated() === "user" ? <EditReservation />: <Navigate to="/user/login"/>
         },
         {
           path: "/reservations/:reservation_id/menu-items",
-          element: isAuthenticated() ? <MenuItemsReservation />: <Navigate to="/user/login"/>
+          element: isAuthenticated() === "user" ? <MenuItemsReservation />: <Navigate to="/user/login"/>
         },
         {
           path: "/user/passreset",
@@ -104,6 +109,14 @@ function App() {
         {
           path: "/partner/passreset",
           element:<PartnerResetPassword />
+        },
+        {
+          path: "/admin/profile",
+          element:<AdminProfile />
+        },
+        {
+          path: "/admin/passreset",
+          element:<AdminResetPassword />
         },
       ]
     },
@@ -125,25 +138,14 @@ function App() {
         {
           path: "/partner/signup",
           element: <PartnerSignup />
-        }
+        },
+        {
+          path: "/admin/login",
+          element: <AdminLogin />
+        },
       ]
     },
   ]);
-
-  // useEffect(() => {
-  //   const listen = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setLoggedIn(user);
-  //     } else {
-  //       setLoggedIn(null);
-  //     }
-  //   });
-
-  //   return () => {
-  //     listen();
-  //   };
-  // }, []);
-
   return (
     <>
       <RouterProvider router={router}/>

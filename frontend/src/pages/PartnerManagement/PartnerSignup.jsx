@@ -32,7 +32,6 @@ function PartnerSignup() {
     createUserWithEmailAndPassword(partnerAuth, email, password)
       .then(() => {
         //call AddEmailToDynamoDB API here
-        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
@@ -55,6 +54,7 @@ function PartnerSignup() {
         localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
         navigate("/partner/profile");
+        window.location.reload();
       })
       .catch(() => {
         toast({

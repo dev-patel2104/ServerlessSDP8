@@ -56,6 +56,7 @@ function Login() {
         localStorage.setItem('foodvaganzaUser', auth.currentUser.email);
         localStorage.setItem('userType', 'user');
         navigate("/user/profile");
+        window.location.reload();
       })
       .catch((error) => {
         if (error.message.includes("popup-closed-by-use")) {
@@ -103,6 +104,7 @@ function Login() {
         localStorage.setItem('userType', 'user');
         console.log(localStorage.getItem('userType'));
         navigate("/user/profile");
+        window.location.reload();
       })
       .catch((error) => {
         if (error.message.includes("auth/invalid-login-credentials")) {
