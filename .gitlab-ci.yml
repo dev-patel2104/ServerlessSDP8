@@ -1,27 +1,21 @@
 stages:
   # - dependencies
-  # - deploy
+  - cloud_run_deploy
   - build_stage
   - deploy_stage
 
-# install_dependencies:
-#   stage: dependencies
-#   image: node
-#   script:
-#     - cd frontend
-#     - npm install
-# deploy:
-#   stage: deploy
-#   image: google/cloud-sdk
-#   services:
-#     - docker:dind
-#   only:
-#     - "main"
-#   script:
-#     - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
-#     - gcloud auth activate-service-account --key-file gcloud-service-key.json
-#     - gcloud config set project $GCP_PROJECT_ID
-#     - gcloud builds submit . --config=cloudbuild.yml
+cloud_run_deploy:
+  stage: cloud_run_deploy
+  image: google/cloud-sdk
+  services:
+    - docker:dind
+  only:
+    - "main"
+  script:
+    - echo $GCP_SERVICE_KEY > gcloud-service-key.json # Google Cloud service accounts
+    - gcloud auth activate-service-account --key-file gcloud-service-key.json
+    - gcloud config set project $GCP_PROJECT_ID
+    - gcloud builds submit . --config=cloudbuild.yml
 
 # Build the frontend on development branch 
 build_development_frontend:
