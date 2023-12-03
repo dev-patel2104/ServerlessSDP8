@@ -60,7 +60,7 @@ function PartnerReservation() {
 
     const handleApprove = async () => {
         const aprroveResponse = await editReservation(reservation.reservation_id, reservation.restaurant_id, reservation.reservation_time, reservation.customer_id, "confirmed", reservation.is_notified, reservation.is_);
-      
+
         if (aprroveResponse.reservation_id) {
             toast({
                 title: 'Reservation Successfully Approved',
@@ -85,9 +85,40 @@ function PartnerReservation() {
 
     return (
         isMobile ?
-            <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
-                Reservation Page
-            </Flex>
+            loading === "false" ?
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
+                    <Flex w="90%" flexDirection="column" alignItems="start">
+                        <Image src={logo} boxSize="256px" alt={restaurant.name} />
+                        <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
+                        <Text fontSize="lg">{restaurant.address}</Text>
+                        <Text mt="8px" fontWeight="medium">Opens {restaurant.start_time}</Text>
+                        <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
+                    </Flex>
+                    <Flex w="90%" flexDir="column">
+                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Reservation Details:</Text>
+                        <Text mt="8px" fontWeight="medium">Customer: {reservation.customer_id}</Text>
+                        <Text mt="8px" fontWeight="medium">Reservation Time:</Text>
+                        <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
+
+                        <Flex gap="16px" alignItems="center">
+                            {
+                                reservationDate.getTime() - new Date().getTime() > 3600000 ?
+                                    reservation.reservation_status === "confirmed" ? <Text mt="8px" fontWeight="medium">Approved</Text> :
+                                        <Button onClick={handleApprove} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Approve</Button>
+                                    : null
+                            }
+                            {
+                                reservationDate.getTime() - new Date().getTime() > 3600000 ?
+                                    <Button onClick={handleDelete} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Delete</Button>
+                                    : null
+                            }
+
+                        </Flex>
+                    </Flex>
+                </Flex> :
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
+                    <CircularProgress isIndeterminate color="teal" />
+                </Flex>
             :
             loading === "false" ?
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
@@ -107,8 +138,8 @@ function PartnerReservation() {
                         <Flex gap="16px" alignItems="center">
                             {
                                 reservationDate.getTime() - new Date().getTime() > 3600000 ?
-                                    reservation.reservation_status === "confirmed"? <Text mt="8px" fontWeight="medium">Approved</Text>:
-                                    <Button onClick={handleApprove} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Approve</Button>
+                                    reservation.reservation_status === "confirmed" ? <Text mt="8px" fontWeight="medium">Approved</Text> :
+                                        <Button onClick={handleApprove} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Approve</Button>
                                     : null
                             }
                             {

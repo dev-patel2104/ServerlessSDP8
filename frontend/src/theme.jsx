@@ -1,7 +1,7 @@
 export const theme = {
-    primaryBackground: '#92817a',
-    secondaryBackground: '#362417',
-    primaryForeground: '#04030f',
-    secondaryForeground: '#fffbff',
-    accent: '#f1dabf'
+  primaryBackground: '#F5F5F5',
+  secondaryBackground: '#30353B',
+  primaryForeground: '#0F0A0A',
+  secondaryForeground: '#FAFEFF',
+  accent: '#3B7080'
   };

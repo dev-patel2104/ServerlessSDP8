@@ -32,7 +32,6 @@ function PartnerLogin() {
   function handleGoogleSignIn() {
     signInWithPopup(partnerAuth, googleProvider)
       .then(() => {
-        localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         fetch("https://e4x258613e.execute-api.us-east-1.amazonaws.com/user", {
         method: "POST",
         headers: {
@@ -54,6 +53,7 @@ function PartnerLogin() {
         localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
         navigate("/partner/profile");
+        window.location.reload();
       })
       .catch((error) => {
         if (error.message.includes("popup-closed-by-use")) {
@@ -100,6 +100,7 @@ function PartnerLogin() {
         localStorage.setItem('foodvaganzaUser', partnerAuth.currentUser.email);
         localStorage.setItem('userType', 'partner');
         navigate("/partner/profile");
+        window.location.reload();
       })
       .catch((error) => {
         if (error.message.includes("auth/invalid-login-credentials")) {

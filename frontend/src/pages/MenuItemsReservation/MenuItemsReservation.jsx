@@ -93,9 +93,54 @@ function MenuItemsReservation() {
 
     return (
         isMobile ?
-            <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
-                Items reservation page
-            </Flex>
+            loading === "false" ?
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="start">
+                    <Flex w="90%" flexDirection="column" alignItems="start">
+                        <Image src={logo} boxSize="256px" alt={restaurant.name} />
+                        <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
+                        <Text fontSize="lg">{restaurant.address}</Text>
+                        <Text mt="8px" fontWeight="medium">Opens {restaurant.start_time}</Text>
+                        <Text fontWeight="medium">Closes {restaurant.end_time}</Text>
+                    </Flex>
+                    <Flex w="90%" flexDir="column">
+                        <Text mt="16px" fontSize="2xl" fontWeight="medium">Have a great experience!</Text>
+                        <Text mt="8px" fontWeight="medium">Reservation Time:</Text>
+                        <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
+
+                        <Text mt="32px" fontSize="xl" fontWeight="medium">Add menu items: </Text>
+                        <Flex mt="24px" flexDirection="column" gap="16px">
+                            {
+                                items.map((item, ind) =>
+                                    <Flex key={ind} gap="24px" alignItems="center">
+                                        <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant.restaurant_id}/${item.item_image_path}`} w="128px" h="128px"></Image>
+
+                                        <Flex flexDir="column" justifyContent="center" alignItems="center">
+                                            <Text mb="8px">{item.item_name}</Text>
+                                            <Flex gap="16px">
+                                                <Text>Quantity ordered: {item.item_quantity}</Text>
+                                                <Text>Quantity remaining: {item.item_qty}</Text>
+                                            </Flex>
+                                            <Flex gap="8px">
+                                                {
+                                                    item.item_qty > 0 ? <Button onClick={() => addQuantity(item)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Add</Button>
+                                                        : null
+                                                }
+                                                {
+                                                    item.item_quantity > 0 ? <Button onClick={() => removeQuantity(item)} mt="16px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Remove</Button>
+                                                        : null
+                                                }
+                                            </Flex>
+                                        </Flex>
+                                    </Flex>
+                                )
+                            }
+                        </Flex>
+                        <Button onClick={updateItems} mt="64px" variant="solid" w="128px" _hover={{ backgroundColor: theme.accent, opacity: 0.8 }} backgroundColor={theme.accent} color={theme.primaryForeground}>Save</Button>
+                    </Flex>
+                </Flex> :
+                <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} flexDir="column" alignItems="center" justifyContent="center">
+                    <CircularProgress isIndeterminate color="teal" />
+                </Flex>
             :
             loading === "false" ?
                 <Flex w="100%" minHeight="90vh" backgroundColor={theme.primaryBackground} alignItems="start" justifyContent="space-around">
@@ -111,7 +156,7 @@ function MenuItemsReservation() {
                         <Text mt="8px" fontWeight="medium">Reservation Time:</Text>
                         <Text fontWeight="medium">{reservationDate.toLocaleString()}</Text>
 
-                        <Text  mt="32px" fontSize="xl" fontWeight="medium">Add menu items: </Text>
+                        <Text mt="32px" fontSize="xl" fontWeight="medium">Add menu items: </Text>
                         <Flex mt="24px" flexDirection="column" gap="16px">
                             {
                                 items.map((item, ind) =>
