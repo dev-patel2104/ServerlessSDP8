@@ -55,8 +55,11 @@ function RestaurantDetails() {
         rating: reviewRating.toString(), 
         review: reviewFeedback,
     };
-    restaurant.reviews = [ ...restaurant.reviews, newCustomerReview];
-
+    if (Array.isArray(restaurant.reviews)) {
+      restaurant.reviews = [...restaurant.reviews, newCustomerReview];
+    } else {
+      restaurant.reviews = [newCustomerReview];
+    }
     let response = await updateRestaurantData(restaurant);
     console.log("submit Feedback -> "+response);
     setReviewRating(0);
@@ -102,7 +105,7 @@ function RestaurantDetails() {
                         <Text fontWeight="bold" fontSize="1xl">{`${restaurant.discount_percentage}% OFF (on All Menu Items)`}</Text>
                     </>
                 )}
-                {restaurant.is_offer && restaurant.offer_on === 'menu_item' && (
+                {(restaurant.menu && restaurant.menu.length > 0) && restaurant.is_offer && restaurant.offer_on === 'menu_item' && (
                     <>
                         <Icon as={TbDiscount2} color="green.500" boxSize={10} />
                         {`DISCOUNTS UPTO `}<Text fontWeight="bold" fontSize="1xl" ml="1" mr="1">{` $${maxDiscount}% OFF `}</Text> {`(on Selected Menu Items)`}
@@ -220,18 +223,29 @@ function RestaurantDetails() {
             <Text fontSize="4xl" p="20px" fontWeight="bold">Hear from Our Customers:</Text>
             <VStack alignItems="start" spacing="20px" ml="60px">
                 {/* Display reviews */}
-                {restaurant.reviews.map((review, index) => (
-                    <Box key={index} mt="4px" p="4px" bg="gray.50" rounded="md" boxShadow="md">
+                {(restaurant.reviews && restaurant.reviews.length > 0) ? (
+                    restaurant.reviews.map((review, index) => (
+                      <Box key={index} mt="4px" p="4px" bg="gray.50" rounded="md" boxShadow="md">
                         <Flex align="center">
-                            <Badge variant="solid" colorScheme="purple" fontSize="sm" mr="2px"> Rating: {review.rating} </Badge>
-                            <Flex> {displayNumberOfStars(parseInt(review.rating)).map((star, index) => (
-                                        <Box key={index} mr="1px"> {star} </Box>
-                                    ))}
-                            </Flex>
+                          <Badge variant="solid" colorScheme="purple" fontSize="sm" mr="2px">
+                            Rating: {review.rating}
+                          </Badge>
+                          <Flex>
+                            {displayNumberOfStars(parseInt(review.rating)).map((star, index) => (
+                              <Box key={index} mr="1px"> {star} </Box>
+                            ))}
+                          </Flex>
                         </Flex>
-                        <Text fontSize="md" color="gray.700" maxW="400px" overflow="hidden" textOverflow="ellipsis" textAlign="justify"> {review.review} </Text>
-                    </Box>
-                ))}
+                        <Text fontSize="md" color="gray.700" maxW="400px" overflow="hidden" textOverflow="ellipsis" textAlign="justify">
+                          {review.review}
+                        </Text>
+                      </Box>
+                    ))
+                  ) : (
+                    <Text fontSize="xl" color="gray.700" fontWeight="bold">
+                      Be the first one to review!
+                    </Text>
+                  )}
 
                 {/* Get feedback input: */}
                 <Box bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
@@ -255,7 +269,7 @@ function RestaurantDetails() {
 
         <Box ml="auto" mt="20px">
             <NavLink to="/restaurants" p="20px">
-                <Icon as={BsArrowLeft} color='blackAlpha.900' boxSize={6} /> Back to Restaurant List
+                <Icon as={BsArrowLeft} color='blackAlpha.900' boxSize="6px" /> Back to Restaurant List
             </NavLink>
         </Box>
         <Box mt="50px" h="150px">
