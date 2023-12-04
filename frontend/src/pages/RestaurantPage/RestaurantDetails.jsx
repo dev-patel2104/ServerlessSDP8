@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button } from '@chakra-ui/react';
+import { Flex, Text, Link, Icon, Box, VStack, HStack, Image, Button, Select, Textarea, FormControl, FormLabel, Badge  } from '@chakra-ui/react';
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
-import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill } from 'react-icons/bs';
-import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock } from 'react-icons/fa';
+import { BsFacebook, BsArrowLeft, BsFillHouseSlashFill, BsFillBagCheckFill, BsFillBagXFill, BsFillHouseHeartFill, BsTelephoneFill, BsStar, BsStarFill  } from 'react-icons/bs';
+import { FaInstagram, FaLink, FaMapMarkedAlt, FaClock  } from 'react-icons/fa';
 import { TbDiscount2, TbDiscountCheckFilled } from "react-icons/tb";
-import { getRestaurant } from '../../services/RestaurantServices/RestaurantService';
+import { getRestaurant, updateRestaurantDetails } from '../../services/RestaurantServices/RestaurantService';
 import { theme } from '../../theme';
 
 function RestaurantDetails() {
@@ -12,6 +12,8 @@ function RestaurantDetails() {
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
   const [maxDiscount, setMaxDiscount] = useState(0);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewFeedback, setReviewFeedback] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,6 +41,37 @@ function RestaurantDetails() {
     return (originalPrice * (1.0-(discountPercentage/100.0))).toFixed(2);
   };
 
+  async function updateRestaurantData(restaurant) {
+    console.log(restaurant);
+    const restaurantResponse = await updateRestaurantDetails(restaurant);
+    console.log(restaurantResponse);
+  };
+
+
+  async function submitFeedback () {
+
+    const newCustomerReview = {
+        customer_id: localStorage.getItem("foodvaganzaUser"), 
+        rating: reviewRating.toString(), 
+        review: reviewFeedback,
+    };
+    restaurant.reviews = [ ...restaurant.reviews, newCustomerReview];
+
+    let response = await updateRestaurantData(restaurant);
+    console.log("submit Feedback -> "+response);
+    setReviewRating(0);
+    setReviewFeedback('');
+    window.location.reload();
+  }
+
+  function displayNumberOfStars(rating) {
+    const starsToDisplay = [];
+    for (let i = 0; i < rating; i++) {
+        starsToDisplay.push(<BsStarFill key={i} color="#FFD700" />);
+    }
+    return starsToDisplay;
+  }
+
   if (loading) {
     return <div>Loading restaurant details...</div>;
   }
@@ -48,18 +81,19 @@ function RestaurantDetails() {
   }
 
   return (
-    <Flex flexDirection="column" alignItems="start" justifyContent="center">
+    <Flex flexDirection="column" alignItems="start" justifyContent="center" backgroundColor={theme.primaryBackground}>
         {/* {Object.keys(restaurant).length < 5 && restaurant["email_id"] && restaurant["menu"] && restaurant["restaurant_id"] ? ( */}
             {/* <Text fontSize="3xl" fontWeight="bold" color="red" textAlign="center" mt="20px"> */}
             {/* OOPS! Restaurant under construction */}
           {/* </Text> */}
             {/* ) : ( */}
                 {/* <> */}
-        <Box bg="white" w="100%"  rounded="md" mb="5px">
+        <Box bg={theme.primaryBackground}  w="100%"  rounded="md" mb="5px">
             <Image src={`https://foodvaganza.s3.amazonaws.com/${restaurant_id}/${restaurant.image_path}`}  w="100%" h="200px"  objectFit="cover" />
         </Box>
+        
         <Flex flexDirection="column" alignItems="start" justifyContent="space-between">
-        <Box bg="white" w="100%" mr="45%" ml="45%" rounded="md" >
+        <Box bg={theme.primaryBackground}  w="100%" mr="45%" ml="45%" rounded="md" >
             <Flex alignItems="center">
                 <Text fontSize="4xl" p="20px" fontWeight="bold">{restaurant.name}</Text>
                 {restaurant.is_offer && restaurant.offer_on === 'restaurant' && (
@@ -75,8 +109,25 @@ function RestaurantDetails() {
                     </>
                 )}
             </Flex>
+            <Flex direction="row">
+                {!restaurant.is_open ? (
+                <Box bg="red.500" color="white" p="10px" rounded="md" m="10px" ml="40px">
+                    <Text fontWeight="bold">Currently Closed by Owner</Text>
+                </Box>
+                ) : (
+                <Box bg="green.500" color="white" p="10px" rounded="md" m="10px" ml="40px">
+                    <Text fontWeight="bold">Restaurant Open & Serving</Text>
+                </Box>
+                )}
+
+                {restaurant.is_new && (
+                <Box bg="blue.500" color="white" p="10px" rounded="md" m="10px" ml="40px">
+                    <Text fontWeight="bold">New in Town!</Text>
+                </Box>
+                )}
+            </Flex>
             <Box bg="white" p="20px" ml="40px" rounded="md">
-                <Text p="5px" fontSize="lg">{restaurant.tagline}</Text>
+                <Text p="5px" fontSize="lg" fontStyle="italic">{restaurant.tagline}</Text>
                 <Text p="5px" fontSize="lg"> <Icon as={FaMapMarkedAlt} color='blackAlpha.900' boxSize={6} /> {restaurant.address} </Text>
                 <Text p="5px" fontWeight="medium"> <Icon as={BsTelephoneFill} color='blackAlpha.900' boxSize={6} /> {restaurant.contact} </Text>
                 <Text p="5px" fontWeight="medium"> <Icon as={FaClock} color='rgb(0 205 106)' boxSize={6} /> Opens at: {restaurant.start_time} </Text>
@@ -164,17 +215,49 @@ function RestaurantDetails() {
                 ) : (
                     <Text as="span" fontWeight="bold" color="purple.500">No menu items present in Menu.</Text>
                   )}
-                </VStack>
+            </VStack>
+            
+            <Text fontSize="4xl" p="20px" fontWeight="bold">Hear from Our Customers:</Text>
+            <VStack alignItems="start" spacing="20px" ml="60px">
+                {/* Display reviews */}
+                {restaurant.reviews.map((review, index) => (
+                    <Box key={index} mt="4px" p="4px" bg="gray.50" rounded="md" boxShadow="md">
+                        <Flex align="center">
+                            <Badge variant="solid" colorScheme="purple" fontSize="sm" mr="2px"> Rating: {review.rating} </Badge>
+                            <Flex> {displayNumberOfStars(parseInt(review.rating)).map((star, index) => (
+                                        <Box key={index} mr="1px"> {star} </Box>
+                                    ))}
+                            </Flex>
+                        </Flex>
+                        <Text fontSize="md" color="gray.700" maxW="400px" overflow="hidden" textOverflow="ellipsis" textAlign="justify"> {review.review} </Text>
+                    </Box>
+                ))}
 
+                {/* Get feedback input: */}
+                <Box bg="white" p="20px" rounded="md" w="100%" border="1px solid #ccc">
+                    <Text fontSize="xl" fontWeight="bold" mb="20px" >Share Your Experience</Text>
+                    <FormControl mb="4px">
+                        <FormLabel>How would you rate us?</FormLabel>
+                        <Select value={reviewRating} isDisabled={localStorage.getItem("userType") == "user" ? false : true} onChange={(event) => setReviewRating(event.target.value)}>
+                        {[0, 1, 2, 3, 4, 5].map((value) => (
+                            <option key={value} value={value}>
+                            {value}
+                            </option>
+                        ))}
+                        </Select>
+                    </FormControl>
+                    <Text mt="20px" mb="20px" >Let us know what you think:</Text>
+                    <Textarea placeholder="Please enter your feedback here..." value={reviewFeedback} isDisabled={localStorage.getItem("userType") == "user" ? false : true} onChange={(event) => setReviewFeedback(event.target.value)} size="md" resize="vertical" mb="4px" />
+                    <Button colorScheme="purple" isDisabled={localStorage.getItem("userType") == "user" ? false : true} onClick={submitFeedback}> Submit </Button>
+                </Box>
+            </VStack>
+        </Box>
 
-            </Box>
-
-
-            <Box ml="auto" mt="20px">
-                <NavLink to="/restaurants" p="20px">
-                    <Icon as={BsArrowLeft} color='blackAlpha.900' boxSize={6} /> Back to Restaurant List
-                </NavLink>
-            </Box>
+        <Box ml="auto" mt="20px">
+            <NavLink to="/restaurants" p="20px">
+                <Icon as={BsArrowLeft} color='blackAlpha.900' boxSize={6} /> Back to Restaurant List
+            </NavLink>
+        </Box>
         <Box mt="50px" h="150px">
 
         </Box>

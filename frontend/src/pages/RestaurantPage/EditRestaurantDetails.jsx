@@ -116,8 +116,8 @@ function restaurant() {
   };
 
   const addNewMenuItem = () => {
-    // TODO: Replace with UUID
-    const newMenuItem = { ...newMenuItemDetail, item_id: Date.now() };
+    const uuidValue = uuidv4();
+    const newMenuItem = { ...newMenuItemDetail, item_id: uuidValue };
     console.log('newMenuItem : ', newMenuItem);
     setNewMenuItemDetail(newMenuItem);
     setInEditMenu(true);
