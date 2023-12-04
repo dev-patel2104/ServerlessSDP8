@@ -42,6 +42,18 @@
             }
         ]
       }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "5",
+        "review": "Looking just like a Wow!"
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "4",
+        "review": "Spinach Salad here is a game-changer!"
+      }
     ]
   },
   {
@@ -79,6 +91,18 @@
           }
         ]
       }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "4",
+        "review": "croissants was tasty, its layers, its flakiness, it was amazing!!"
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "Love the coffee here! Perfectly brewed with a smooth, rich taste. Compliments with the croissant."
+      }
     ]
   },
   {
@@ -114,6 +138,33 @@
             "price": 16.99
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "Hands down the best Margherita pizza I've had in Halifax! Fresh basil, tangy tomato sauce, and that perfect cheese pull!"
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "Amazing dining by the waterfront! The Margherita pizza was flavourful, and the atmosphere was uplifting."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "The Margherita pizza was a burst of authentic taste, and the service was phenominal."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "3",
+        "review": "Bringing Italy to Halifax! The Margherita pizza reminded me of Italy."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "The location is perfect with their Margherita pizza being authentic and tastful!"
       }
     ]
   },
@@ -155,6 +206,23 @@
           }
         ]
       }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "4",
+        "review": "The most heavenly Eggs Benedict! The hollandaise sauce was perfect, and the English muffin was toasted to perfection."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "4",
+        "review": "The Egg Benedict was tasty! The poached eggs were cooked perfectly, and the hollandaise sauce was complimentary."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "2",
+        "review": "Its the perfect brunch choice."
+      }
     ]
   },
   {
@@ -190,6 +258,13 @@
             "type": "pcs"
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "1",
+        "review": "Tasteless and falvourless! Wouldn't recommend."
       }
     ]
   },
@@ -227,6 +302,33 @@
             "type": "pcs"
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "5",
+        "review": "Lobster Bisque is a culinary perfection! Creamy, rich, and perfectly seasoned."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "4",
+        "review": "The flavors with the sherry added a unique richness!"
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "4",
+        "review": "Creaminess coupled with the delightful taste of lobster made my day."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "5",
+        "review": "Creamy texture, distinct flavor, with sherry fish was wonderful!"
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "1",
+        "review": "Tasteless, Irish Pub is better!"
       }
     ]
   },
@@ -281,6 +383,28 @@
             "type": "pcs"
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "Their Fish and Chips are crispy, golden, and perfectly seasoned."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "The Stew had rich flavors, tender lamb, and hearty vegetables."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "4",
+        "review": "Their Fish and Chips was amazing! Generous portions, crispy fish, and the tartar sauce was perfect!"
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "Serves very traditional Irish Stew that is comforting!"
       }
     ]
   },
@@ -355,6 +479,33 @@
           }
         ]
       }
+    ],
+    "reviews": [
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "Amaizng texture and richness! The Blueberry Pancakes are fluffy, with fresh blueberries, and drizzled with maple syrup."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "Their Blueberry Pancakes are truly delicious!"
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "4",
+        "review": "Their Eggs Benedict is a perfect compliment with their hollandaise sauce. Definitely a must-try item!"
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "Their Blueberry Pancakes are a comforting and flavorful!"
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "2",
+        "review": "The Blueberry Pancakes were sour not sweet enough!"
+      }
     ]
   },
   {
@@ -408,6 +559,33 @@
             "type": "pcs"
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "1",
+        "review": "The Veal Marsala was overcooked and tasted bland."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "2",
+        "review": "Would not recommend Gio. The Linguine Carbonara was overly salty, and the portion size was too small for the price."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "0",
+        "review": "The Veal Marsala lacked flavor, and the service was disapointing. Won't recommend this restaurant."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "5",
+        "review": "The Linguine Carbonara had perfectly balanced flavors, and great service."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "3",
+        "review": "Would highly recommend to have the best in town pasta and eggs!"
       }
     ]
   },
@@ -470,6 +648,28 @@
             "discount_percentage": 70
           }
         ]
+      }
+    ],
+    "reviews": [
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "4",
+        "review": "The Shepherd's Pie was bursting with flavor, and the staff were welcoming. Definitely recommend."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "5",
+        "review": "Great experience! Loved the Bangers and Mash, delicious food, and friendly staff."
+      },
+      {
+        "customer_id": "zainuddin.s@dal.ca",
+        "rating": "0",
+        "review": "Disappointed with my visit to The Henry House. The Shepherd's Pie lacked seasoning, and the service was slow. Not worth it."
+      },
+      {
+        "customer_id": "pr717348@dal.ca",
+        "rating": "2",
+        "review": "Expected better service. The Bangers and Mash were tasteless, and the prices didn't match the taste. Not recommended."
       }
     ]
   }

@@ -5,7 +5,6 @@ import { BsFacebook, BsFillHouseSlashFill, BsFillHouseHeartFill } from 'react-ic
 import { FaInstagram, FaStaylinked, FaArrowRightLong } from 'react-icons/fa6';
 import { NavLink } from 'react-router-dom';
 import { getAllRestaurants, deleteRestaurant } from '../../services/RestaurantServices/RestaurantService';
-import { isAuthenticated } from "../../services/AuthenticationServices/AuthenticationServices";
 import { TbDiscount2 } from "react-icons/tb";
 
 function RestaurantList() {
@@ -133,6 +132,12 @@ function RestaurantList() {
             <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
               <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
               <Text fontSize="lg" color="#8A8896">{restaurant.address}</Text>
+              {restaurant.is_new && (
+                <Box bg="blue.500" color="white" p="10px" rounded="md" mt="20px">
+                  <Text fontWeight="bold">New in Town!</Text>
+                </Box>
+              )}
+
               <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
               <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
               <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
@@ -190,6 +195,11 @@ function RestaurantList() {
             <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
               <Text fontSize="2xl" fontWeight="bold">{restaurant.name}</Text>
               <Text fontSize="lg" color="#6B6977">{restaurant.address}</Text>
+              {restaurant.is_new && (
+                <Box display="inline-block" bg="blue.500" color="white" p="8px" rounded="md" mt="20px">
+                  <Text fontWeight="bold" fontSize="sm">New in Town!</Text>
+                </Box>
+              )}
               <Text mt="8px" fontWeight="medium">Opens at: {restaurant.start_time}</Text>
               <Text fontWeight="medium">Closes at: {restaurant.end_time}</Text>
               <Text fontSize="lg" as="em">{restaurant.tagline}</Text>
