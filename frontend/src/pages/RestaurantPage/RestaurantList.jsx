@@ -145,12 +145,12 @@ function RestaurantList() {
               
               {allRestaurantDiscounts[restaurant.restaurant_id] && (
                 <>
-                  {allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' ? (<>
+                  {(allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' && allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage !== 0 ) ? (<>
                       
                       <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />{allRestaurantDiscounts[restaurant.restaurant_id].discountPercentage}% Discount all Items.</Text>
                     </>
                   ) : (
-                    allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && (<>
+                    (allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage !== 0 ) && (<>
                       
                       <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />Up To {allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage}% Discount.</Text>
                       </>
@@ -162,24 +162,38 @@ function RestaurantList() {
                 
               </Text>
             </NavLink>
-            <Text ml="25px" mt="10px" color="#0244A1">
-              <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
-                <Icon as={FaStaylinked} color='#78C257' boxSize={6} />
-                <Text ml={2}>Restaurant Website</Text>
-              </Link>
-            </Text>
-            <Text ml="25px" mt="10px" color="#0244A1">
-              <Link href={restaurant.fb_link} isExternal display="flex" alignItems="center" align="center">
-                <Icon as={BsFacebook} color='#4267B2' boxSize={6} />
-                <Text ml={2}>Facebook</Text>
-              </Link>
-            </Text>
-            <Text ml="25px" mt="10px" color="#0244A1">
-              <Link href={restaurant.insta_link} isExternal display="flex" alignItems="center" align="center">
-                <Icon as={FaInstagram} color='#E1306C' boxSize={6} />
-                <Text ml={2}>Instagram</Text>
-              </Link>
-            </Text>
+            {restaurant.store_link && (
+              <Text ml="25px" mt="10px" color="#0244A1">
+                <Link href={restaurant.store_link} isExternal display="flex" alignItems="center" align="center">
+                  <Icon as={FaStaylinked} color='#78C257' boxSize={6} />
+                  <Text ml={2}>Restaurant Website</Text>
+                </Link>
+              </Text>
+            )}
+
+            {restaurant.fb_link && (
+              <Text ml="25px" mt="10px" color="#0244A1">
+                <Link href={restaurant.fb_link} isExternal display="flex" alignItems="center" align="center">
+                  <Icon as={BsFacebook} color='#4267B2' boxSize={6} />
+                  <Text ml={2}>Facebook</Text>
+                </Link>
+              </Text>
+            )}
+
+            {restaurant.insta_link && (
+              <Text ml="25px" mt="10px" color="#0244A1">
+                <Link href={restaurant.insta_link} isExternal display="flex" alignItems="center" align="center">
+                  <Icon as={FaInstagram} color='#E1306C' boxSize={6} />
+                  <Text ml={2}>Instagram</Text>
+                </Link>
+              </Text>
+            )}
+
+            {!restaurant.store_link && !restaurant.fb_link && !restaurant.insta_link && (
+              <Text ml="5px" mt="10px" color="gray.500">
+                Click to learn more about this restaurant
+              </Text>
+            )}
             <NavLink to={`/restaurants/${restaurant.restaurant_id}`}>
               <Flex justifyContent="flex-end">
                 <Icon as={FaArrowRightLong} color='blackAlpha.900' boxSize={6} ml="auto" />
@@ -207,12 +221,12 @@ function RestaurantList() {
             </NavLink>
             {allRestaurantDiscounts[restaurant.restaurant_id] && (
                 <>
-                  {allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' ? (<>
+                  {(allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'restaurant' && allRestaurantDiscounts[restaurant.restaurant_id].discountPercentage !== 0) ? (<>
                       
                       <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />{allRestaurantDiscounts[restaurant.restaurant_id].discountPercentage}% Discount all Items.</Text>
                     </>
                   ) : (
-                    allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && (<>
+                    (allRestaurantDiscounts[restaurant.restaurant_id].discountType === 'menu_item' && allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage !== 0 ) && (<>
                       
                       <Text fontWeight="medium" p="5px"><Icon as={TbDiscount2} color="green.500" boxSize={8} />Up To {allRestaurantDiscounts[restaurant.restaurant_id].maxDiscountPercentage}% Discount.</Text>
                       </>
